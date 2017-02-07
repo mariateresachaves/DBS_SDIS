@@ -118,6 +118,22 @@ A peer should also count the number of confirmation messages for each of the chu
 
 **Enhancement:** This scheme can deplete the backup space rather rapidly, and cause too much activity on the nodes once that space is full. Can you think of an alternative scheme that ensures the desired replication degree, avoid these problems, and, nevertheless, can interoperate with peers that execute the chunk backup protocol described above?
 
+### 3.3. Chunk restore protocol
+
+This protocol uses the same multicast control channel (MC) as the backup protocol, but uses a different multicast channel for data, the multicast data recovery channel (MDR).
+
+To recovery a chunk, the initiator-peer shall send a message with the following format to the MC:
+
+**GETCHUNK \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>**
+
+Upon receiving this message, a peer that has a copy of the specified chunk shall send it in the body of a CHUNK message via the MDR channel:
+
+**CHUNK \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>\<Body\>**
+
+To avoid flooding the host with CHUNK messages, each peer shall wait for a random time uniformly distributed between 0 and 400 ms, before sending the CHUNK message. If it receives a CHUNK message before that time expires, it will not send the CHUNK message.
+
+**Enhancement:** If chunks are larger, this protocol may not be desirable: only one peer needs to receive the chunk, but we are using a multicast channel for that. Can you think of a change to the protocol that would eliminate this problem, and yet interoperate with non-initiator peers that implement the protocol described in this section?
+
 ## Report
 
 https://www.overleaf.com/8064403cwszmfcszkjg
