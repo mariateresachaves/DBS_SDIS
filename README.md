@@ -20,7 +20,11 @@ The backup service is provided by a set of servers. Because no server is special
 
 ### Service Description
 
-The purpose of the service is to backup files by replicating their content in multiple servers. We assume that each file has a "home" server, which has the original copy of the file. 
+The purpose of the service is to backup files by replicating their content in multiple servers. We assume that each file has a "home" server, which has the original copy of the file. Although the file will be stored on some file system, which may be distributed, the backup service will generate an identifier for each file backs up. This identifier is obtained by applying SHA256, a cryptographic hash function, to some \*bit string\*. Each implementation can choose the \*bit string\* used to generate a file identifier, as long as that choice generates file identifiers that are unique with very high probability, i.e. that bit string should be unique. Furthermore, because the backup service is not aware of versions of a file, the bit string used to generate a file identifier should include data and or metadata that ensures that a modified file has a different field. As a suggestion you can combine the file metadata (file name, date modified, owner, ...) and/or file data to generate that bit string.
+
+The backup service splits each file in chunks and then backs up each chunk independently, rather than crating multiple files that are a copy of the file to backup. Each chunk is identified by the pair (field, chunkNo). The size of each chunk is 64KByte (where K stands for 1000). The size of the last chunk is always shorter than that size. **If the file size is a multiple of the chunk size, the last chunk has size 0**. A peer need not store all chunks of a file, or even any chunk of a file. The recovery of each chunk is also performed independently of the recovery of other chunks of a file.
+
+
 
 ## Report
 
