@@ -134,6 +134,18 @@ To avoid flooding the host with CHUNK messages, each peer shall wait for a rando
 
 **Enhancement:** If chunks are larger, this protocol may not be desirable: only one peer needs to receive the chunk, but we are using a multicast channel for that. Can you think of a change to the protocol that would eliminate this problem, and yet interoperate with non-initiator peers that implement the protocol described in this section?
 
+### 3.4. File deletion subprotocol
+
+When a file is deleted from its home file system, its chunks should also be deleted from the backup service. In order to support this, the protocol provides the following message, that should be sent on the MC:
+
+**DELETE \<Version\> \<SenderId\> \<FileId\> \<CRLF\>\<CRLF\>**
+
+Upon receiving this message, a peer should remove from its backing store all chunks belonging to the specified file.
+
+This message does not elicit any response message. An implementation, may send this message as many times as it is deemed necessary to ensure that all space used by chunks of the deleted file are deleted in spite of the loss of some messages.
+
+**Enhancement:** If a peer that backs up some chunk of the file is not running at the time the initiator peer sends a DELETE message for that file, the space used by these chunks will never be reclaimed. Can you think of a change to the protocol, possibly including additional messages, that would allow to reclaim storage space even in that event?
+
 ## Report
 
 https://www.overleaf.com/8064403cwszmfcszkjg
