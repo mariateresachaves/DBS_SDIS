@@ -158,6 +158,21 @@ Upon receiving this message, a peer that has a local copy of the chunk shall upd
 
 **Enhancement:** If the peer that initiates the chunk backup subprotocol fails before finishing it, the replication degree of the file chunk may be lower than that desired. Can you think of a change to the protocol, compatible with the chunk backup subprotocol, i.e. both when a chunk is being backed up for the first time and when a copy of the chunk is deleted.
 
+### 3.6. Protocol Enhancements
+
+If you choose to enhance any of the subprotocols described above, or to create new subprotocols to add some features, you must be careful to ensure interoperability with the subprotocols defined in this document.
+
+If possible, you should avoid changing or adding any messages. If you find that that is unavoidable, you should adhere to the following rules:
+
+ 1. The header of each message shall be a sequence of lines, such that it does not break the general format rules used in the header definition:
+ 
+  1. The last header line is always an empty line, i.e. the \<CRLF\> ASCII character sequence
+  2. Each header line teminates with the \<CRLF\> ASCII character sequence
+  3. Fields in a header line are separated by the space ASCII char
+  
+ 2. If you have to change messages defined herein, do not change the respective header line, instead add new header lines
+ 3. Any message either new or modified must use a version different from '1''.''0', the version of the messages defined in this specification.
+
 ## Report
 
 https://www.overleaf.com/8064403cwszmfcszkjg
