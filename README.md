@@ -96,6 +96,28 @@ This field contains the desired replication degree of the chunk. This is a digit
 
 When present, the body contains the data of a file chunk. The length of the body is variable. As stated above, if it is smaller than the maximum chunk size, 64 KByte, it is the last chunk in a file. The protocol does not interpret the contents of the Body. For the protocol its value is just a byte sequence.
 
+### 3.2. Chunk backup subprotocol
+
+To backup a chunk, the initiator-peer sends to the **MDB multicast data channel** a message whose body is the contents of that chunk. This message includes also the sender and the chunk ids and the desired replication degree:
+
+**PUTCHUNK \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>\<CRLF\>\<Body\>**
+
+A peer that stores the chunk upon receiving the PUTCHUNK message, should reply by sending **on the multicast control channel (MC)** a confirmation message with the following format:
+
+**STORED \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>**
+
+after a random delay uniformly distributed between 0 and 400 ms. **Food for thought:** Why use a random delay?
+
+**IMP:** A peer must never store the chunks of its own files.
+
+This message is used to ensure that the chunk is backed up with the desired replication degree as follows. The initiator-peer collects the confirmation messages during a time interval of one second. If the number of confirmation messages it received up to the end of that interval is lower than the desired replication degree, it retransmits the backup message **on the MDB channel**, and doubles the time interval for receiving confirmation messages. This procedure is repeated up to maximum number of five times, i.e. the initiator will send at most 5 PUTCHUNK messages per chunk.
+
+**Hint:** Because UDP is not reliable, a peer that has stored a chunk must reply with STORED message to every PUTCHUNK message it receives. Therefore, the initiator-peer needs to keep track of which peers have responded.
+
+A peer should also count the number of confirmation messages for each of the chunks it has stored and keep that count in non-volatile memory. This information is used if the peer runs out of disk space: in that event, the peer will try to free some space by evicting chunks whose actual replication degree is higher than the desired replication degree.
+
+**Enhancement:** This scheme can deplete the backup space rather rapidly, and cause too much activity on the nodes once that space is full. Can you think of an alternative scheme that ensures the desired replication degree, avoid these problems, and, nevertheless, can interoperate with peers that execute the chunk backup protocol described above?
+
 ## Report
 
 https://www.overleaf.com/8064403cwszmfcszkjg
