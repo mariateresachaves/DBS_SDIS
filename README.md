@@ -31,6 +31,10 @@ In adition to the basic functionality for backing up and recovering a file, the 
 
 As described, the backup service knows only about chunks of the backed up files, wich are identified by the field. It knows nothing about the file systems where they are kept. Of course to be of pratical use, the mapping between the fileId kept by the backup system and the name of that file (and possibly its file system) needs to survive a failure of the original file system. This problem can be solved in different ways, but you are not required to do it for this project. For this project, and to keep it feasible for all of you, we will assume that this mapping is never lost.
 
+## Service Interface
+
+Will be based on a command line interface (CLI) application, which will then have to communicate with the local servers. Essentially, it will provide the functionality required to test the protocol.
+
 ## Report
 
 https://www.overleaf.com/8064403cwszmfcszkjg
