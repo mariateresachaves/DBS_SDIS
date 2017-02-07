@@ -31,9 +31,24 @@ In adition to the basic functionality for backing up and recovering a file, the 
 
 As described, the backup service knows only about chunks of the backed up files, wich are identified by the field. It knows nothing about the file systems where they are kept. Of course to be of pratical use, the mapping between the fileId kept by the backup system and the name of that file (and possibly its file system) needs to survive a failure of the original file system. This problem can be solved in different ways, but you are not required to do it for this project. For this project, and to keep it feasible for all of you, we will assume that this mapping is never lost.
 
-## Service Interface
+### Service Interface
 
 Will be based on a command line interface (CLI) application, which will then have to communicate with the local servers. Essentially, it will provide the functionality required to test the protocol.
+
+## Protocol
+
+The protocol used by the backup service comprises several smaller subprotocols, which are used for specific tasks, and that can be run concurrently:
+
+ 1. chunk backup
+ 2. chunk restore
+ 3. file deletion
+ 4. space reclaiming
+ 
+Many of these subprotocols are initiated by a peer. To distinguish it from the other peers, in the description of these protocols, we call that peer the **initiator-peer**. The other peers are called peers only. The role of initiator-peer can be played by any peer, depending on the particular instance of the subprotocol.
+
+All subprotocols use a **multicast channel, the control channel (MC)**, that is used for control messages. All peers must subscribe the MC channel. Some subprotocols use also one of two multicast data channels, **MDB** and **MDR**, which are used to **backup** and **restore** file chunk data respectively.
+
+**Note** The IP multicast addresses of these channels should be configurable via 6 command line arguments of the server program, in the following order MC, MDB, MDR, with IP multicast address of each channel before the respective port number. These arguments must follow immediately the first command line argument, which is the server id.
 
 ## Report
 
