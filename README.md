@@ -14,6 +14,14 @@ This project is a distibuted backup service for a local area network (LAN). The 
   
   * The participants do not modify either intentionally or accidentally, the backed up data.
 
+## Service
+
+The backup service is provided by a set of servers. Because no server is special, we call these servers "peers". (This kind of implementation is often called serverless service.) As stated earlier, **each peer is identified by an integer**, which is unique among the set of peers in the system.
+
+### Service Description
+
+The purpose of the service is to backup files by replicating their content in multiple servers. We assume that each file has a "home" server, which has the original copy of the file. 
+
 ## Report
 
 https://www.overleaf.com/8064403cwszmfcszkjg
