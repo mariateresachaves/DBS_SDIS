@@ -36,7 +36,7 @@
 
 **Header**
 
-  * [ ] \<CRLF\> - '0xD' '0xA'
+  * [ ] \<CRLF\> - '0xD''0xA'
   
   * [ ] Each header line is a sequence of fields, sequences of ASCII codes separated by spaces, the ASCII char ' '
       * [ ] There may be more than one space between fields
