@@ -36,6 +36,9 @@
 
 **Header**
 
+  * [ ] \<MessageType\> \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>
+      * [ ] Some of these fields may not be used by some messages, but all fields that appear in a message must appear in the relative order specified above
+
   * [ ] \<CRLF\> - '0xD''0xA'
   
   * [ ] Each header line is a sequence of fields, sequences of ASCII codes separated by spaces, the ASCII char ' '
@@ -44,9 +47,51 @@
       * [ ] The header always terminates with an empty header line
            * [ ] the \<CRLF\> of the last header line is followed immediatly by another \<CRLF\>, without any character in between
 
+  * [ ] \<MessageType\>
+      * [ ] Each subprotocol specifies its own message types
+      * [ ] This fields determines the format of the message and what actions its receivers should perform
+      * [ ] This is encoded as a variable length sequance of ASCII characters
+      
+  * [ ] \<Version\>
+      * [ ] This is the version of the protocol
+      * [ ] Is a 3 ASCII char sequence with the format \<n\>'.'\<m\>, where \<n\> and \<m\> are the ASCII codes of digits
+      
+  * [ ] \<SenderId\>
+      * [ ] This is the id of the server that has sent the message
+      * [ ] This is encoded as a variable length sequence of ASCII digits
+      
+  * [ ] \<FileId\>
+      * [ ] This is the file identifier for the backup service
+      * [ ] Obtained by using the SHA256 cryptographic hash function
+      * [ ] As its name indicates its lenght is 256 bit
+      * [ ] Should be encoded as a 64 ASCII character sequence
+      * [ ] The encoding is: each byte of the hash value is encoded by the two ASCII characters corresponding to the hexadeciaml representation of that byte
+      * [ ] The entire hash is represented in big-endian order, i.e. from the MSB (byte 31) to LSB (byte 0)
+
+  * [ ] \<ChunkNo\>
+      * [ ] This field together with the FileId specifies a chunk in the file
+      * [ ] The chunk numbers are integers and should be assigned sequentially starting at 0
+      * [ ] It is encoded as a sequence of ASCII characters corresponding to the decimal representation of that number, with the most significant digit first
+      * [ ] The length of this field is variable, but should not be larger than 6 chars
+          * [ ] Each file can have at most one million chunks
+          * [ ] Given that each chunk is 64kByte, this limits the size of the files to backup to 64GByte
+
+  * [ ] \<ReplicationDeg\>
+      * [ ] This field contains the desired replication degree of the chunk
+      * [ ] This is a digit, thus allowing a replication degree of up to 9
+      * [ ] It takes one byte, which is the ASCII code of that digit
+
 **Body**
 
-  * [ ] ...
+  * [ ] The body contains the data of a file chunk
+  
+  * [ ] The length of the body is variable
+  
+  * [ ] If it is smaller than the maximum chunk size, 64 KByte, it is the last chunk in a file
+  
+  * [ ] The protocol does not interpret the contents of the Body
+  
+  * [ ] For the protocol its value is just a byte sequence
 
 ## Subprotocols
 
