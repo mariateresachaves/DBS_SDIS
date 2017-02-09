@@ -32,4 +32,20 @@
       * [ ] The backup service should delete all the chunks of that file
       * [ ] deletion of the chunks of a file, may happen not only when the file is deleted on its file system, but also when it is modified, because, for the backup system, it will be a different file
 
+## Subprotocols
+
+## 1. Chunk backup
+
+  * [ ] ...
+
+## 2. Chunk restore
+
+ 	* [ ] ...
+
+## 3. File deletion
+
+  * [ ] ...
+
+## 4. Space reclaiming
+
   * [ ] ...
