@@ -175,7 +175,7 @@
 ### 4. Space reclaiming
 
  * [ ] When a peer deletes a copy of a chunk it has backed up, it shall send to the MC channel a message
-    * [ ] REMOVED \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>
+    * [ ] **REMOVED \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>**
       
  * [ ] Upon receiving this message, a peer that has a local copy of the chunk shall update its local count of this chunk
     * [ ] If this count drops below the desired replication degree of that chunk, it shall initiate the chunk backup subprotocol after a random delay uniformly distributed between 0 and 400 ms
