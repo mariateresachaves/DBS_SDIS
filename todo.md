@@ -34,6 +34,8 @@
 
 ## Subprotocols
 
+  * [x] Many of these subprotocols are initiated by a peer, we call that peer the initiator-peer.
+
 ### 1. Chunk backup
 
   * [ ] ...
