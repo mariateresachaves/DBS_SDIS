@@ -20,7 +20,6 @@
 
   * [ ] The service backs up each chunk with a given degree of replication, i.e. on a given number of peers
       * [ ] The desired replication degree of a chunk depends on the file to which it belongs, and all chunks of a given file have the same desired replication degree
-      * [ ] 
       
   * [ ]  The backup service must provide the functionality for reclaiming disk space on peers
       * [ ] Each peer retains total control on the use of its local disk
