@@ -34,18 +34,18 @@
 
 ## Subprotocols
 
-## 1. Chunk backup
+### 1. Chunk backup
 
   * [ ] ...
 
-## 2. Chunk restore
+### 2. Chunk restore
 
   * [ ] ...
 
-## 3. File deletion
+### 3. File deletion
 
   * [ ] ...
 
-## 4. Space reclaiming
+### 4. Space reclaiming
 
   * [ ] ...
