@@ -34,7 +34,21 @@
 
 ## Subprotocols
 
-  * [x] Many of these subprotocols are initiated by a peer, we call that peer the initiator-peer.
+  * [x] Many of these subprotocols are initiated by a peer, we call that peer the initiator-peer
+  
+  * [x] The role of initiator-peer can be played by any peer, depending on the particular instance of the subprotocol
+  
+  * [ ] Multicast Control channel (MC) - used for control messages
+      * [ ] All peers must subscribe the MC channel
+  
+  * [ ] Some subprotocols use also one of two multicast data channels
+      * [ ] Multicast Data Backup channel (MDB) - used to backup file chunk data
+      * [ ] Multicast Data Restore channel (MDR) - used to restore file chunk data
+
+  * [ ] The IP multicast addresses of these channels should be configurable
+      * [ ] 6 command line arguments of the server program
+          * [ ] MC, MDB, MDR, with IP multicast address of each channel before the respective port number
+          * [ ] These arguments must follow immediately the first command line argument, which is the server id
 
 ### 1. Chunk backup
 
