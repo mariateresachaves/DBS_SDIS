@@ -113,7 +113,30 @@
 
 ### 1. Chunk backup
 
-  * [ ] ...
+  * [ ] The initiator-peer sends to the MDB multicast data channel a message whose body is the contents of that chunk
+  
+  * [ ] Message: PUTCHUNK \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>\<CRLF\>\<Body\>
+  
+  * [ ] A peer that stores the chunk upon receiving the PUTCHUNK message, should reply by sending on the multicast control channel (MC) a confirmation message
+      * [ ] STORED \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>
+      * [ ] After a random delay uniformly distributed between 0 and 400 ms
+      
+  * [ ] A peer must never store the chunks of its own files
+  
+  * [ ] The initiator-peer collects the confirmation messages during a time interval of one second
+      * [ ] If the number of confirmation messages it received up to the end of that interval is lower than the desired replication degree, it retransmits the backup message on the MDB channel, and doubles the time interval for receiving confirmation messages
+      * [ ] This procedure is repeated up to maximum number of five times, i.e. the initiator will send at most 5 PUTCHUNK messages per chunk
+
+  * [ ] Because UDP is not reliable, a peer that has stored a chunk must reply with STORED message to every PUTCHUNK message it receives
+      * [ ] The initiator-peer needs to keep track of which peers have responded
+      
+  * [ ] A peer should also count the number of confirmation messages for each of the chunks it has stored and keep that count in non-volatile memory
+      * [ ] This information is used if the peer runs out of disk space
+          * [ ] The peer will try to free some space by evicting chunks whose actual replication degree is higher than the desired replication degree
+  
+**[Enhancement]**
+  
+  * [ ] This scheme can deplete the backup space rather rapidly, and cause too much activity on the nodes once that space is full. Can you think of an alternative scheme that ensures the desired replication degree, avoid these problems, and, nevertheless, can interoperate with peers that execute the chunk backup protocol described above?
 
 ### 2. Chunk restore
 
