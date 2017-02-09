@@ -40,6 +40,10 @@
       * [ ] The backup service should delete all the chunks of that file
       * [ ] deletion of the chunks of a file, may happen not only when the file is deleted on its file system, but also when it is modified, because, for the backup system, it will be a different file
 
+## Message Format and Field Encoding
+
+  * [ ] ...
+
 ## Subprotocols
 
   * [x] Many of these subprotocols are initiated by a peer, we call that peer the initiator-peer
