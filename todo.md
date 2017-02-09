@@ -140,7 +140,7 @@
 
 ### 2. Chunk restore
 
-  * [ ] ...
+  * [ ] Uses the same multicast control channel (MC) as the backup protocol, but uses a different multicast channel for data, the multicast data recovery channel (MDR)
 
 ### 3. File deletion
 
