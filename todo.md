@@ -36,10 +36,10 @@
 
 **Header**
 
-  * [ ] \<MessageType\> \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>
+  * [ ] **\<MessageType\> \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>**
       * [ ] Some of these fields may not be used by some messages, but all fields that appear in a message must appear in the relative order specified above
 
-  * [ ] \<CRLF\> - '0xD''0xA'
+  * [ ] **\<CRLF\>** - '0xD''0xA'
   
   * [ ] Each header line is a sequence of fields, sequences of ASCII codes separated by spaces, the ASCII char ' '
       * [ ] There may be more than one space between fields
@@ -47,20 +47,20 @@
       * [ ] The header always terminates with an empty header line
            * [ ] the \<CRLF\> of the last header line is followed immediatly by another \<CRLF\>, without any character in between
 
-  * [ ] \<MessageType\>
+  * [ ] **\<MessageType\>**
       * [ ] Each subprotocol specifies its own message types
       * [ ] This fields determines the format of the message and what actions its receivers should perform
       * [ ] This is encoded as a variable length sequance of ASCII characters
       
-  * [ ] \<Version\>
+  * [ ] **\<Version\>**
       * [ ] This is the version of the protocol
       * [ ] Is a 3 ASCII char sequence with the format \<n\>'.'\<m\>, where \<n\> and \<m\> are the ASCII codes of digits
       
-  * [ ] \<SenderId\>
+  * [ ] **\<SenderId\>**
       * [ ] This is the id of the server that has sent the message
       * [ ] This is encoded as a variable length sequence of ASCII digits
       
-  * [ ] \<FileId\>
+  * [ ] **\<FileId\>**
       * [ ] This is the file identifier for the backup service
       * [ ] Obtained by using the SHA256 cryptographic hash function
       * [ ] As its name indicates its lenght is 256 bit
@@ -68,7 +68,7 @@
       * [ ] The encoding is: each byte of the hash value is encoded by the two ASCII characters corresponding to the hexadeciaml representation of that byte
       * [ ] The entire hash is represented in big-endian order, i.e. from the MSB (byte 31) to LSB (byte 0)
 
-  * [ ] \<ChunkNo\>
+  * [ ] **\<ChunkNo\>**
       * [ ] This field together with the FileId specifies a chunk in the file
       * [ ] The chunk numbers are integers and should be assigned sequentially starting at 0
       * [ ] It is encoded as a sequence of ASCII characters corresponding to the decimal representation of that number, with the most significant digit first
@@ -76,7 +76,7 @@
           * [ ] Each file can have at most one million chunks
           * [ ] Given that each chunk is 64kByte, this limits the size of the files to backup to 64GByte
 
-  * [ ] \<ReplicationDeg\>
+  * [ ] **\<ReplicationDeg\>**
       * [ ] This field contains the desired replication degree of the chunk
       * [ ] This is a digit, thus allowing a replication degree of up to 9
       * [ ] It takes one byte, which is the ASCII code of that digit
@@ -99,12 +99,12 @@
   
   * [x] The role of initiator-peer can be played by any peer, depending on the particular instance of the subprotocol
   
-  * [ ] Multicast Control channel (MC) - used for control messages
+  * [ ] **Multicast Control channel (MC)** - used for control messages
       * [ ] All peers must subscribe the MC channel
   
   * [ ] Some subprotocols use also one of two multicast data channels
-      * [ ] Multicast Data Backup channel (MDB) - used to backup file chunk data
-      * [ ] Multicast Data Restore channel (MDR) - used to restore file chunk data
+      * [ ] **Multicast Data Backup channel (MDB)** - used to backup file chunk data
+      * [ ] **Multicast Data Restore channel (MDR)** - used to restore file chunk data
 
   * [ ] The IP multicast addresses of these channels should be configurable
       * [ ] 6 command line arguments of the server program
@@ -115,10 +115,10 @@
 
   * [ ] The initiator-peer sends to the MDB multicast data channel a message whose body is the contents of that chunk
   
-  * [ ] Message: PUTCHUNK \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>\<CRLF\>\<Body\>
+  * [ ] Message: **PUTCHUNK \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<ReplicationDeg\> \<CRLF\>\<CRLF\>\<Body\>**
   
   * [ ] A peer that stores the chunk upon receiving the PUTCHUNK message, should reply by sending on the multicast control channel (MC) a confirmation message
-      * [ ] STORED \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>
+      * [ ] **STORED \<Version\> \<SenderId\> \<FileId\> \<ChunkNo\> \<CRLF\>\<CRLF\>**
       * [ ] After a random delay uniformly distributed between 0 and 400 ms
       
   * [ ] A peer must never store the chunks of its own files
