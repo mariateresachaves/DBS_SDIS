@@ -82,7 +82,7 @@ This is the id of the server that has sent the message. This field is useful in 
 
 **\<FileId\>**
 
-This is the file identifier for the backup service. As stated above, it is supposed to be obtained by using the SHA256 cryptographic hash function. As its name indicates its lenght is 256 bit, i.e. 32 bytes, and should be encoded as a 64 ASCII caracter sequence. The encoding is as follow: each byte of the hash value is encoded by the two ASCII characters corresponding to the hexadeciaml representation of that byte. E.g., a byte with value 0xB2 should be represented by the two char sequence 'B''2' (or 'b''2', it does not matter). The entire hash is represented in big-endian order, i.e. from the MSB (byte 31) to LSB (byte 0).
+This is the file identifier for the backup service. As stated above, it is supposed to be obtained by using the SHA256 cryptographic hash function. As its name indicates its lenght is 256 bit, i.e. 32 bytes, and should be encoded as a 64 ASCII character sequence. The encoding is as follow: each byte of the hash value is encoded by the two ASCII characters corresponding to the hexadeciaml representation of that byte. E.g., a byte with value 0xB2 should be represented by the two char sequence 'B''2' (or 'b''2', it does not matter). The entire hash is represented in big-endian order, i.e. from the MSB (byte 31) to LSB (byte 0).
 
 **\<ChunkNo\>**
 
