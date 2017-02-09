@@ -40,7 +40,7 @@
 
 ## 2. Chunk restore
 
- 	* [ ] ...
+  * [ ] ...
 
 ## 3. File deletion
 
