@@ -129,3 +129,10 @@ where:
   * **\<oper\> \<opnd\*\>** and have the same meaning and format of homonyms arguments from the command line and
   * **\<out\>** is the value returned by the operation invoked or ''ERROR" if any error occurs.
 
+## 3 Documentation
+
+[MulticastSocket (Java Platform SE 8)](http://docs.oracle.com/javase/8/docs/api/java/net/MulticastSocket.html)
+
+[A simple example on java.net.MulticastSocket](https://examples.javacodegeeks.com/core-java/net/multicastsocket-net/java-net-multicastsocket-example/) (A very simple example to get started. One of thousands you can find on the Web)
+
+[Oracle's MulticastSocket's Tutorial](http://docs.oracle.com/javase/tutorial/networking/datagrams/broadcasting.html) (Part of a not so simple Tutorial on datagram communication)
