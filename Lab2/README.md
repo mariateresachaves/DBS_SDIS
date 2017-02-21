@@ -61,8 +61,8 @@ where:
   * **\<mcast_port\>** is the port number of the multicast group used by the server to advertise its service;
   * **\<oper\>** is "register" or "lookup", depending on the operation to invoke;
   * **\<opnd\>\*** is the list of operands of the specified operation:
-    * **\<plate number\>** \<owner name\>, for register;
-    * **\<plate number\>**, for lookup.
+    * **\<plate number\> \<owner name\>** for register;
+    * **\<plate number\>** for lookup.
     
 ### 2.2 Communication Protocol
 
