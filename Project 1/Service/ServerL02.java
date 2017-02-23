@@ -29,16 +29,17 @@ public class ServerL02 {
     private static int srvc_port;
     private static String mcast_addr;
     private static int mcast_port;
-    
+
     /**
      * Static Variables
      */
-    private static int mcastRate=1000;
+    private static int mcastRate ;
 
-    public ServerL02(int srvcpt, String mcastAdress, int mcastPort) {
+    public ServerL02(int srvcpt, String mcastAdress, int mcastPort,int rate) {
         srvc_port = srvcpt;
         mcast_addr = mcastAdress;
         mcast_port = mcastPort;
+        mcastRate= rate;
 
         try {
             addr = InetAddress.getByName(mcast_addr);
@@ -52,31 +53,12 @@ public class ServerL02 {
             throwErrorandExit("[-] Error setting multicast socket", ERR_SETTING_SOCK);
         }
 
-        createMenance();
     }
 
     public static void main(String[] args) {
 
-        if (args.length < 3) {
-            System.err.println("[-] Incorrect Argument number");
-            System.exit(ERR_WRONG_ARGS);
-        }
-
-        try {
-
-            srvc_port = Integer.parseInt(args[0]);
-            mcast_addr = args[1];
-            mcast_port = Integer.parseInt(args[2]);
-
-            addr = InetAddress.getByName(mcast_addr);
-            serverSocket = new DatagramSocket();
-        } catch (NumberFormatException | UnknownHostException | SocketException e) {
-            /**
-             * Do error catching
-             */
-        }
-
-        ServerL02 abc= new ServerL02(srvc_port, mcast_addr, mcast_port);
+        //For testing porpuses
+        ServerL02 abc = new ServerL02(8080, "224.13.3.7", 1111,1000);
         abc.createMenance();
 
     }
