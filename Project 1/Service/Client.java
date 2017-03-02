@@ -6,8 +6,8 @@ import java.util.*;
 
 public class Client {
 	/**
-     * Socket-related variables
-     */
+	 * Socket-related variables
+	 */
 	private static DatagramPacket packet;
 	private static DatagramSocket socket;
 	private static String address;
@@ -16,8 +16,7 @@ public class Client {
 	private static MulticastSocket mcast_socket;
 	private static InetAddress mcast_address;
 	private static Object lock = new Object();
-	
-	
+
 	public static void main(String[] args) {
 		// Arguments verification
 		check_args(args);
