@@ -1,9 +1,5 @@
 package testingapp;
 
-/**
- *
- * @author up201104253
- */
 public class TestingApp {
 
 	/**
