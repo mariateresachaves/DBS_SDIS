@@ -68,8 +68,8 @@ public class ChunkController {
     private Chunk makeChunk(File f, byte[] data) throws Exception {
 
         //MUDAR PARA AS PROPRIEDADES (CRYPTO)
-        //Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), "SHA-256"), 0, Base64.getEncoder().encodeToString(data));
-        Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), "SHA-256"), 0, new String(data));
+        Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), "SHA-256"), 0, Base64.getEncoder().encodeToString(data));
+        //Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), "SHA-256"), 0, new String(data));
         return c;
     }
 
