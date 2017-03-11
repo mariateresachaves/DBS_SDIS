@@ -12,7 +12,6 @@ public class Server {
 	 */
 	private static DatagramSocket serverSocket;
 	private static InetAddress addr;
-	private static int srvc_port;
 	private static String mcast_addr;
 	private static int mcast_port;
 
@@ -21,8 +20,7 @@ public class Server {
 	 */
 	private static int mcastRate;
 
-	public Server(int srvcpt, String mcastAdress, int mcastPort, int rate) {
-		srvc_port = srvcpt;
+	public Server(String mcastAdress, int mcastPort, int rate) {
 		mcast_addr = mcastAdress;
 		mcast_port = mcastPort;
 		mcastRate = rate;
@@ -44,7 +42,7 @@ public class Server {
 	public static void main(String[] args) {
 
 		// For testing porpuses
-		Server abc = new Server(8080, "192.168.32.182", 1111, 1000);
+		Server abc = new Server("192.168.32.182", 1111, 1000);
 		abc.createMenance();
 
 	}
@@ -64,13 +62,13 @@ public class Server {
 			public void run() {
 				try {
 					String local_addr = InetAddress.getLocalHost().toString().split("/")[1];
-					String msg = String.format("Multicast Message:%s:%d", local_addr, srvc_port);
+					String msg = String.format("Multicast Message:%s:%d", local_addr, mcast_port);
 					DatagramPacket msgPacket = new DatagramPacket(msg.getBytes(), msg.getBytes().length, addr,
 							mcast_port);
 					serverSocket.send(msgPacket);
 					String status = String.format(
-							"multicast: <mcast_addr>%s <mcast_port>%d: <srvc_addr>%s <srvc_port>%d", mcast_addr,
-							mcast_port, local_addr, srvc_port);
+							"multicast: <mcast_addr>%s <mcast_port>%d: <srvc_addr>%s", mcast_addr,
+							mcast_port, local_addr);
 					System.out.println(status);
 				} catch (IOException ex) {
 					System.err.println("[-] Error sending multicast Message");
