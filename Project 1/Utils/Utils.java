@@ -26,6 +26,11 @@ public class Utils {
     public static final int ERR_REGISTER_WRONG_ARGS = 10;
     public static final int ERR_LOOKUP_WRONG_ARGS = 11;
     public static final int ERR_LOGFILE = 12;
+    public static final int ERR_OVER_CHUNK=13;
+    public static final int ERR_NULLBODY_CHUCK=14;
+    public static final int ERR_NULLSENDERID_CHUCK=15;
+    public static final int ERR_NULLFILEID_CHUCK=16;
+    public static final int ERR_SIZECHUNK_CHCONTROLLER=17;
 
     /**
      * Logger
