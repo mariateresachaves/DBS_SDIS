@@ -11,6 +11,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Utils.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NodeCollector {
 
@@ -132,7 +135,7 @@ public class NodeCollector {
 
 		} catch (IOException e) {
 			System.err.println("[-] Fail to receive the packet from multicast");
-			System.exit(Utils.Utils.ERR_RECEIVE);
+			System.exit(Utils.ERR_RECEIVE);
 		}
 		return 0;
 	}
@@ -163,5 +166,23 @@ public class NodeCollector {
 
 		}
 	}
+        
+        //<IP:Port>
+    public ArrayList<String> getNodes() {
+        ArrayList<String> ret= new ArrayList();
+        synchronized (database) {
+            for (Map.Entry<String, Map<String, String>> entry : database.entrySet()) {
+                String key = entry.getKey();
+                Map<String, String> value = entry.getValue();
+                for (Map.Entry<String, String> entry1 : value.entrySet()) {
+                    String key1 = entry1.getKey();
+                    String value1 = entry1.getValue();
+                    ret.add(String.format("%s-%s",key,key1));
+                }
+
+            }
+        }
+        return ret;
+    }
 
 }
