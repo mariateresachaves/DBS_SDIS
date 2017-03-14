@@ -66,8 +66,7 @@ public class Server {
 					DatagramPacket msgPacket = new DatagramPacket(msg.getBytes(), msg.getBytes().length, addr,
 							mcast_port);
 					serverSocket.send(msgPacket);
-					String status = String.format(
-							"multicast: <mcast_addr>%s <mcast_port>%d: <srvc_addr>%s", mcast_addr,
+					String status = String.format("multicast: <mcast_addr>%s <mcast_port>%d: <srvc_addr>%s", mcast_addr,
 							mcast_port, local_addr);
 					System.out.println(status);
 				} catch (IOException ex) {

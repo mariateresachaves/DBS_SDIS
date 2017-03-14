@@ -77,7 +77,7 @@ public class Utils {
 		File f = new File(file);
 		return loadPropertiesFile(f);
 	}
-	
+
 	public static Properties getPropertie() {
 		return p;
 	}
