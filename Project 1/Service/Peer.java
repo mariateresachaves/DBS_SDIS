@@ -1,5 +1,6 @@
 package Service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -14,9 +15,15 @@ public class Peer {
 	private static NodeCollector mc_collector;
 	private static NodeCollector mdb_collector;
 	private static NodeCollector mdr_collector;
+	private static ShellInterpreter shell= new ShellInterpreter();
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
+		//Para teste
+		//File props= new File("properties.txt");
+		//Utils.loadPropertiesFile(props);
+		shell.getShell();
+		
 		// Load properties file
 		// Utils.Utils.loadPropertiesFile(args[1]);
 
@@ -31,7 +38,7 @@ public class Peer {
 			System.exit(Utils.ERR_WRONG_ARGS);
 		}
 
-		mc_rate = Integer.parseInt(Utils.getPropertie().getProperty("MC_RATE"));
+		mc_rate = Integer.parseInt(Utils.getProperties().getProperty("MC_RATE"));
 
 		// Multicast Control Channel
 		String mc_addr = args[0].trim();
@@ -53,6 +60,8 @@ public class Peer {
 		int mdr_port = Integer.parseInt(args[5]);
 
 		mdr_collector = new NodeCollector(mdr_addr, mdr_port);
+		
+		
 
 	}
 
