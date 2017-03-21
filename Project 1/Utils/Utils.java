@@ -79,7 +79,7 @@ public class Utils {
 		return loadPropertiesFile(f);
 	}
 
-	public static Properties getPropertie() {
+	public static Properties getProperties() {
 		return p;
 	}
 
