@@ -2,10 +2,14 @@ package Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Utils {
@@ -81,6 +85,17 @@ public class Utils {
 
 	public static Properties getProperties() {
 		return p;
+	}
+	
+	public void saveProperties(File f) {
+	    try {
+	        
+	        OutputStream out = new FileOutputStream( f );
+	        p.store(out, "Saved"+Calendar.getInstance().getTime());
+	    }
+	    catch (Exception e ) {
+	    	getLogger().log(Level.WARNING, "Couldn't Save Properties File");
+	    }
 	}
 
 }
