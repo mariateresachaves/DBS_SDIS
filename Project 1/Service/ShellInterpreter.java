@@ -19,20 +19,20 @@ public class ShellInterpreter {
 	}
 
 	public void getShell() {
-		
+
 		while (true) {
 			String cmd;
 			System.out.print(">");
-			cmd=sc.nextLine();
-			cmd=cmd.trim();
-			
-			String command=cmd.split(" ")[0];
-			String[] args=new String[command.length()-1];
-			inputCommand(command,args);
+			cmd = sc.nextLine();
+			cmd = cmd.trim();
+
+			String command = cmd.split(" ")[0];
+			String[] args = new String[command.length() - 1];
+			inputCommand(command, args);
 		}
 	}
 
-	private int inputCommand(String cmd,String[] args) {
+	private int inputCommand(String cmd, String[] args) {
 		switch (cmd) {
 		case "BACKUP":
 			System.err.println("[!] Setting BACKUP Protocol");
@@ -54,11 +54,11 @@ public class ShellInterpreter {
 			System.err.println("[!] Setting STATE Protocol");
 			protoState(args);
 			break;
-		case "SETDISK": //Para definir o espaço em disco que pode ser utilizado
+		case "SETDISK": // Para definir o espaço em disco que pode ser utilizado
 			System.err.println("[!] Setting SETDISK Protocol");
 			protoSetDisk(args);
 			break;
-		case "QUIT": //Para definir o espaço em disco que pode ser utilizado
+		case "QUIT": // Para definir o espaço em disco que pode ser utilizado
 			Utils.Utils.getLogger().log(Level.WARNING, "Quitting");
 			System.exit(0);
 			break;
@@ -72,13 +72,24 @@ public class ShellInterpreter {
 
 	private void protoSetDisk(String[] args) {
 		Utils.Utils.getLogger().log(Level.INFO, "Running State Protocol");
-		SetDisk controller = new SetDisk();	
+		SetDisk controller = new SetDisk();
 		
+		//Get Value from ARGS
+		int value;
+		try{
+			value=Integer.parseInt(args[0].trim());
+		}catch(NumberFormatException e){
+			Utils.Utils.getLogger().log(Level.WARNING, "Incorrect Number Format, aborting");
+			return; 
+		}
+		
+		controller.setValue(value);
+
 	}
 
 	private void protoState(String[] args) {
 		Utils.Utils.getLogger().log(Level.INFO, "Running State Protocol");
-		State controller = new State();		
+		State controller = new State();
 	}
 
 	private void protoReclaim(String[] args) {
@@ -93,13 +104,13 @@ public class ShellInterpreter {
 
 	private void protoRestore(String[] args) {
 		Utils.Utils.getLogger().log(Level.INFO, "Running Restore Protocol");
-		Restore controller= new Restore(); 
+		Restore controller = new Restore();
 	}
 
 	private void protoBackup(String[] args) {
 		Utils.Utils.getLogger().log(Level.INFO, "Running Backup Protocol");
-		//Backup controller= new Backup(message)
-		//Um bocado confuso com a implementacao
+		// Backup controller= new Backup(message)
+		// Um bocado confuso com a implementacao
 	}
 
 }
