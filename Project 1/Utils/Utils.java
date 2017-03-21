@@ -31,12 +31,13 @@ public class Utils {
 	public static final int ERR_NULLFILEID_CHUCK = 16;
 	public static final int ERR_SIZECHUNK_CHCONTROLLER = 17;
 	public static final int ERR_REP_DEGREE = 18;
+	public static final int ERR_NO_PROTO = 19;
 
 	/**
 	 * Logger
 	 */
 	private static Logger log;
-	private static Properties p;
+	private static Properties p=new Properties();
 
 	public static Logger getLogger() {
 		if (log == null) {
