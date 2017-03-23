@@ -12,7 +12,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Utils {
+public class Util {
 
 	/**
 	 * Error codes
@@ -45,7 +45,7 @@ public class Utils {
 
 	public static Logger getLogger() {
 		if (log == null) {
-			log = Logger.getLogger(Utils.class.getName());
+			log = Logger.getLogger(Util.class.getName());
 			// Mudar nas props
 			FileHandler f = null;
 			try {

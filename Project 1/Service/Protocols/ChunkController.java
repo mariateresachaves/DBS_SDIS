@@ -10,6 +10,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 
+import Utils.Util;
+
 public class ChunkController {
 
 	public ChunkController() {
@@ -19,8 +21,8 @@ public class ChunkController {
 	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk) throws FileNotFoundException, Exception {
 		ArrayList<Chunk> ret = new ArrayList<>();
 		if (sizeOfChunk < 0 || sizeOfChunk > 64 * 1024) {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
-			System.exit(Utils.Utils.ERR_SIZECHUNK_CHCONTROLLER);
+			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
+			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
 		}
 
 		if (f.isFile() && f.canRead()) {
@@ -55,16 +57,17 @@ public class ChunkController {
 			}
 
 		} else {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
-			System.exit(Utils.Utils.ERR_SIZECHUNK_CHCONTROLLER);
+			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
+			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
 		}
 		return ret;
 	}
 
 	private Chunk makeChunk(File f, byte[] data) throws Exception {
 
-		// MUDAR PARA AS PROPRIEDADES (CRYPTO)
-		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), "SHA-256"), 0,
+		String crypto = Util.getProperties().getProperty("Hash_Crypto");
+
+		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), 0,
 				Base64.getEncoder().encodeToString(data));
 		// Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(),
 		// "SHA-256"), 0, new String(data));

@@ -9,7 +9,7 @@ public class SetDisk {
 	}
 
 	public void setValue(int maxStorage){
-		Utils.Utils.getProperties().setProperty("MaxDiskSpace", maxStorage+"");
+		Utils.Util.getProperties().setProperty("MaxDiskSpace", maxStorage+"");
 	}
 	
 }

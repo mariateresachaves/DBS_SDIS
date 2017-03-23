@@ -44,8 +44,8 @@ public class Chunk {
 		if (senderID != null && !senderID.equalsIgnoreCase("")) {
 			this.senderID = senderID;
 		} else {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL Sender ID");
-			System.exit(Utils.Utils.ERR_NULLSENDERID_CHUCK);
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL Sender ID");
+			System.exit(Utils.Util.ERR_NULLSENDERID_CHUCK);
 		}
 	}
 
@@ -54,8 +54,8 @@ public class Chunk {
 		if (fileID != null && !fileID.equalsIgnoreCase("")) {
 			this.fileID = fileID;
 		} else {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL File ID");
-			System.exit(Utils.Utils.ERR_NULLFILEID_CHUCK);
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL File ID");
+			System.exit(Utils.Util.ERR_NULLFILEID_CHUCK);
 		}
 	}
 
@@ -63,8 +63,8 @@ public class Chunk {
 		if (chunkNo >= 0 && chunkNo <= 999999) {
 			this.chunkNo = chunkNo;
 		} else {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Creating a Chunk with overflowed or underflowed values");
-			System.exit(Utils.Utils.ERR_OVER_CHUNK);
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with overflowed or underflowed values");
+			System.exit(Utils.Util.ERR_OVER_CHUNK);
 		}
 	}
 
@@ -72,8 +72,8 @@ public class Chunk {
 		if (replicationDegree > 0) {
 			this.replicationDegree = replicationDegree;
 		} else {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Invalid replication degree");
-			System.exit(Utils.Utils.ERR_REP_DEGREE);
+			Utils.Util.getLogger().log(Level.SEVERE, "Invalid replication degree");
+			System.exit(Utils.Util.ERR_REP_DEGREE);
 		}
 	}
 
@@ -81,8 +81,8 @@ public class Chunk {
 		if (bodyData != null && !bodyData.equalsIgnoreCase("")) {
 			this.bodyData = bodyData;
 		} else {
-			Utils.Utils.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value");
-			System.exit(Utils.Utils.ERR_NULLBODY_CHUCK);
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value");
+			System.exit(Utils.Util.ERR_NULLBODY_CHUCK);
 		}
 	}
 

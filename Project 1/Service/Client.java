@@ -1,6 +1,6 @@
 package Service;
 
-import Utils.Utils;
+import Utils.Util;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -64,7 +64,7 @@ public class Client {
 
 					} catch (IOException e) {
 						System.err.println("[-] Fail to receive the packet from multicast");
-						System.exit(Utils.ERR_RECEIVE);
+						System.exit(Util.ERR_RECEIVE);
 					}
 
 					// Parse received message
@@ -109,12 +109,12 @@ public class Client {
 
 		catch (UnknownHostException ex) {
 			System.err.println("[-] Fail to create destination address");
-			System.exit(Utils.ERR_DEST_ADDR);
+			System.exit(Util.ERR_DEST_ADDR);
 		}
 
 		catch (IOException ex) {
 			System.err.println("[-] Fail to send the packet");
-			System.exit(Utils.ERR_SEND);
+			System.exit(Util.ERR_SEND);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class Client {
 		// Number of arguments verification
 		if (opnd.length != 2) {
 			System.err.println("[-] Wrong number of arguments for REGISTER operation");
-			System.exit(Utils.ERR_REGISTER_WRONG_ARGS);
+			System.exit(Util.ERR_REGISTER_WRONG_ARGS);
 		}
 		// Command construction
 		else {
@@ -139,7 +139,7 @@ public class Client {
 		// Number of arguments verification
 		if (opnd.length != 1) {
 			System.err.println("[-] Wrong number of arguments for LOOKUP operation");
-			System.exit(Utils.ERR_LOOKUP_WRONG_ARGS);
+			System.exit(Util.ERR_LOOKUP_WRONG_ARGS);
 		}
 		// Command construction
 		else {
@@ -180,14 +180,14 @@ public class Client {
 	public static void check_args(String[] args) {
 		if (args.length < 4) {
 			System.err.println("[-] Wrong number of arguments");
-			System.exit(Utils.ERR_NUM_ARGS);
+			System.exit(Util.ERR_NUM_ARGS);
 		}
 	}
 
 	public static void check_plate_format(String plate) {
 		if (!plate.matches("[A-Za-z0-9]{2}-[A-Za-z0-9]{2}-[A-Za-z0-9]{2}")) {
 			System.err.println("[-] Wrong plate format");
-			System.exit(Utils.ERR_PLATE_NUM);
+			System.exit(Util.ERR_PLATE_NUM);
 		}
 	}
 }

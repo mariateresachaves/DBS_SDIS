@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import Utils.Utils;
+import Utils.Util;
 
 public class Peer {
 
@@ -24,27 +24,27 @@ public class Peer {
 
 	private static ShellInterpreter shell = new ShellInterpreter();
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			System.out.println("Usage: Peer <PropertiesFile>");
-			Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
-			System.exit(Utils.ERR_WRONG_ARGS);
+			Util.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
+			System.exit(Util.ERR_WRONG_ARGS);
 		}
 
 		// Load properties file
-		Utils.loadPropertiesFile(args[0]);
+		Util.loadPropertiesFile(args[0]);
 
 		// Get multicast channels properties
-		mc_rate = Integer.parseInt(Utils.getProperties().getProperty("MC_RATE"));
+		mc_rate = Integer.parseInt(Util.getProperties().getProperty("MC_RATE"));
 
-		mc_ip = Utils.getProperties().getProperty("MC_IP");
-		mc_port = Integer.parseInt(Utils.getProperties().getProperty("MC_PORT"));
+		mc_ip = Util.getProperties().getProperty("MC_IP");
+		mc_port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
 
-		mdb_ip = Utils.getProperties().getProperty("MDB_IP");
-		mdb_port = Integer.parseInt(Utils.getProperties().getProperty("MDB_PORT"));
+		mdb_ip = Util.getProperties().getProperty("MDB_IP");
+		mdb_port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
 
-		mdr_ip = Utils.getProperties().getProperty("MDR_IP");
-		mdr_port = Integer.parseInt(Utils.getProperties().getProperty("MDR_PORT"));
+		mdr_ip = Util.getProperties().getProperty("MDR_IP");
+		mdr_port = Integer.parseInt(Util.getProperties().getProperty("MDR_PORT"));
 
 		// Multicast Control Channel
 		mc_server = new Server(mc_ip, mc_port, mc_rate);

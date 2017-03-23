@@ -1,6 +1,5 @@
 package Service;
 
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -9,7 +8,7 @@ import Service.Protocols.Restore;
 import Service.Protocols.Deletion;
 import Service.Protocols.Reclaim;
 import Service.Protocols.State;
-import Utils.Utils;
+import Utils.Util;
 import Service.Protocols.SetDisk;
 
 public class ShellInterpreter {
@@ -20,7 +19,7 @@ public class ShellInterpreter {
 
 	}
 
-	public void getShell() throws IOException {
+	public void getShell() throws Exception {
 
 		while (true) {
 			String cmd;
@@ -39,13 +38,13 @@ public class ShellInterpreter {
 		}
 	}
 
-	private int inputCommand(String cmd, String[] args) throws IOException {
+	private int inputCommand(String cmd, String[] args) throws Exception {
 		switch (cmd.toUpperCase()) {
 		case "BACKUP":
 			// Incorrect number of arguments
 			if (args.length != 2) {
 				System.out.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the BACKUP command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the BACKUP command");
 			}
 			// Correct number of arguments
 			else {
@@ -57,7 +56,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: RESTORE <FilePathName>");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the RESTORE command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RESTORE command");
 			}
 			// Correct number of arguments
 			else {
@@ -69,7 +68,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: DELETE <FilePathName>");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the DELETE command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the DELETE command");
 			}
 			// Correct number of arguments
 			else {
@@ -81,7 +80,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: RECLAIM");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the RECLAIM command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RECLAIM command");
 			}
 			// Correct number of arguments
 			else {
@@ -93,7 +92,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: STATE");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the STATE command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the STATE command");
 			}
 			// Correct number of arguments
 			else {
@@ -105,7 +104,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the SETDISK command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the SETDISK command");
 			}
 			// Correct number of arguments
 			else {
@@ -117,16 +116,16 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: QUIT");
-				Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the QUIT command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the QUIT command");
 			}
 			// Correct number of arguments
 			else {
-				Utils.getLogger().log(Level.WARNING, "Quitting");
+				Util.getLogger().log(Level.WARNING, "Quitting");
 				System.exit(0);
 			}
 			break;
 		default:
-			Utils.getLogger().log(Level.WARNING, "No Protocol Implementation");
+			Util.getLogger().log(Level.WARNING, "No Protocol Implementation");
 			break;
 		}
 
@@ -134,7 +133,7 @@ public class ShellInterpreter {
 	}
 
 	private void protoSetDisk(String[] args) {
-		Utils.getLogger().log(Level.INFO, "Running State Protocol");
+		Util.getLogger().log(Level.INFO, "Running State Protocol");
 		SetDisk controller = new SetDisk(args[0]);
 
 		// Get Value from ARGS
@@ -142,7 +141,7 @@ public class ShellInterpreter {
 		try {
 			value = Integer.parseInt(args[0].trim());
 		} catch (NumberFormatException e) {
-			Utils.getLogger().log(Level.WARNING, "Incorrect Number Format, aborting");
+			Util.getLogger().log(Level.WARNING, "Incorrect Number Format, aborting");
 			return;
 		}
 
@@ -151,27 +150,27 @@ public class ShellInterpreter {
 	}
 
 	private void protoState(String[] args) {
-		Utils.getLogger().log(Level.INFO, "Running State Protocol");
+		Util.getLogger().log(Level.INFO, "Running State Protocol");
 		State controller = new State();
 	}
 
 	private void protoReclaim(String[] args) {
-		Utils.getLogger().log(Level.INFO, "Running Reclaim Protocol");
+		Util.getLogger().log(Level.INFO, "Running Reclaim Protocol");
 		Reclaim controller = new Reclaim();
 	}
 
 	private void protoDelete(String[] args) {
-		Utils.getLogger().log(Level.INFO, "Running Delete Protocol");
+		Util.getLogger().log(Level.INFO, "Running Delete Protocol");
 		Deletion controller = new Deletion(args[0]);
 	}
 
 	private void protoRestore(String[] args) {
-		Utils.getLogger().log(Level.INFO, "Running Restore Protocol");
+		Util.getLogger().log(Level.INFO, "Running Restore Protocol");
 		Restore controller = new Restore(args[0]);
 	}
 
-	private void protoBackup(String[] args) throws IOException {
-		Utils.getLogger().log(Level.INFO, "Running Backup Protocol");
+	private void protoBackup(String[] args) throws Exception {
+		Util.getLogger().log(Level.INFO, "Running Backup Protocol");
 		Backup controller = new Backup(args[0], args[1]);
 	}
 

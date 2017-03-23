@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Backup {
 
@@ -13,14 +14,35 @@ public class Backup {
 	// Chunk(String senderID, String fileID, int chunkNo, String bodyData)
 
 	private static String version;
-	private static String senderId;
-	private static String fileId;
+	private static String senderID;
+	private static String fileID;
 	private static int chunkNo;
-	private static String replicationDeg;
+	private static int replicationDeg;
 	private static String body;
 	private static Chunk chunk;
 
-	public Backup(String filePathName, String replicationDegree) throws IOException {
+	public Backup(String filePathName, String replicationDegree) throws Exception {
+		
+		File f = new File(filePathName);
+		
+		// Split file into chunks
+		ChunkController controller = new ChunkController();
+		List<Chunk> chunks = controller.breakIntoChunks(f, 64*1024);
+		
+		for(Chunk chunk : chunks) {
+			senderID = chunk.getSenderID();
+			fileID = chunk.getFileID();
+			chunkNo = chunk.getChunkNo();
+			replicationDeg = chunk.getReplicationDegree();
+			body = chunk.getBodyData();
+			
+			// Just a Test
+			//System.out.println("senderID - " + senderID);
+			//System.out.println("fileID - " + fileID);
+			//System.out.println("chunkNo - " + chunkNo);
+			//System.out.println("replicationDeg - " + replicationDeg);
+			//System.out.println("body - " + body);
+		}
 		
 		// Just a Test
 		System.out.println("File path name: " + filePathName);
