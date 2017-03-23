@@ -20,8 +20,16 @@ public class Backup {
 	private static String body;
 	private static Chunk chunk;
 
-	public Backup(byte[] message) throws IOException {
-		String s_message = new String(message);
+	public Backup(String filePathName, String replicationDegree) throws IOException {
+		
+		// Just a Test
+		System.out.println("File path name: " + filePathName);
+		System.out.println("Replication degree: " + replicationDegree);
+		
+		
+		/* ------------ OLD CODE ---------- */
+		
+		/*String s_message = new String(message);
 		String[] header = s_message.split(" ");
 
 		version = header[1];
@@ -47,7 +55,7 @@ public class Backup {
 			if (chunk.getBodyData().length() > 0) {
 				Files.write(p_file, chunk.getBodyData().getBytes());
 			}
-		}
+		}*/
 	}
 
 }

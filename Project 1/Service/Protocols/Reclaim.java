@@ -3,7 +3,8 @@ package Service.Protocols;
 public class Reclaim {
 
 	public Reclaim() {
-		// TODO Auto-generated constructor stub
+		// Just a Test
+		System.out.println("No arguments for reclaim subprotocol.");
 	}
 
 	public void run() {

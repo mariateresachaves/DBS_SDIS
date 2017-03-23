@@ -1,5 +1,6 @@
 package Service;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -19,7 +20,7 @@ public class ShellInterpreter {
 
 	}
 
-	public void getShell() {
+	public void getShell() throws IOException {
 
 		while (true) {
 			String cmd;
@@ -38,8 +39,8 @@ public class ShellInterpreter {
 		}
 	}
 
-	private int inputCommand(String cmd, String[] args) {
-		switch (cmd) {
+	private int inputCommand(String cmd, String[] args) throws IOException {
+		switch (cmd.toUpperCase()) {
 		case "BACKUP":
 			// Incorrect number of arguments
 			if (args.length != 2) {
@@ -134,7 +135,7 @@ public class ShellInterpreter {
 
 	private void protoSetDisk(String[] args) {
 		Utils.getLogger().log(Level.INFO, "Running State Protocol");
-		SetDisk controller = new SetDisk();
+		SetDisk controller = new SetDisk(args[0]);
 
 		// Get Value from ARGS
 		int value;
@@ -161,18 +162,17 @@ public class ShellInterpreter {
 
 	private void protoDelete(String[] args) {
 		Utils.getLogger().log(Level.INFO, "Running Delete Protocol");
-		Deletion controller = new Deletion();
+		Deletion controller = new Deletion(args[0]);
 	}
 
 	private void protoRestore(String[] args) {
 		Utils.getLogger().log(Level.INFO, "Running Restore Protocol");
-		Restore controller = new Restore();
+		Restore controller = new Restore(args[0]);
 	}
 
-	private void protoBackup(String[] args) {
+	private void protoBackup(String[] args) throws IOException {
 		Utils.getLogger().log(Level.INFO, "Running Backup Protocol");
-		// Backup controller= new Backup(message)
-		// Um bocado confuso com a implementacao
+		Backup controller = new Backup(args[0], args[1]);
 	}
 
 }
