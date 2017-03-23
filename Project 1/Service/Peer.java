@@ -11,6 +11,9 @@ public class Peer {
 
 	private static Server mc_server;
 	private static int mc_rate;
+	private static String mc_ip;
+	private static String mdb_ip;
+	private static String mdr_ip;
 
 	private static NodeCollector mc_collector;
 	private static NodeCollector mdb_collector;
@@ -24,21 +27,21 @@ public class Peer {
 		//Utils.loadPropertiesFile(props);
 		shell.getShell();
 		
-		// Load properties file
-		// Utils.Utils.loadPropertiesFile(args[1]);
-
-		// Join multicast groups
-		// String mc_ip = Utils.Utils.getPropertie().getProperty("MC_IP");
-		// String mdb_ip = Utils.Utils.getPropertie().getProperty("MDB_IP");
-		// String mdr_ip = Utils.Utils.getPropertie().getProperty("MDR_IP");
-
-		if (args.length < 6) {
-			System.out.println("Usage: Peer <MC_IP> <MC_Port> <MDB_IP> <MDB_Port> <MDR_IP> <MDR_Port>");
+		if (args.length != 1) {
+			System.out.println("Usage: Peer <PropertiesFile>");
 			Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
 			System.exit(Utils.ERR_WRONG_ARGS);
 		}
+		
+		// Load properties file
+		Utils.loadPropertiesFile(args[0]);
 
+		// Get multicast channels properties
 		mc_rate = Integer.parseInt(Utils.getProperties().getProperty("MC_RATE"));
+		mc_ip = Utils.getProperties().getProperty("MC_IP");
+		mdb_ip = Utils.getProperties().getProperty("MDB_IP");
+		mdr_ip = Utils.getProperties().getProperty("MDR_IP");
+		
 
 		// Multicast Control Channel
 		String mc_addr = args[0].trim();
