@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import Utils.Util;
+
 public class Backup {
 
 	// PUTCHUNK <Version> <SenderId> <FileId> <ChunkNo> <ReplicationDeg>
@@ -24,10 +26,11 @@ public class Backup {
 		
 		version = "1.0"; // TODO: mudar para poder ser generico
 		File f = new File(filePathName);
+		int chunkSize = Integer.parseInt(Util.getProperties().getProperty("CHUNK_SIZE"));
 		
 		// Split file into chunks
 		ChunkController controller = new ChunkController();
-		List<Chunk> chunks = controller.breakIntoChunks(f, 64*1024*1024);
+		List<Chunk> chunks = controller.breakIntoChunks(f, chunkSize);
 		
 		for(Chunk chunk : chunks) {
 			senderID = chunk.getSenderID();
@@ -39,7 +42,7 @@ public class Backup {
 			// Just a Test
 			System.out.println("version - " + version);
 			System.out.println("senderID - " + senderID);
-			//System.out.println("fileID - " + fileID);
+			System.out.println("fileID - " + fileID);
 			System.out.println("chunkNo - " + chunkNo);
 			System.out.println("replicationDeg - " + replicationDeg);
 			//System.out.println("body - " + body);
