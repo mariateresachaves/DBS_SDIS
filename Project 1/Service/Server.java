@@ -68,7 +68,7 @@ public class Server {
 					serverSocket.send(msgPacket);
 					String status = String.format("multicast: <mcast_addr>%s <mcast_port>%d: <srvc_addr>%s", mcast_addr,
 							mcast_port, local_addr);
-					System.out.println(status);
+					// System.out.println(status);
 				} catch (IOException ex) {
 					System.err.println("[-] Error sending multicast Message");
 					System.exit(Utils.ERR_SENDING_ADV);

@@ -118,14 +118,15 @@ public class NodeCollector {
 				// removeTimeOutNodes();
 				// test
 				synchronized (database) {
-					System.out.println("DATABASE_DUMP");
+					// System.out.println("DATABASE_DUMP");
 					for (Map.Entry<String, Map<String, String>> entry : database.entrySet()) {
 						String key = entry.getKey();
 						Map<String, String> value = entry.getValue();
 						for (Map.Entry<String, String> entry1 : value.entrySet()) {
 							String key1 = entry1.getKey();
 							String value1 = entry1.getValue();
-							System.out.println(key + "->\t" + key1 + "->\t" + value1);
+							// System.out.println(key + "->\t" + key1 + "->\t" +
+							// value1);
 						}
 
 					}

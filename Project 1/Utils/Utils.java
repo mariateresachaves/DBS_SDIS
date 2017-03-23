@@ -41,7 +41,7 @@ public class Utils {
 	 * Logger
 	 */
 	private static Logger log;
-	private static Properties p=new Properties();
+	private static Properties p = new Properties();
 
 	public static Logger getLogger() {
 		if (log == null) {
@@ -67,35 +67,35 @@ public class Utils {
 		p = new Properties();
 		InputStream inputStream;
 
-		inputStream = Thread.currentThread().getContextClassLoader().getClass().getClassLoader()
-				.getResourceAsStream(f.getPath());
+		inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(f.getPath());
 
 		if (inputStream != null) {
 			p.load(inputStream);
 		} else {
 			throw new FileNotFoundException("property file '" + p + "' not found in the classpath");
 		}
+
 		return p;
 	}
 
 	public static Properties loadPropertiesFile(String file) throws FileNotFoundException, IOException {
 		File f = new File(file);
+
 		return loadPropertiesFile(f);
 	}
 
 	public static Properties getProperties() {
 		return p;
 	}
-	
+
 	public void saveProperties(File f) {
-	    try {
-	        
-	        OutputStream out = new FileOutputStream( f );
-	        p.store(out, "Saved"+Calendar.getInstance().getTime());
-	    }
-	    catch (Exception e ) {
-	    	getLogger().log(Level.WARNING, "Couldn't Save Properties File");
-	    }
+		try {
+
+			OutputStream out = new FileOutputStream(f);
+			p.store(out, "Saved" + Calendar.getInstance().getTime());
+		} catch (Exception e) {
+			getLogger().log(Level.WARNING, "Couldn't Save Properties File");
+		}
 	}
 
 }

@@ -12,60 +12,56 @@ public class Peer {
 	private static Server mc_server;
 	private static int mc_rate;
 	private static String mc_ip;
+	private static int mc_port;
 	private static String mdb_ip;
+	private static int mdb_port;
 	private static String mdr_ip;
+	private static int mdr_port;
 
 	private static NodeCollector mc_collector;
 	private static NodeCollector mdb_collector;
 	private static NodeCollector mdr_collector;
-	private static ShellInterpreter shell= new ShellInterpreter();
+
+	private static ShellInterpreter shell = new ShellInterpreter();
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-
-		//Para teste
-		//File props= new File("properties.txt");
-		//Utils.loadPropertiesFile(props);
-		shell.getShell();
-		
 		if (args.length != 1) {
 			System.out.println("Usage: Peer <PropertiesFile>");
 			Utils.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
 			System.exit(Utils.ERR_WRONG_ARGS);
 		}
-		
+
 		// Load properties file
 		Utils.loadPropertiesFile(args[0]);
 
 		// Get multicast channels properties
 		mc_rate = Integer.parseInt(Utils.getProperties().getProperty("MC_RATE"));
+
 		mc_ip = Utils.getProperties().getProperty("MC_IP");
+		mc_port = Integer.parseInt(Utils.getProperties().getProperty("MC_PORT"));
+
 		mdb_ip = Utils.getProperties().getProperty("MDB_IP");
+		mdb_port = Integer.parseInt(Utils.getProperties().getProperty("MDB_PORT"));
+
 		mdr_ip = Utils.getProperties().getProperty("MDR_IP");
-		
+		mdr_port = Integer.parseInt(Utils.getProperties().getProperty("MDR_PORT"));
 
 		// Multicast Control Channel
-		String mc_addr = args[0].trim();
-		int mc_port = Integer.parseInt(args[1]);
-
-		mc_server = new Server(mc_addr, mc_port, mc_rate);
+		mc_server = new Server(mc_ip, mc_port, mc_rate);
 		mc_server.createMenance();
 
-		mc_collector = new NodeCollector(mc_addr, mc_port);
+		mc_collector = new NodeCollector(mc_ip, mc_port);
 
 		// Multicast Data Channel for BACKUP
-		String mdb_addr = args[2].trim();
-		int mdb_port = Integer.parseInt(args[3]);
-
-		mdb_collector = new NodeCollector(mdb_addr, mdb_port);
+		mdb_collector = new NodeCollector(mdb_ip, mdb_port);
 
 		// Multicast Data Channel for RESTORE
-		String mdr_addr = args[4].trim();
-		int mdr_port = Integer.parseInt(args[5]);
+		mdr_collector = new NodeCollector(mdr_ip, mdr_port);
 
-		mdr_collector = new NodeCollector(mdr_addr, mdr_port);
-		
-		
+		// Shell Interpreter
+		shell.getShell();
 
+		// TODO: Implementar um listner para ler as respostas dos protocolos
 	}
 
 }
