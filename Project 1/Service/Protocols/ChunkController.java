@@ -20,54 +20,49 @@ public class ChunkController {
 
 	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk) throws FileNotFoundException, Exception {
 		ArrayList<Chunk> ret = new ArrayList<>();
-		if (sizeOfChunk < 0 || sizeOfChunk > 64 * 1024) {
+
+		if (sizeOfChunk < 0) {
 			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
 			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
 		}
 
-		if (f.isFile() && f.canRead()) {
-			int contador = 0, seek = 0;
-			byte[] tempValues = new byte[sizeOfChunk];
-			byte temp;
-			FileInputStream fip = new FileInputStream(f);
+		if (f.isFile()) {
+			int bytes2write = 0, chunkNo = 0;
 			byte[] fileBytes = Files.readAllBytes(f.toPath());
-			// aqui, vou ler e dividir o array, já estou farto
+			int fileSize = (int) f.length();
 
-			for (int i = 0; i < fileBytes.length; i++) {
+			bytes2write = fileSize;
+			for (int i = 0; bytes2write > 0; chunkNo++) {
+				byte[] chunkData = new byte[sizeOfChunk];
 
-				if (contador >= sizeOfChunk) {
-					// check for end of stream
-
-					ret.add(makeChunk(f, tempValues));
-
-					// Reset aos valores
-					contador = 0;
-					tempValues = new byte[sizeOfChunk];
-					tempValues[contador++] = fileBytes[i];
-				} else {
-					tempValues[contador++] = fileBytes[i];
+				// Check if can create a chunk with remaining bytes2write
+				if (bytes2write / sizeOfChunk > 0) {
+					System.arraycopy(fileBytes, i, chunkData, 0, sizeOfChunk);
+					bytes2write -= sizeOfChunk;
+					i += sizeOfChunk;
 				}
-
-			}
-			if (contador >= 1) {
-				// Flush data
-				byte[] flushedData = new byte[contador];
-				System.arraycopy(tempValues, 0, flushedData, 0, contador);
-				ret.add(makeChunk(f, flushedData));
+				// File size less than chunk size or file size not pair with
+				// chunk size
+				else {
+					System.arraycopy(fileBytes, i, chunkData, 0, bytes2write);
+					bytes2write -= bytes2write;
+					i += bytes2write;
+				}
+				ret.add(makeChunk(f, chunkNo, chunkData));
 			}
 
 		} else {
-			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
+			Util.getLogger().log(Level.SEVERE, "Cannot read file.");
 			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
 		}
 		return ret;
 	}
 
-	private Chunk makeChunk(File f, byte[] data) throws Exception {
+	private Chunk makeChunk(File f, int chunkNo, byte[] data) throws Exception {
 
 		String crypto = Util.getProperties().getProperty("Hash_Crypto");
 
-		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), 0,
+		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo,
 				Base64.getEncoder().encodeToString(data));
 		// Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(),
 		// "SHA-256"), 0, new String(data));

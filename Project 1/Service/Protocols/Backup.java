@@ -19,15 +19,15 @@ public class Backup {
 	private static int chunkNo;
 	private static int replicationDeg;
 	private static String body;
-	private static Chunk chunk;
 
 	public Backup(String filePathName, String replicationDegree) throws Exception {
 		
+		version = "1.0"; // TODO: mudar para poder ser generico
 		File f = new File(filePathName);
 		
 		// Split file into chunks
 		ChunkController controller = new ChunkController();
-		List<Chunk> chunks = controller.breakIntoChunks(f, 64*1024);
+		List<Chunk> chunks = controller.breakIntoChunks(f, 64*1024*1024);
 		
 		for(Chunk chunk : chunks) {
 			senderID = chunk.getSenderID();
@@ -37,10 +37,11 @@ public class Backup {
 			body = chunk.getBodyData();
 			
 			// Just a Test
-			//System.out.println("senderID - " + senderID);
+			System.out.println("version - " + version);
+			System.out.println("senderID - " + senderID);
 			//System.out.println("fileID - " + fileID);
-			//System.out.println("chunkNo - " + chunkNo);
-			//System.out.println("replicationDeg - " + replicationDeg);
+			System.out.println("chunkNo - " + chunkNo);
+			System.out.println("replicationDeg - " + replicationDeg);
 			//System.out.println("body - " + body);
 		}
 		
