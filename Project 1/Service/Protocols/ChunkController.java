@@ -18,7 +18,8 @@ public class ChunkController {
 
 	}
 
-	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk, int replicationDegree) throws FileNotFoundException, Exception {
+	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk, int replicationDegree)
+			throws FileNotFoundException, Exception {
 		ArrayList<Chunk> ret = new ArrayList<>();
 
 		if (sizeOfChunk < 0) {

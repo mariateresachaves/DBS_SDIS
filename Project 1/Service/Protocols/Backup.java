@@ -13,7 +13,6 @@ public class Backup {
 
 	// PUTCHUNK <Version> <SenderId> <FileId> <ChunkNo> <ReplicationDeg>
 	// <CRLF><CRLF><Body>
-	// Chunk(String senderID, String fileID, int chunkNo, String bodyData)
 
 	private static String version;
 	private static String senderID;
@@ -23,65 +22,34 @@ public class Backup {
 	private static String body;
 
 	public Backup(String filePathName, String replicationDegree) throws Exception {
-		
+
 		version = "1.0"; // TODO: mudar para poder ser generico
 		File f = new File(filePathName);
 		int chunkSize = Integer.parseInt(Util.getProperties().getProperty("CHUNK_SIZE"));
-		
+
 		// Split file into chunks
 		ChunkController controller = new ChunkController();
 		List<Chunk> chunks = controller.breakIntoChunks(f, chunkSize, Integer.parseInt(replicationDegree));
-		
-		for(Chunk chunk : chunks) {
+
+		for (Chunk chunk : chunks) {
 			senderID = chunk.getSenderID();
 			fileID = chunk.getFileID();
 			chunkNo = chunk.getChunkNo();
 			replicationDeg = chunk.getReplicationDegree();
 			body = chunk.getBodyData();
 			
-			// Just a Test
-			System.out.println("version - " + version);
-			System.out.println("senderID - " + senderID);
-			System.out.println("fileID - " + fileID);
-			System.out.println("chunkNo - " + chunkNo);
-			System.out.println("replicationDeg - " + replicationDeg);
-			//System.out.println("body - " + body);
+			// TODO: Initiator-peer sends to the MDB a message:
+			// PUTCHUNK <Version> <SenderId> <FileId> <ChunkNo> <ReplicationDeg> <CRLF><CRLF><Body>
+
+
+			/* TODO:
+			 * A peer that stores the chunk upon receiving the PUTCHUNK message,
+			 * should reply by sending on the multicast control channel (MC) a
+			 * confirmation message with the following format:
+			 * 
+			 * STORED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
+			 */
 		}
-		
-		// Just a Test
-		System.out.println("File path name: " + filePathName);
-		System.out.println("Replication degree: " + replicationDegree);
-		
-		
-		/* ------------ OLD CODE ---------- */
-		
-		/*String s_message = new String(message);
-		String[] header = s_message.split(" ");
-
-		version = header[1];
-		senderId = header[2];
-		fileId = header[3];
-		chunkNo = Integer.parseInt(header[4]);
-		replicationDeg = header[5];
-		body = header[6];
-
-		if (header[0].equals("PUTCHUNK")) { // valid PUTCHUNK message
-			chunk = new Chunk(senderId, fileId, chunkNo, body);
-
-			// TODO: Falta colocar aqui o chunkController
-
-			// TODO: Verificar se o diretorio existe
-			// Se não existir criar o diretorio que esta
-			// especificado no ficheiro Properties
-
-			String filename = chunk.getFileID() + "." + chunk.getChunkNo() + ".chunk";
-			File file = new File(filename);
-
-			Path p_file = Paths.get(filename);
-			if (chunk.getBodyData().length() > 0) {
-				Files.write(p_file, chunk.getBodyData().getBytes());
-			}
-		}*/
 	}
 
 }
