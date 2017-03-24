@@ -1,9 +1,11 @@
 package Service;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 
 import Service.Protocols.Backup;
+import Service.Protocols.Chunk;
 import Service.Protocols.Restore;
 import Service.Protocols.Deletion;
 import Service.Protocols.Reclaim;
@@ -172,6 +174,12 @@ public class ShellInterpreter {
 	private void protoBackup(String[] args) throws Exception {
 		Util.getLogger().log(Level.INFO, "Running Backup Protocol");
 		Backup controller = new Backup(args[0], args[1]);
+		
+		List<Chunk> chunks = controller.get_chunks();
+		
+		for(Chunk chunk : chunks) {
+			controller.send_message("PUTCHUNK");
+		}
 	}
 
 }

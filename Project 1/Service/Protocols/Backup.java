@@ -11,15 +11,10 @@ import Utils.Util;
 
 public class Backup {
 
-	// PUTCHUNK <Version> <SenderId> <FileId> <ChunkNo> <ReplicationDeg>
-	// <CRLF><CRLF><Body>
+	// PUTCHUNK <Version> <SenderId> <FileId> <ChunkNo> <ReplicationDeg> <CRLF><CRLF><Body>
 
+	private static List<Chunk> chunks;
 	private static String version;
-	private static String senderID;
-	private static String fileID;
-	private static int chunkNo;
-	private static int replicationDeg;
-	private static String body;
 
 	public Backup(String filePathName, String replicationDegree) throws Exception {
 
@@ -29,27 +24,37 @@ public class Backup {
 
 		// Split file into chunks
 		ChunkController controller = new ChunkController();
-		List<Chunk> chunks = controller.breakIntoChunks(f, chunkSize, Integer.parseInt(replicationDegree));
+		chunks = controller.breakIntoChunks(f, chunkSize, Integer.parseInt(replicationDegree));
+	}
 
-		for (Chunk chunk : chunks) {
-			senderID = chunk.getSenderID();
-			fileID = chunk.getFileID();
-			chunkNo = chunk.getChunkNo();
-			replicationDeg = chunk.getReplicationDegree();
-			body = chunk.getBodyData();
-			
+	public static void send_message(String msg_name) {
+
+		switch (msg_name.toUpperCase()) {
+		case "PUTCHUNK":
+			// Backs up each chunk independently
+
 			// TODO: Initiator-peer sends to the MDB a message:
 			// PUTCHUNK <Version> <SenderId> <FileId> <ChunkNo> <ReplicationDeg> <CRLF><CRLF><Body>
+			break;
 
-
-			/* TODO:
-			 * A peer that stores the chunk upon receiving the PUTCHUNK message,
-			 * should reply by sending on the multicast control channel (MC) a
-			 * confirmation message with the following format:
+		case "STORED":
+			/*
+			 * Maybe on Listner!
+			 * 
+			 * TODO: A peer that stores the chunk upon receiving the PUTCHUNK
+			 * message, should reply by sending on the multicast control channel
+			 * (MC) a confirmation message with the following format:
 			 * 
 			 * STORED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
 			 */
+			break;
+
+		default:
+			break;
 		}
 	}
 
+	public static List<Chunk> get_chunks() {
+		return chunks;
+	}
 }
