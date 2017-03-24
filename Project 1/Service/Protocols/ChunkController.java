@@ -18,7 +18,7 @@ public class ChunkController {
 
 	}
 
-	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk) throws FileNotFoundException, Exception {
+	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk, int replicationDegree) throws FileNotFoundException, Exception {
 		ArrayList<Chunk> ret = new ArrayList<>();
 
 		if (sizeOfChunk < 0) {
@@ -48,7 +48,7 @@ public class ChunkController {
 					bytes2write -= bytes2write;
 					i += bytes2write;
 				}
-				ret.add(makeChunk(f, chunkNo, chunkData));
+				ret.add(makeChunk(f, chunkNo, replicationDegree, chunkData));
 			}
 
 		} else {
@@ -58,14 +58,13 @@ public class ChunkController {
 		return ret;
 	}
 
-	private Chunk makeChunk(File f, int chunkNo, byte[] data) throws Exception {
+	private Chunk makeChunk(File f, int chunkNo, int replicationDegree, byte[] data) throws Exception {
 
 		String crypto = Util.getProperties().getProperty("Hash_Crypto");
 
-		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo,
+		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo, replicationDegree,
 				Base64.getEncoder().encodeToString(data));
-		// Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(),
-		// "SHA-256"), 0, new String(data));
+
 		return c;
 	}
 

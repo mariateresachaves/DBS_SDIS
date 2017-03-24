@@ -13,10 +13,11 @@ public class Chunk {
 	public Chunk() {
 	}
 
-	public Chunk(String senderID, String fileID, int chunkNo, String bodyData) {
+	public Chunk(String senderID, String fileID, int chunkNo, int replicationDegree, String bodyData) {
 		setSenderID(senderID);
 		setFileID(fileID);
 		setChunkNo(chunkNo);
+		setReplicationDegree(replicationDegree);
 		setBodyData(bodyData);
 	}
 

@@ -30,7 +30,7 @@ public class Backup {
 		
 		// Split file into chunks
 		ChunkController controller = new ChunkController();
-		List<Chunk> chunks = controller.breakIntoChunks(f, chunkSize);
+		List<Chunk> chunks = controller.breakIntoChunks(f, chunkSize, Integer.parseInt(replicationDegree));
 		
 		for(Chunk chunk : chunks) {
 			senderID = chunk.getSenderID();
