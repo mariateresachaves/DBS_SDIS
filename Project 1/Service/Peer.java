@@ -1,8 +1,6 @@
 package Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import Utils.Util;
@@ -23,6 +21,8 @@ public class Peer {
 	private static NodeCollector mdr_collector;
 
 	private static ShellInterpreter shell = new ShellInterpreter();
+
+	private static final ArrayList<StoredChunk> database = new ArrayList<StoredChunk>();
 
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
@@ -62,6 +62,15 @@ public class Peer {
 		shell.getShell();
 
 		// TODO: Implementar um listner para ler as respostas dos protocolos
+	}
+
+	public static ArrayList<StoredChunk> getDB() {
+		return database;
+	}
+
+	public static void saveChunkToDB(String senderID, String fileID, int chunkNo) {
+		StoredChunk chunk = new StoredChunk(senderID, fileID, chunkNo);
+		database.add(chunk);
 	}
 
 }
