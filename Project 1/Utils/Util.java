@@ -36,6 +36,9 @@ public class Util {
 	public static final int ERR_SIZECHUNK_CHCONTROLLER = 17;
 	public static final int ERR_REP_DEGREE = 18;
 	public static final int ERR_NO_PROTO = 19;
+	public static final int ERR_CHUNKSTORAGE = 20;
+	public static final int ERR_CREATELISTMDB = 21;
+	public static final int ERR_SENDSTORED=21;
 
 	/**
 	 * Logger
