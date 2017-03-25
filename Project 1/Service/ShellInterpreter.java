@@ -1,5 +1,6 @@
 package Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -161,25 +162,62 @@ public class ShellInterpreter {
 		Reclaim controller = new Reclaim();
 	}
 
-	private void protoDelete(String[] args) {
+	private void protoDelete(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Delete Protocol");
 		Deletion controller = new Deletion(args[0]);
+		
+		controller.send_delete();
+
+		// TODO:
+		/*
+		 * This message does not elicit any response message. An implementation,
+		 * may send this message as many times as it is deemed necessary to
+		 * ensure that all space used by chunks of the deleted file are deleted
+		 * in spite of the loss of some messages.
+		 */
 	}
 
-	private void protoRestore(String[] args) {
+	private void protoRestore(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Restore Protocol");
 		Restore controller = new Restore(args[0]);
+
+		controller.send_getchunk();
+
+		// TODO:
+		/*
+		 * Upon receiving this message, a peer that has a copy of the specified
+		 * chunk shall send it in the body of a CHUNK message via the MDR
+		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF><Body>
+		 */
+
+		/*
+		 * To avoid flooding the host with CHUNK messages, each peer shall wait
+		 * for a random time uniformly distributed between 0 and 400 ms, before
+		 * sending the CHUNK message. If it receives a CHUNK message before that
+		 * time expires, it will not send the CHUNK message.
+		 */
 	}
 
 	private void protoBackup(String[] args) throws Exception {
 		Util.getLogger().log(Level.INFO, "Running Backup Protocol");
+
 		Backup controller = new Backup(args[0], args[1]);
-		
 		List<Chunk> chunks = controller.get_chunks();
-		
-		for(Chunk chunk : chunks) {
-			controller.send_message("PUTCHUNK");
-		}
+
+		for (Chunk chunk : chunks)
+			controller.send_putchunk(chunk);
+
+		// TODO:
+		/*
+		 * The initiator-peer collects the confirmation messages during a time
+		 * interval of one second. If the number of confirmation messages it
+		 * received up to the end of that interval is lower than the desired
+		 * replication degree, it retransmits the backup message on the MDB
+		 * channel, and doubles the time interval for receiving confirmation
+		 * messages. This procedure is repeated up to a maximum number of five
+		 * times, i.e. the initiator will send at most 5 PUTCHUNK messages per
+		 * chunk.
+		 */
 	}
 
 }
