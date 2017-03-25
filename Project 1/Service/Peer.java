@@ -1,6 +1,7 @@
 package Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import Utils.Util;
@@ -22,7 +23,7 @@ public class Peer {
 
 	private static ShellInterpreter shell = new ShellInterpreter();
 
-	private static final ArrayList<StoredChunk> database = new ArrayList<StoredChunk>();
+	private static final HashMap<String, StoredChunk> database = new HashMap<>();
 
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
@@ -64,13 +65,16 @@ public class Peer {
 		// TODO: Implementar um listner para ler as respostas dos protocolos
 	}
 
-	public static ArrayList<StoredChunk> getDB() {
+	public static HashMap<String, StoredChunk> getDB() {
 		return database;
 	}
 
-	public static void saveChunkToDB(String senderID, String fileID, int chunkNo) {
+	public static void saveChunkToDB(String filePathName, String senderID, String fileID, int chunkNo) {
 		StoredChunk chunk = new StoredChunk(senderID, fileID, chunkNo);
-		database.add(chunk);
+		database.put(filePathName, chunk);
 	}
 
+	public static StoredChunk getStoredChunk(String filePathName) {
+		return database.get(filePathName);
+	}
 }

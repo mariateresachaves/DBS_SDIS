@@ -1,5 +1,6 @@
 package Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -166,9 +167,26 @@ public class ShellInterpreter {
 		Deletion controller = new Deletion(args[0]);
 	}
 
-	private void protoRestore(String[] args) {
+	private void protoRestore(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Restore Protocol");
 		Restore controller = new Restore(args[0]);
+		
+		controller.send_getchunk();
+
+		// TODO:
+		/*
+		 * Upon receiving this message, a peer that has a copy of the specified
+		 * chunk shall send it in the body of a CHUNK message via the MDR
+		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo>
+		 * <CRLF><CRLF><Body>
+		 */
+
+		/*
+		 * To avoid flooding the host with CHUNK messages, each peer shall wait
+		 * for a random time uniformly distributed between 0 and 400 ms, before
+		 * sending the CHUNK message. If it receives a CHUNK message before that
+		 * time expires, it will not send the CHUNK message.
+		 */
 	}
 
 	private void protoBackup(String[] args) throws Exception {

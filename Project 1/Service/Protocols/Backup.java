@@ -21,7 +21,7 @@ public class Backup {
 	private static InetAddress address;
 
 	public Backup(String filePathName, String replicationDegree) throws Exception {
-		Util.getLogger().log(Level.INFO, "Breaking File Into Chunks Backup Protocol");
+		Util.getLogger().log(Level.INFO, "Breaking File Into Chunks");
 
 		version = "1.0";
 		File f = new File(filePathName);
@@ -36,11 +36,12 @@ public class Backup {
 		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
 
 		// Create message to send
-		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d 0xD0xA0xD0xA%s", version, chunk.getSenderID(),
+		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n%s", version, chunk.getSenderID(),
 				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), chunk.getBodyData());
 
 		byte[] msg = tmp_msg.getBytes();
-
+		
+		
 		// Socket to send the message
 		DatagramSocket socket = new DatagramSocket();
 
@@ -50,6 +51,7 @@ public class Backup {
 		address = InetAddress.getByName(hostname);
 
 		DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
+		
 		socket.send(packet);
 
 		socket.close();
