@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import Service.Listeners.MDBListener;
 import Utils.Util;
 
 public class Peer {
@@ -35,6 +36,11 @@ public class Peer {
 		// Load properties file
 		Util.loadPropertiesFile(args[0]);
 
+		//Start Mulicast Data Backup Listener
+		MDBListener mdbl= new MDBListener();
+		Thread t = new Thread(mdbl);
+		t.start();
+		
 		// Get multicast channels properties
 		mc_rate = Integer.parseInt(Util.getProperties().getProperty("MC_RATE"));
 
