@@ -60,10 +60,10 @@ public class Peer {
 		mc_collector = new NodeCollector(mc_ip, mc_port);
 
 		// Multicast Data Channel for BACKUP
-		mdb_collector = new NodeCollector(mdb_ip, mdb_port);
+		//mdb_collector = new NodeCollector(mdb_ip, mdb_port);
 
 		// Multicast Data Channel for RESTORE
-		mdr_collector = new NodeCollector(mdr_ip, mdr_port);
+		//mdr_collector = new NodeCollector(mdr_ip, mdr_port);
 
 		// Shell Interpreter
 		shell.getShell();

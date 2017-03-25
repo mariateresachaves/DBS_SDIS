@@ -97,38 +97,41 @@ public class NodeCollector {
 				String time = System.currentTimeMillis() + "";
 				String[] responseData = response.split(":");
 
-				synchronized (database) {
-					if (database.containsKey(responseData[1])) {
-						if (database.get(responseData[1]).get(responseData[2]) != null) {
-							// UPDATE
-							database.get(responseData[1]).remove(responseData[2]);
-							database.get(responseData[1]).put(responseData[2], time);
+				if (response.startsWith("Multicast Message")) {
+					synchronized (database) {
+						if (database.containsKey(responseData[1])) {
+							if (database.get(responseData[1]).get(responseData[2]) != null) {
+								// UPDATE
+								database.get(responseData[1]).remove(responseData[2]);
+								database.get(responseData[1]).put(responseData[2], time);
+							} else {
+								database.get(responseData[1]).put(responseData[2], time);
+							}
 						} else {
-							database.get(responseData[1]).put(responseData[2], time);
+							HashMap<String, String> values = new HashMap();
+							values.put(responseData[2], time);
+							database.put(responseData[1], values);
 						}
-					} else {
-						HashMap<String, String> values = new HashMap();
-						values.put(responseData[2], time);
-						database.put(responseData[1], values);
+
 					}
 
-				}
+					// Check if there are any dead nodes
+					// removeTimeOutNodes();
+					// test
+					synchronized (database) {
+						// System.out.println("DATABASE_DUMP");
+						for (Map.Entry<String, Map<String, String>> entry : database.entrySet()) {
+							String key = entry.getKey();
+							Map<String, String> value = entry.getValue();
+							for (Map.Entry<String, String> entry1 : value.entrySet()) {
+								String key1 = entry1.getKey();
+								String value1 = entry1.getValue();
+								// System.out.println(key + "->\t" + key1 +
+								// "->\t" +
+								// value1);
+							}
 
-				// Check if there are any dead nodes
-				// removeTimeOutNodes();
-				// test
-				synchronized (database) {
-					// System.out.println("DATABASE_DUMP");
-					for (Map.Entry<String, Map<String, String>> entry : database.entrySet()) {
-						String key = entry.getKey();
-						Map<String, String> value = entry.getValue();
-						for (Map.Entry<String, String> entry1 : value.entrySet()) {
-							String key1 = entry1.getKey();
-							String value1 = entry1.getValue();
-							// System.out.println(key + "->\t" + key1 + "->\t" +
-							// value1);
 						}
-
 					}
 				}
 			}
