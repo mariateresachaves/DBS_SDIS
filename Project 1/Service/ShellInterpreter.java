@@ -162,23 +162,32 @@ public class ShellInterpreter {
 		Reclaim controller = new Reclaim();
 	}
 
-	private void protoDelete(String[] args) {
+	private void protoDelete(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Delete Protocol");
 		Deletion controller = new Deletion(args[0]);
+		
+		controller.send_delete();
+
+		// TODO:
+		/*
+		 * This message does not elicit any response message. An implementation,
+		 * may send this message as many times as it is deemed necessary to
+		 * ensure that all space used by chunks of the deleted file are deleted
+		 * in spite of the loss of some messages.
+		 */
 	}
 
 	private void protoRestore(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Restore Protocol");
 		Restore controller = new Restore(args[0]);
-		
+
 		controller.send_getchunk();
 
 		// TODO:
 		/*
 		 * Upon receiving this message, a peer that has a copy of the specified
 		 * chunk shall send it in the body of a CHUNK message via the MDR
-		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo>
-		 * <CRLF><CRLF><Body>
+		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF><Body>
 		 */
 
 		/*
