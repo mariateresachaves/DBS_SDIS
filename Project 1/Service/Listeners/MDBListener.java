@@ -25,12 +25,12 @@ public class MDBListener implements Runnable {
 		// Check preconditions
 		checkStorage(storage);
 		// Run Thread
-		//this.run();
+		// this.run();
 	}
 
 	public void run() {
-		
-System.out.println("Running");
+
+		System.out.println("Running");
 		// Set of variables
 		MulticastSocket mcast_socket = null;
 
@@ -51,7 +51,7 @@ System.out.println("Running");
 
 		try {
 			while (true) {
-							
+
 				sck.receive(packet_received);
 
 				String response = new String(packet_received.getData());
@@ -81,22 +81,20 @@ System.out.println("Running");
 	private void saveChunk(String protocolMessage) {
 		String[] split = protocolMessage.split(" ");
 
-		for(String x: split){
-			System.out.println(x);
-		}
-		Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]),
-				Integer.parseInt(split[5].trim()), split[6]);
+		if (split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
+			Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]), Integer.parseInt(split[5].trim()),
+					split[6]);
 
-		if (c.saveToDisk(this.storage)) {
-			anounceStorageonMCC(c);
+			if (c.saveToDisk(this.storage)) {
+				anounceStorageonMCC(c);
+			}
 		}
 
 	}
 
 	private void anounceStorageonMCC(Chunk c) {
 		// STORED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
-		String msg = String.format("STORED %s %s %s %d \r\n", "1.0", c.getSenderID(), c.getFileID(),
-				c.getChunkNo());
+		String msg = String.format("STORED %s %s %s %d \r\n", "1.0", c.getSenderID(), c.getFileID(), c.getChunkNo());
 
 		// Data For MCC Channel
 		try {

@@ -70,16 +70,7 @@ public class ChunkController {
 	}
 
 	private String getHID() throws SocketException {
-		/*
-		 * Not working
-		 * 
-		 * String res = "";
-		 * System.out.println(NetworkInterface.getNetworkInterfaces().toString()
-		 * ); byte[] mac = NetworkInterface.getByIndex(0).getHardwareAddress();
-		 * for (int k = 0; k < mac.length; k++) { res += String.format("%02X%s",
-		 * mac[k], (k < mac.length - 1) ? "-" : ""); }
-		 */
-		String res = "011";
+		String res = Util.getProperties().getProperty("SenderID");
 		return res;
 	}
 
