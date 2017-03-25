@@ -39,8 +39,7 @@ public class Backup {
 		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n%s", version, chunk.getSenderID(),
 				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), chunk.getBodyData());
 
-		byte[] msg = tmp_msg.getBytes();
-		
+		byte[] msg = tmp_msg.getBytes();		
 		
 		// Socket to send the message
 		DatagramSocket socket = new DatagramSocket();
