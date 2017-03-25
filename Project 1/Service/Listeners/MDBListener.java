@@ -51,8 +51,7 @@ System.out.println("Running");
 
 		try {
 			while (true) {
-				// Time-To-Live
-				sck.setTimeToLive(1);
+							
 				sck.receive(packet_received);
 
 				String response = new String(packet_received.getData());

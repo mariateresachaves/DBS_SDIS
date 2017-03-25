@@ -96,7 +96,7 @@ public class Chunk {
 	}
 
 	public boolean saveToDisk(String path){
-		File f = new File(path+"/"+this.senderID+"-"+this.fileID);
+		File f = new File(path+"/"+this.senderID+"-"+this.fileID+"-"+this.chunkNo);
 		
 		
 		try{
