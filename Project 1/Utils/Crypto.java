@@ -17,9 +17,21 @@ public class Crypto {
 			throw new Exception("[-] Invalid String passed to getFileHash function]");
 		}
 
-		res = MessageDigest.getInstance(hash).digest(Files.readAllBytes((f.toPath())));
-		String ret = new String(res);
-		return ret;
+		
+		MessageDigest md=MessageDigest.getInstance(hash);
+		byte[] filebytes=Files.readAllBytes(f.toPath());
+		md.update(filebytes);
+		res = md.digest();
+		
+		
+		//http://www.mkyong.com/java/java-sha-hashing-example/
+		//convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < res.length; i++) {
+         sb.append(Integer.toString((res[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        
+		return sb.toString();
 	}
 
 	public static String getFileHash(String path, String hash) throws NullPointerException, Exception {
