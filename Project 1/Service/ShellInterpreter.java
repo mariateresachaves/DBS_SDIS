@@ -173,12 +173,12 @@ public class ShellInterpreter {
 
 	private void protoBackup(String[] args) throws Exception {
 		Util.getLogger().log(Level.INFO, "Running Backup Protocol");
-		Backup controller = new Backup(args[0], args[1]);
 		
+		Backup controller = new Backup(args[0], args[1]);
 		List<Chunk> chunks = controller.get_chunks();
 		
 		for(Chunk chunk : chunks) {
-			controller.send_message("PUTCHUNK");
+			controller.send_message("PUTCHUNK", chunk);
 		}
 	}
 
