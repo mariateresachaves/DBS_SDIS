@@ -1,7 +1,6 @@
 package Service.Protocols;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.SocketException;
 import java.nio.file.Files;
@@ -15,7 +14,6 @@ import Utils.Util;
 public class ChunkController {
 
 	public ChunkController() {
-
 	}
 
 	public List<Chunk> breakIntoChunks(File f, int sizeOfChunk, int replicationDegree)
@@ -42,8 +40,7 @@ public class ChunkController {
 					bytes2write -= sizeOfChunk;
 					i += sizeOfChunk;
 				}
-				// File size less than chunk size or file size not pair with
-				// chunk size
+				// File size less than chunk size or file size not pair with chunk size
 				else {
 					System.arraycopy(fileBytes, i, chunkData, 0, bytes2write);
 					bytes2write -= bytes2write;
@@ -51,7 +48,6 @@ public class ChunkController {
 				}
 				ret.add(makeChunk(f, chunkNo, replicationDegree, chunkData));
 			}
-
 		} else {
 			Util.getLogger().log(Level.SEVERE, "Cannot read file.");
 			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
@@ -60,7 +56,6 @@ public class ChunkController {
 	}
 
 	private Chunk makeChunk(File f, int chunkNo, int replicationDegree, byte[] data) throws Exception {
-
 		String crypto = Util.getProperties().getProperty("Hash_Crypto");
 
 		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo, replicationDegree,

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 
-import Service.Listeners.MDBListener;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
 import Service.Protocols.Restore;
@@ -20,11 +19,9 @@ public class ShellInterpreter {
 	private Scanner sc = new Scanner(System.in);
 
 	public ShellInterpreter() {
-
 	}
 
 	public void getShell() throws Exception {
-
 		while (true) {
 			String cmd;
 			System.out.print(">");
@@ -150,7 +147,6 @@ public class ShellInterpreter {
 		}
 
 		controller.setValue(value);
-
 	}
 
 	private void protoState(String[] args) {
@@ -166,7 +162,7 @@ public class ShellInterpreter {
 	private void protoDelete(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Delete Protocol");
 		Deletion controller = new Deletion(args[0]);
-		
+
 		controller.send_delete();
 
 		// TODO:

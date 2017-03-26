@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 import Service.Peer;
@@ -12,6 +11,7 @@ import Service.StoredChunk;
 import Utils.Util;
 
 public class Deletion {
+
 	private static StoredChunk chunk_info;
 	private static String version;
 

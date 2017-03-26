@@ -1,7 +1,6 @@
 package Service.Protocols;
 
 import java.io.File;
-import java.text.Format;
 import java.util.Formatter;
 import java.util.logging.Level;
 
@@ -95,22 +94,19 @@ public class Chunk {
 		return String.format("%s:%s:%s:%s", this.senderID, this.fileID, this.chunkNo, this.bodyData);
 	}
 
-	public boolean saveToDisk(String path){
-		File f = new File(path+"/"+this.senderID+"-"+this.fileID+"-"+this.chunkNo);
-		
-		
-		try{
-			Formatter ft= new Formatter(f);
+	public boolean saveToDisk(String path) {
+		File f = new File(path + "/" + this.senderID + "-" + this.fileID + "-" + this.chunkNo);
+
+		try {
+			Formatter ft = new Formatter(f);
 			ft.format("%s %s %s\n%s", this.senderID, this.fileID, this.chunkNo, this.bodyData);
 			ft.flush();
 			ft.close();
 			return true;
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			Utils.Util.getLogger().log(Level.WARNING, "Couln't save chunk to folder");
 			return false;
 		}
-		
-		
 	}
+
 }

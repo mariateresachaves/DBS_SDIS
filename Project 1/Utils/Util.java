@@ -38,9 +38,9 @@ public class Util {
 	public static final int ERR_NO_PROTO = 19;
 	public static final int ERR_CHUNKSTORAGE = 20;
 	public static final int ERR_CREATELISTMDB = 21;
-	public static final int ERR_SENDSTORED=21;
-	public static final int ERR_CREATELISTMDR=22;
-	public static final int ERR_CREATELISTMCC=23;
+	public static final int ERR_SENDSTORED=22;
+	public static final int ERR_CREATELISTMDR=23;
+	public static final int ERR_CREATELISTMCC=24;
 
 	/**
 	 * Logger

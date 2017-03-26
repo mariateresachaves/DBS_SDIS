@@ -3,7 +3,6 @@ package Service;
 import Utils.Util;
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
@@ -27,9 +26,6 @@ public class AdvertiseNode {
 	 */
 	private static int rateThreshold = 10000;
 	private static int trashCollectorTime = 5000;
-	private static DatagramPacket packet;
-	private static DatagramSocket socket;
-	private static InetAddress unicast_address;
 	private static MulticastSocket mcast_socket;
 	private static InetAddress mcast_address;
 
@@ -52,7 +48,6 @@ public class AdvertiseNode {
 
 		try {
 			// Prepare the socket
-			socket = new DatagramSocket();
 			mcast_socket = new MulticastSocket(port);
 			mcast_address = InetAddress.getByName(address);
 
@@ -80,7 +75,6 @@ public class AdvertiseNode {
 		};
 		t.schedule(rcvData, 0);
 		tGarbage.schedule(remoNodes, 0, trashCollectorTime);
-
 	}
 
 	private int collectPackage() {
@@ -108,11 +102,10 @@ public class AdvertiseNode {
 							database.get(responseData[1]).put(responseData[2], time);
 						}
 					} else {
-						HashMap<String, String> values = new HashMap();
+						HashMap<String, String> values = new HashMap<String, String>();
 						values.put(responseData[2], time);
 						database.put(responseData[1], values);
 					}
-
 				}
 
 				// Check if there are any dead nodes
@@ -128,11 +121,9 @@ public class AdvertiseNode {
 							String value1 = entry1.getValue();
 							System.out.println(key + "->\t" + key1 + "->\t" + value1);
 						}
-
 					}
 				}
 			}
-
 		} catch (IOException e) {
 			System.err.println("[-] Fail to receive the packet from multicast");
 			System.exit(Util.ERR_RECEIVE);
@@ -160,26 +151,22 @@ public class AdvertiseNode {
 						}
 						return;
 					}
-
 				}
 			}
-
 		}
 	}
 
 	// <IP:Port>
 	public List<String> getNodes() {
-		ArrayList<String> ret = new ArrayList();
+		ArrayList<String> ret = new ArrayList<String>();
 		synchronized (database) {
 			for (Map.Entry<String, Map<String, String>> entry : database.entrySet()) {
 				String key = entry.getKey();
 				Map<String, String> value = entry.getValue();
 				for (Map.Entry<String, String> entry1 : value.entrySet()) {
 					String key1 = entry1.getKey();
-					String value1 = entry1.getValue();
 					ret.add(String.format("%s-%s", key, key1));
 				}
-
 			}
 		}
 		return ret;
