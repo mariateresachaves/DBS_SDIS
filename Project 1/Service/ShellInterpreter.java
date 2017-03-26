@@ -1,10 +1,17 @@
 package Service;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 
+import Service.Listeners.MCCListener;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
 import Service.Protocols.Restore;
@@ -17,6 +24,9 @@ import Service.Protocols.SetDisk;
 public class ShellInterpreter {
 
 	private Scanner sc = new Scanner(System.in);
+
+	private static MCCListener mcc_listener;
+	private static Thread mcc_thread;
 
 	public ShellInterpreter() {
 	}
@@ -184,7 +194,8 @@ public class ShellInterpreter {
 		/*
 		 * Upon receiving this message, a peer that has a copy of the specified
 		 * chunk shall send it in the body of a CHUNK message via the MDR
-		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF><Body>
+		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo>
+		 * <CRLF><CRLF><Body>
 		 */
 
 		/*
@@ -200,9 +211,51 @@ public class ShellInterpreter {
 
 		Backup controller = new Backup(args[0], args[1]);
 		List<Chunk> chunks = controller.get_chunks();
+		ArrayList<DatagramPacket> packets = new ArrayList<DatagramPacket>();
+		int num_stores = 0, tries = 0;
+		double time = 0.1;
+		boolean done = false;
 
-		for (Chunk chunk : chunks)
-			controller.send_putchunk(chunk);
+		//int k = 1;
+		for (Chunk chunk : chunks) {
+			//System.out.println("---> CHUNK NO " + k++);
+			while (!done && tries != 5) {
+				//System.out.println("-> TENTATIVA NO " + tries);
+				int i = chunk.getReplicationDegree();
+
+				while (i > 0) {
+					//System.out.println("PUTCHUNK NO " + i);
+					DatagramPacket packet = controller.make_packet(chunk);
+					controller.send_putchunk(packet);
+					i--;
+				}
+
+				// Collects confirmation messages during an interval
+				mcc_listener = new MCCListener();
+				mcc_thread = new Thread(mcc_listener);
+				mcc_thread.start();
+				
+				long start = System.currentTimeMillis();
+				while (System.currentTimeMillis() - start <= time) {
+				  System.out.println("-.-");
+				  //packets.add(mcc_listener.recieveMessage(mcc_listener.getMCastSocket()));
+				}
+
+				// TODO: Verificar packets STORED e contar quantos são!
+				
+				if (num_stores >= chunk.getReplicationDegree())
+					done = true;
+
+				// number of confirmation messages received lower than the
+				// desired replication degree
+				else {
+					// doubles the time interval for receiving confirmation
+					// messages
+					time += time * 2;
+					tries++;
+				}
+			}
+		}
 
 		// TODO:
 		/*
