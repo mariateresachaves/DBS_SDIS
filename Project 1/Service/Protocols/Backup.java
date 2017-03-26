@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.logging.Level;
+
+import javax.xml.crypto.Data;
 
 import Utils.Util;
 
@@ -31,7 +35,7 @@ public class Backup {
 		chunks = controller.breakIntoChunks(f, chunkSize, Integer.parseInt(replicationDegree));
 	}
 
-	public void send_putchunk(Chunk chunk) throws IOException {
+	public DatagramPacket make_packet(Chunk chunk) throws UnknownHostException, SocketException {
 		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
 
 		// Create message to send
@@ -40,15 +44,21 @@ public class Backup {
 
 		byte[] msg = tmp_msg.getBytes();
 
-		// Socket to send the message
-		DatagramSocket socket = new DatagramSocket();
-
 		// MDB Channel
 		hostname = Util.getProperties().getProperty("MDB_IP");
 		port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
 		address = InetAddress.getByName(hostname);
 
 		DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
+		
+		return packet;
+	}
+	
+	public void send_putchunk(DatagramPacket packet) throws IOException {
+		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
+		
+		// Socket to send the message
+		DatagramSocket socket = new DatagramSocket();
 
 		socket.send(packet);
 
