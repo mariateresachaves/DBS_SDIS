@@ -37,11 +37,6 @@ public class Peer {
 		// Load properties file
 		Util.loadPropertiesFile(args[0]);
 
-		//Start Mulicast Data Backup Listener
-		MDBListener mdbl= new MDBListener();
-		Thread t = new Thread(mdbl);
-		t.start();
-		
 		// Get multicast channels properties
 		mc_rate = Integer.parseInt(Util.getProperties().getProperty("MC_RATE"));
 
@@ -59,12 +54,11 @@ public class Peer {
 		mc_server.createMenance();
 
 		mc_collector = new NodeCollector(mc_ip, mc_port);
-
-		// Multicast Data Channel for BACKUP
-		//mdb_collector = new NodeCollector(mdb_ip, mdb_port);
-
-		// Multicast Data Channel for RESTORE
-		//mdr_collector = new NodeCollector(mdr_ip, mdr_port);
+		
+		// Start Mulicast Data Backup Listener
+		MDBListener mdbl= new MDBListener();
+		Thread t = new Thread(mdbl);
+		t.start();
 
 		// Shell Interpreter
 		shell.getShell();

@@ -29,8 +29,6 @@ public class MDBListener implements Runnable {
 	}
 
 	public void run() {
-
-		System.out.println("Running");
 		// Set of variables
 		MulticastSocket mcast_socket = null;
 
@@ -68,25 +66,28 @@ public class MDBListener implements Runnable {
 	}
 
 	private void selectProtocol(String protocolMessage) {
-		switch (protocolMessage.split(" ")[0]) {
+		String[] split = protocolMessage.split(" ");
 
-		case "PUTCHUNK":
-			Util.getLogger().log(Level.INFO, "Received PUTCHUNK on MDB Channel");
-			saveChunk(protocolMessage);
-			break;
-
+		if (!split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
+			switch (protocolMessage.split(" ")[0]) {
+	
+			case "PUTCHUNK":
+				Util.getLogger().log(Level.INFO, "Received PUTCHUNK on MDB Channel");
+				saveChunk(protocolMessage);
+				break;
+	
+			}
 		}
-
 	}
 
 	private void saveChunk(String protocolMessage) {
 		String[] split = protocolMessage.split(" ");
-
-		if (split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
+		
+		if (!split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
 			Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]), Integer.parseInt(split[5].trim()),
 					split[6]);
 			
-			System.out.println("[+] Saving Chunk No " + split[4] + " on MDB Channel");
+			System.out.println("[+] Saving Chunk No " + split[4]);
 
 			if (c.saveToDisk(this.storage)) {
 				anounceStorageonMCC(c);
