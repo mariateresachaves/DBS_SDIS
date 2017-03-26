@@ -208,34 +208,26 @@ public class ShellInterpreter {
 		Backup controller = new Backup(args[0], args[1]);
 		List<Chunk> chunks = controller.get_chunks();
 		ArrayList<DatagramPacket> packets = new ArrayList<DatagramPacket>();
-		int num_stores = 0, tries = 0;
-		double time = 0.1;
+		int num_stores = 0, tries = 0, time = 1000;
 		boolean done = false;
 
-		// int k = 1;
+		int k = 1;
 		for (Chunk chunk : chunks) {
-			// System.out.println("---> CHUNK NO " + k++);
 			while (!done && tries != 5) {
-				// System.out.println("-> TENTATIVA NO " + tries);
+				System.out.println("--- Try " + (tries + 1) + " ---");
 				int i = chunk.getReplicationDegree();
 
 				while (i > 0) {
-					// System.out.println("PUTCHUNK NO " + i);
 					DatagramPacket packet = controller.make_packet(chunk);
 					controller.send_putchunk(packet);
 					i--;
 				}
 
 				// Collects confirmation messages during an interval
-				mcc_listener = new MCCListener();
+				mcc_listener = new MCCListener(time);
 				mcc_thread = new Thread(mcc_listener);
 				mcc_thread.start();
-
-				long start = System.currentTimeMillis();
-				while (System.currentTimeMillis() - start <= time) {
-					System.out.println("-.-");
-					// packets.add(mcc_listener.recieveMessage(mcc_listener.getMCastSocket()));
-				}
+				mcc_thread.join();
 
 				// TODO: Verificar packets STORED e contar quantos são!
 
@@ -247,7 +239,7 @@ public class ShellInterpreter {
 				else {
 					// doubles the time interval for receiving confirmation
 					// messages
-					time += time * 2;
+					time = time * 2;
 					tries++;
 				}
 			}
