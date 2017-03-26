@@ -43,26 +43,23 @@ public class MDBListener implements Runnable {
 		recieveMessage(mcast_socket);
 	}
 
-	private void recieveMessage(MulticastSocket sck) {		
+	private void recieveMessage(MulticastSocket sck) {
 		byte[] buf = new byte[4096];
 		DatagramPacket packet_received = new DatagramPacket(buf, buf.length);
 
 		try {
 			while (true) {
-
 				sck.receive(packet_received);
 
 				String response = new String(packet_received.getData());
 				String protocolMessage = processProtocol(response);
 
 				selectProtocol(protocolMessage);
-
 			}
 		} catch (Exception e) {
 			Util.getLogger().log(Level.WARNING, "Error Recieving packet, Error Message: ");
 			e.printStackTrace();
 		}
-
 	}
 
 	private void selectProtocol(String protocolMessage) {
@@ -70,35 +67,34 @@ public class MDBListener implements Runnable {
 
 		if (!split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
 			switch (protocolMessage.split(" ")[0]) {
-	
+
 			case "PUTCHUNK":
 				Util.getLogger().log(Level.INFO, "Received PUTCHUNK on MDB Channel");
 				saveChunk(protocolMessage);
 				break;
-	
+
 			}
 		}
 	}
 
 	private void saveChunk(String protocolMessage) {
 		String[] split = protocolMessage.split(" ");
-		
+
 		if (!split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
 			Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]), Integer.parseInt(split[5].trim()),
 					split[6]);
-			
+
 			System.out.println("[+] Saving Chunk No " + split[4]);
 
 			if (c.saveToDisk(this.storage)) {
 				anounceStorageonMCC(c);
 			}
 		}
-
 	}
 
 	private void anounceStorageonMCC(Chunk c) {
-		/*Util.getLogger().log(Level.INFO, "Sending STORED to MC Channel");
-		
+		Util.getLogger().log(Level.INFO, "Sending STORED to MC Channel");
+
 		// STORED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
 		String msg = String.format("STORED %s %s %s %d \r\n", "1.0", c.getSenderID(), c.getFileID(), c.getChunkNo());
 
@@ -113,12 +109,10 @@ public class MDBListener implements Runnable {
 			serverSocket.close();
 		} catch (Exception e) {
 			Util.getLogger().log(Level.SEVERE, "Error Creating Socket to Send STORED. Error Message " + e.getMessage());
-		}*/
-
+		}
 	}
 
 	private String processProtocol(String response) {
-
 		String old = response;
 
 		String processed;
@@ -128,7 +122,6 @@ public class MDBListener implements Runnable {
 		} else {
 			return processProtocol(processed);
 		}
-
 	}
 
 	private void checkStorage(String loc) {
@@ -143,7 +136,6 @@ public class MDBListener implements Runnable {
 				System.exit(Util.ERR_CHUNKSTORAGE);
 			}
 		}
-
 	}
 
 }

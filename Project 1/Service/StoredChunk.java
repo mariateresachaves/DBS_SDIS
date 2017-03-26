@@ -1,6 +1,7 @@
 package Service;
 
 public class StoredChunk {
+
 	private String senderID;
 	private String fileID;
 	private int chunkNo;
@@ -22,4 +23,5 @@ public class StoredChunk {
 	public int getChunkNo() {
 		return chunkNo;
 	}
+
 }

@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.logging.Level;
 
 import Utils.Util;
 
 public class Backup {
+
 	private static List<Chunk> chunks;
 	private static String version;
 
@@ -39,8 +38,8 @@ public class Backup {
 		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n%s", version, chunk.getSenderID(),
 				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), chunk.getBodyData());
 
-		byte[] msg = tmp_msg.getBytes();		
-		
+		byte[] msg = tmp_msg.getBytes();
+
 		// Socket to send the message
 		DatagramSocket socket = new DatagramSocket();
 
@@ -50,7 +49,7 @@ public class Backup {
 		address = InetAddress.getByName(hostname);
 
 		DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
-		
+
 		socket.send(packet);
 
 		socket.close();
@@ -59,4 +58,5 @@ public class Backup {
 	public List<Chunk> get_chunks() {
 		return chunks;
 	}
+
 }

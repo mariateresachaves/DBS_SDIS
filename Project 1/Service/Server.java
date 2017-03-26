@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.logging.*;
 
 public class Server {
+
 	/**
 	 * Socket-related variables
 	 */
@@ -31,20 +32,16 @@ public class Server {
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 			throwErrorandExit("[-] Error setting multicast Destination", Util.ERR_SETTING_ADV);
-
 		} catch (SocketException ex) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 			throwErrorandExit("[-] Error setting multicast socket", Util.ERR_SETTING_SOCK);
 		}
-
 	}
 
 	public static void main(String[] args) {
-
 		// For testing porpuses
 		Server abc = new Server("192.168.32.182", 1111, 1000);
 		abc.createMenance();
-
 	}
 
 	private static void throwErrorandExit(String msg, int error) {
@@ -66,9 +63,6 @@ public class Server {
 					DatagramPacket msgPacket = new DatagramPacket(msg.getBytes(), msg.getBytes().length, addr,
 							mcast_port);
 					serverSocket.send(msgPacket);
-					String status = String.format("multicast: <mcast_addr>%s <mcast_port>%d: <srvc_addr>%s", mcast_addr,
-							mcast_port, local_addr);
-					// System.out.println(status);
 				} catch (IOException ex) {
 					System.err.println("[-] Error sending multicast Message");
 					System.exit(Util.ERR_SENDING_ADV);
@@ -78,4 +72,5 @@ public class Server {
 		};
 		t.scheduleAtFixedRate(adv_network, 0, mcastRate);
 	}
+
 }

@@ -12,6 +12,7 @@ import Service.StoredChunk;
 import Utils.Util;
 
 public class Restore {
+
 	private static ArrayList<StoredChunk> chunks_info;
 	private static String version;
 
@@ -51,4 +52,5 @@ public class Restore {
 
 		socket.close();
 	}
+
 }

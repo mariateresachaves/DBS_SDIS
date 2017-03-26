@@ -1,6 +1,5 @@
 package Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -20,8 +19,8 @@ public class Peer {
 	private static int mdr_port;
 
 	private static NodeCollector mc_collector;
-	private static NodeCollector mdb_collector;
-	private static NodeCollector mdr_collector;
+	private static MDBListener mdb_listener;
+	private static Thread mdb_thread;
 
 	private static ShellInterpreter shell = new ShellInterpreter();
 
@@ -54,11 +53,11 @@ public class Peer {
 		mc_server.createMenance();
 
 		mc_collector = new NodeCollector(mc_ip, mc_port);
-		
+
 		// Start Mulicast Data Backup Listener
-		MDBListener mdbl= new MDBListener();
-		Thread t = new Thread(mdbl);
-		t.start();
+		mdb_listener = new MDBListener();
+		mdb_thread = new Thread(mdb_listener);
+		mdb_thread.start();
 
 		// Shell Interpreter
 		shell.getShell();
@@ -70,7 +69,7 @@ public class Peer {
 		return database;
 	}
 
-	public static void saveChunkToDB(String filePathName, ArrayList<StoredChunk>storedChunks) {
+	public static void saveChunkToDB(String filePathName, ArrayList<StoredChunk> storedChunks) {
 		database.put(filePathName, storedChunks);
 	}
 

@@ -17,20 +17,18 @@ public class Crypto {
 			throw new Exception("[-] Invalid String passed to getFileHash function]");
 		}
 
-		
-		MessageDigest md=MessageDigest.getInstance(hash);
-		byte[] filebytes=Files.readAllBytes(f.toPath());
+		MessageDigest md = MessageDigest.getInstance(hash);
+		byte[] filebytes = Files.readAllBytes(f.toPath());
 		md.update(filebytes);
 		res = md.digest();
-		
-		
-		//http://www.mkyong.com/java/java-sha-hashing-example/
-		//convert the byte to hex format method 1
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < res.length; i++) {
-         sb.append(Integer.toString((res[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        
+
+		// http://www.mkyong.com/java/java-sha-hashing-example/
+		// convert the byte to hex format method 1
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < res.length; i++) {
+			sb.append(Integer.toString((res[i] & 0xff) + 0x100, 16).substring(1));
+		}
+
 		return sb.toString();
 	}
 
@@ -38,4 +36,5 @@ public class Crypto {
 		File f = new File(path);
 		return Crypto.getFileHash(f, hash);
 	}
+
 }

@@ -38,7 +38,7 @@ public class Util {
 	public static final int ERR_NO_PROTO = 19;
 	public static final int ERR_CHUNKSTORAGE = 20;
 	public static final int ERR_CREATELISTMDB = 21;
-	public static final int ERR_SENDSTORED=21;
+	public static final int ERR_SENDSTORED = 21;
 
 	/**
 	 * Logger
@@ -72,11 +72,10 @@ public class Util {
 
 		inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(f.getPath());
 
-		if (inputStream != null) {
+		if (inputStream != null)
 			p.load(inputStream);
-		} else {
+		else
 			throw new FileNotFoundException("property file '" + p + "' not found in the classpath");
-		}
 
 		return p;
 	}
@@ -93,7 +92,6 @@ public class Util {
 
 	public void saveProperties(File f) {
 		try {
-
 			OutputStream out = new FileOutputStream(f);
 			p.store(out, "Saved" + Calendar.getInstance().getTime());
 		} catch (Exception e) {
