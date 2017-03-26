@@ -3,12 +3,8 @@ package Service;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 
 import Service.Listeners.MCCListener;
@@ -216,15 +212,15 @@ public class ShellInterpreter {
 		double time = 0.1;
 		boolean done = false;
 
-		//int k = 1;
+		// int k = 1;
 		for (Chunk chunk : chunks) {
-			//System.out.println("---> CHUNK NO " + k++);
+			// System.out.println("---> CHUNK NO " + k++);
 			while (!done && tries != 5) {
-				//System.out.println("-> TENTATIVA NO " + tries);
+				// System.out.println("-> TENTATIVA NO " + tries);
 				int i = chunk.getReplicationDegree();
 
 				while (i > 0) {
-					//System.out.println("PUTCHUNK NO " + i);
+					// System.out.println("PUTCHUNK NO " + i);
 					DatagramPacket packet = controller.make_packet(chunk);
 					controller.send_putchunk(packet);
 					i--;
@@ -234,15 +230,15 @@ public class ShellInterpreter {
 				mcc_listener = new MCCListener();
 				mcc_thread = new Thread(mcc_listener);
 				mcc_thread.start();
-				
+
 				long start = System.currentTimeMillis();
 				while (System.currentTimeMillis() - start <= time) {
-				  System.out.println("-.-");
-				  //packets.add(mcc_listener.recieveMessage(mcc_listener.getMCastSocket()));
+					System.out.println("-.-");
+					// packets.add(mcc_listener.recieveMessage(mcc_listener.getMCastSocket()));
 				}
 
 				// TODO: Verificar packets STORED e contar quantos são!
-				
+
 				if (num_stores >= chunk.getReplicationDegree())
 					done = true;
 

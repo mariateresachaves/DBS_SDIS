@@ -11,11 +11,8 @@ public class MCCListener implements Runnable {
 
 	private String channelIP;
 	private String channelport;
-	
-	MulticastSocket mcast_socket;
-	
 
-	private int num_stores;
+	MulticastSocket mcast_socket;
 
 	public MCCListener() {
 		// Variables assingment
@@ -34,7 +31,7 @@ public class MCCListener implements Runnable {
 			System.exit(Util.ERR_CREATELISTMCC);
 		}
 
-		//recieveMessage(mcast_socket);
+		// recieveMessage(mcast_socket);
 	}
 
 	public DatagramPacket recieveMessage(MulticastSocket sck) {
@@ -45,16 +42,16 @@ public class MCCListener implements Runnable {
 			while (true) {
 				sck.receive(packet_received);
 
-				//String response = new String(packet_received.getData());
-				//String protocolMessage = processProtocol(response);
-				
-				//selectProtocol(protocolMessage);
+				// String response = new String(packet_received.getData());
+				// String protocolMessage = processProtocol(response);
+
+				// selectProtocol(protocolMessage);
 			}
 		} catch (Exception e) {
 			Util.getLogger().log(Level.WARNING, "Error Recieving packet, Error Message: ");
 			e.printStackTrace();
 		}
-		
+
 		return packet_received;
 	}
 
@@ -107,5 +104,5 @@ public class MCCListener implements Runnable {
 	public MulticastSocket getMCastSocket() {
 		return mcast_socket;
 	}
-	
+
 }
