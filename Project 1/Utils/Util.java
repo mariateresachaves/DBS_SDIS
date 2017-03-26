@@ -41,6 +41,7 @@ public class Util {
 	public static final int ERR_SENDSTORED=22;
 	public static final int ERR_CREATELISTMDR=23;
 	public static final int ERR_CREATELISTMCC=24;
+	public static final int ERR_SOCKET_TIMEOUT=25;
 
 	/**
 	 * Logger
