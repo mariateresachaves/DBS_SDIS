@@ -6,6 +6,9 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
@@ -13,6 +16,7 @@ import Utils.Util;
 
 public class MCCListener implements Runnable {
 
+	private PacketCollector collectedMessages;
 	private String channelIP;
 	private String channelport;
 
@@ -20,6 +24,32 @@ public class MCCListener implements Runnable {
 
 	private long ttl;
 	private long start_time;
+
+	public MCCListener() {
+		// Variables assingment
+		channelIP = Util.getProperties().getProperty("MC_IP", "224.13.3.1");
+		channelport = Util.getProperties().getProperty("MC_PORT", "9176");
+
+		collectedMessages = new PacketCollector();
+
+		start_time = System.currentTimeMillis();
+		ttl = Integer.parseInt(Util.getProperties().getProperty("TTL", "1000"));
+
+		/**
+		 * Create threads to clear old messages in queuueueueueu
+		 */
+		Timer t = new Timer();
+		TimerTask clearMessagesinQueu = new TimerTask() {
+			@Override
+			public void run() {
+				synchronized (collectedMessages) {
+					collectedMessages.deleteOlderThan(ttl);
+				}
+			}
+		};
+		t.scheduleAtFixedRate(clearMessagesinQueu, 0, 1000);
+
+	}
 
 	public MCCListener(int time) {
 		// Variables assingment
@@ -31,13 +61,16 @@ public class MCCListener implements Runnable {
 	}
 
 	public void run() {
-		Util.getLogger().log(Level.INFO, "Starting Multicast Control Channel Listener");
+		Util.getLogger().log(Level.INFO,
+				"Starting Multicast Control Channel Listener");
 
 		try {
-			mcast_socket = new MulticastSocket(Integer.parseInt(this.channelport));
+			mcast_socket = new MulticastSocket(
+					Integer.parseInt(this.channelport));
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Restore Channel");
+			Util.getLogger().log(Level.SEVERE,
+					"Error creating Listener for multicast Restore Channel");
 			System.exit(Util.ERR_CREATELISTMCC);
 		}
 
@@ -49,24 +82,26 @@ public class MCCListener implements Runnable {
 		DatagramPacket packet_received = new DatagramPacket(buf, buf.length);
 
 		// (System.currentTimeMillis() - start_time) -> elapsed time
-		while ((System.currentTimeMillis() - start_time) <= ttl) {
+		while (true) {
 			try {
-				mcast_socket.setSoTimeout((int) (ttl - (System.currentTimeMillis() - start_time)));
 				mcast_socket.receive(packet_received);
-			} catch (SocketTimeoutException e1) {
-				Util.getLogger().log(Level.WARNING, "Error Recieving packet");
 			} catch (IOException e) {
-				Util.getLogger().log(Level.SEVERE, "Error Setting Socket Timeout for MCC Listener");
-				System.exit(Util.ERR_SOCKET_TIMEOUT);
+				Util.getLogger().log(Level.SEVERE,
+						"Error Recieving packet on control channel");
+				System.exit(Util.ERR_MCC_PACKET);
 			}
 
 			String response = new String(packet_received.getData());
 			String protocolMessage = processProtocol(response);
 
+			synchronized (collectedMessages) {
+				collectedMessages.add(new DatedMessage(response, System
+						.currentTimeMillis()));
+			}
+
 			selectProtocol(protocolMessage);
 		}
 
-		Thread.currentThread().interrupt();
 	}
 
 	private void selectProtocol(String protocolMessage) {
@@ -100,7 +135,9 @@ public class MCCListener implements Runnable {
 	}
 
 	private void getChunkProtocol() {
-		// TODO Auto-generated method stub
+		// Go to the database and check for that chunk
+
+		// if the chunk is present then send the chunk to other channel
 	}
 
 	private String processProtocol(String response) {
