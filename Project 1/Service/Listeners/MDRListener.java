@@ -69,7 +69,7 @@ public class MDRListener implements Runnable {
 	}
 
 	private void recoverChunk(String protocolMessage) {
-		// TODO ADD to the database
+
 		File folder = new File(recovertLocation + "/" + protocolMessage.split(" ")[3]);
 		if (!folder.exists()) {
 			folder.mkdir();
@@ -83,8 +83,7 @@ public class MDRListener implements Runnable {
 				f.flush();
 				f.close();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Util.getLogger().log(Level.WARNING, "Error saving recovery message");
 			}
 		}
 	}

@@ -1,10 +1,13 @@
 package Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import Service.Listeners.MCCListener;
 import Service.Listeners.MDBListener;
+import Service.Listeners.MDRListener;
 import Utils.Util;
 
 public class Peer {
@@ -19,8 +22,8 @@ public class Peer {
 	private static int mdr_port;
 
 	private static NodeCollector mc_collector;
-	private static MDBListener mdb_listener;
-	private static Thread mdb_thread;
+	private static NodeCollector mdb_collector;
+	private static NodeCollector mdr_collector;
 
 	private static ShellInterpreter shell = new ShellInterpreter();
 
@@ -29,12 +32,28 @@ public class Peer {
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			System.out.println("Usage: Peer <PropertiesFile>");
-			Util.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
+			Util.getLogger().log(Level.SEVERE,
+					"Invalid arguments at the start of application");
 			System.exit(Util.ERR_WRONG_ARGS);
 		}
 
 		// Load properties file
 		Util.loadPropertiesFile(args[0]);
+
+		// Start Mulicast Data Backup Listener
+		MDBListener mdbl = new MDBListener();
+		Thread t = new Thread(mdbl);
+		t.start();
+
+		// Start Mulicast Control Channel Listener
+		MCCListener mccl = new MCCListener();
+		Thread t1 = new Thread(mccl);
+		t1.start();
+
+		// Start Mulicast Data Backup Listener
+		MDRListener mdrl = new MDRListener();
+		Thread t2 = new Thread(mdrl);
+		t2.start();
 
 		// Get multicast channels properties
 		mc_rate = Integer.parseInt(Util.getProperties().getProperty("MC_RATE"));
@@ -43,10 +62,12 @@ public class Peer {
 		mc_port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
 
 		mdb_ip = Util.getProperties().getProperty("MDB_IP");
-		mdb_port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
+		mdb_port = Integer.parseInt(Util.getProperties()
+				.getProperty("MDB_PORT"));
 
 		mdr_ip = Util.getProperties().getProperty("MDR_IP");
-		mdr_port = Integer.parseInt(Util.getProperties().getProperty("MDR_PORT"));
+		mdr_port = Integer.parseInt(Util.getProperties()
+				.getProperty("MDR_PORT"));
 
 		// Multicast Control Channel
 		mc_server = new Server(mc_ip, mc_port, mc_rate);
@@ -54,22 +75,17 @@ public class Peer {
 
 		mc_collector = new NodeCollector(mc_ip, mc_port);
 
-		// Start Mulicast Data Backup Listener
-		mdb_listener = new MDBListener();
-		mdb_thread = new Thread(mdb_listener);
-		mdb_thread.start();
-
 		// Shell Interpreter
 		shell.getShell();
 
-		// TODO: Implementar um listner para ler as respostas dos protocolos
 	}
 
 	public static HashMap<String, ArrayList<StoredChunk>> getDB() {
 		return database;
 	}
 
-	public static void saveChunkToDB(String filePathName, ArrayList<StoredChunk> storedChunks) {
+	public static void saveChunkToDB(String filePathName,
+			ArrayList<StoredChunk> storedChunks) {
 		database.put(filePathName, storedChunks);
 	}
 
