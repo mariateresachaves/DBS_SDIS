@@ -9,6 +9,7 @@ import java.util.Formatter;
 import java.util.logging.Level;
 
 import Utils.Util;
+import Utils.Util.ErrorCode;
 
 public class MDRListener implements Runnable {
 
@@ -32,7 +33,7 @@ public class MDRListener implements Runnable {
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
 			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Recovery Channel");
-			System.exit(Util.ERR_CREATELISTMDR);
+			System.exit(ErrorCode.ERR_CREATELISTMDR.ordinal());
 		}
 
 		recieveMessage(mcast_socket);

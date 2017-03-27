@@ -10,7 +10,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import Utils.Util;
+import Utils.Util.ErrorCode;
+
 import java.util.ArrayList;
 
 public class NodeCollector {
@@ -111,7 +112,7 @@ public class NodeCollector {
 			}
 		} catch (IOException e) {
 			System.err.println("[-] Fail to receive the packet from multicast");
-			System.exit(Util.ERR_RECEIVE);
+			System.exit(ErrorCode.ERR_RECEIVE.ordinal());
 		}
 		return 0;
 	}

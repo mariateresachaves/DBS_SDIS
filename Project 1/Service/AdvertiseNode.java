@@ -1,6 +1,7 @@
 package Service;
 
-import Utils.Util;
+import Utils.Util.ErrorCode;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -126,7 +127,7 @@ public class AdvertiseNode {
 			}
 		} catch (IOException e) {
 			System.err.println("[-] Fail to receive the packet from multicast");
-			System.exit(Util.ERR_RECEIVE);
+			System.exit(ErrorCode.ERR_RECEIVE.ordinal());
 		}
 		return 0;
 	}

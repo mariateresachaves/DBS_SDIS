@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import Utils.Util;
+import Utils.Util.ErrorCode;
 
 public class ChunkController {
 
@@ -22,7 +23,7 @@ public class ChunkController {
 
 		if (sizeOfChunk < 0) {
 			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
-			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
+			System.exit(ErrorCode.ERR_SIZECHUNK_CHCONTROLLER.ordinal());
 		}
 
 		if (f.isFile()) {
@@ -50,7 +51,7 @@ public class ChunkController {
 			}
 		} else {
 			Util.getLogger().log(Level.SEVERE, "Cannot read file.");
-			System.exit(Utils.Util.ERR_SIZECHUNK_CHCONTROLLER);
+			System.exit(ErrorCode.ERR_SIZECHUNK_CHCONTROLLER.ordinal());
 		}
 		return ret;
 	}

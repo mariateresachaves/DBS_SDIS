@@ -1,6 +1,7 @@
 package Service;
 
-import Utils.Util;
+import Utils.Util.ErrorCode;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -31,10 +32,10 @@ public class Server {
 			serverSocket = new DatagramSocket();
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-			throwErrorandExit("[-] Error setting multicast Destination", Util.ERR_SETTING_ADV);
+			throwErrorandExit("[-] Error setting multicast Destination", ErrorCode.ERR_SETTING_ADV.ordinal());
 		} catch (SocketException ex) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-			throwErrorandExit("[-] Error setting multicast socket", Util.ERR_SETTING_SOCK);
+			throwErrorandExit("[-] Error setting multicast socket", ErrorCode.ERR_SETTING_SOCK.ordinal());
 		}
 	}
 
@@ -65,7 +66,7 @@ public class Server {
 					serverSocket.send(msgPacket);
 				} catch (IOException ex) {
 					System.err.println("[-] Error sending multicast Message");
-					System.exit(Util.ERR_SENDING_ADV);
+					System.exit(ErrorCode.ERR_SENDING_ADV.ordinal());
 
 				}
 			}

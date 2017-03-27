@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import Service.Protocols.Chunk;
 import Utils.Util;
+import Utils.Util.ErrorCode;
 
 public class MDBListener implements Runnable {
 
@@ -37,7 +38,7 @@ public class MDBListener implements Runnable {
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
 			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Backup Channel");
-			System.exit(Util.ERR_CREATELISTMDB);
+			System.exit(ErrorCode.ERR_CREATELISTMDB.ordinal());
 		}
 
 		recieveMessage(mcast_socket);
@@ -133,7 +134,7 @@ public class MDBListener implements Runnable {
 				f.mkdir();
 			} catch (Exception e) {
 				Util.getLogger().log(Level.SEVERE, "Error Creating chunk store");
-				System.exit(Util.ERR_CHUNKSTORAGE);
+				System.exit(ErrorCode.ERR_CHUNKSTORAGE.ordinal());
 			}
 		}
 	}

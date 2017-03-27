@@ -17,33 +17,36 @@ public class Util {
 	/**
 	 * Error codes
 	 */
-	public static final int ERR_WRONG_ARGS = 1;
-	public static final int ERR_NUM_ARGS = 2;
-	public static final int ERR_SENDING_ADV = 3;
-	public static final int ERR_SETTING_ADV = 4;
-	public static final int ERR_SETTING_SOCK = 5;
-	public static final int ERR_PLATE_NUM = 6;
-	public static final int ERR_RECEIVE = 7;
-	public static final int ERR_SEND = 8;
-	public static final int ERR_DEST_ADDR = 9;
-	public static final int ERR_REGISTER_WRONG_ARGS = 10;
-	public static final int ERR_LOOKUP_WRONG_ARGS = 11;
-	public static final int ERR_LOGFILE = 12;
-	public static final int ERR_OVER_CHUNK = 13;
-	public static final int ERR_NULLBODY_CHUCK = 14;
-	public static final int ERR_NULLSENDERID_CHUCK = 15;
-	public static final int ERR_NULLFILEID_CHUCK = 16;
-	public static final int ERR_SIZECHUNK_CHCONTROLLER = 17;
-	public static final int ERR_REP_DEGREE = 18;
-	public static final int ERR_NO_PROTO = 19;
-	public static final int ERR_CHUNKSTORAGE = 20;
-	public static final int ERR_CREATELISTMDB = 21;
-	public static final int ERR_SENDSTORED=22;
-	public static final int ERR_CREATELISTMDR=23;
-	public static final int ERR_CREATELISTMCC=24;
-	public static final int ERR_SOCKET_TIMEOUT=25;
-	public static final int ERR_MCC_PACKET=26;
-
+	public enum ErrorCode {
+		ERR_WRONG_ARGS,
+		ERR_NUM_ARGS,
+		ERR_SENDING_ADV,
+		ERR_SETTING_ADV,
+		ERR_SETTING_SOCK,
+		ERR_PLATE_NUM,
+		ERR_RECEIVE,
+		ERR_SEND,
+		ERR_DEST_ADDR,
+		ERR_REGISTER_WRONG_ARGS,
+		ERR_LOOKUP_WRONG_ARGS,
+		ERR_LOGFILE,
+		ERR_OVER_CHUNK,
+		ERR_NULLBODY_CHUCK,
+		ERR_NULLSENDERID_CHUCK,
+		ERR_NULLFILEID_CHUCK,
+		ERR_SIZECHUNK_CHCONTROLLER,
+		ERR_REP_DEGREE,
+		ERR_NO_PROTO,
+		ERR_CHUNKSTORAGE,
+		ERR_CREATELISTMDB,
+		ERR_SENDSTORED,
+		ERR_CREATELISTMDR,
+		ERR_CREATELISTMCC,
+		ERR_SOCKET_TIMEOUT,
+		ERR_MCC_PACKET
+		
+	}
+	
 	/**
 	 * Logger
 	 */
@@ -59,10 +62,10 @@ public class Util {
 				f = new FileHandler(p.getProperty("LogFile", "mylog.log"));
 			} catch (IOException ex) {
 				System.err.println("[-] Could not create log file the program will terminate");
-				System.exit(ERR_LOGFILE);
+				System.exit(ErrorCode.ERR_LOGFILE.ordinal());
 			} catch (SecurityException ex) {
 				System.err.println("[-] Could not create log file the program will terminate");
-				System.exit(ERR_LOGFILE);
+				System.exit(ErrorCode.ERR_LOGFILE.ordinal());
 			}
 
 			log.addHandler(f);

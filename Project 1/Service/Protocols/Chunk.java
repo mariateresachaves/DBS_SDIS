@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Formatter;
 import java.util.logging.Level;
 
+import Utils.Util.ErrorCode;
+
 public class Chunk {
 
 	private String senderID; // Peer identifier that has sent the chunk
@@ -48,7 +50,7 @@ public class Chunk {
 			this.senderID = senderID;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL Sender ID");
-			System.exit(Utils.Util.ERR_NULLSENDERID_CHUCK);
+			System.exit(ErrorCode.ERR_NULLSENDERID_CHUCK.ordinal());
 		}
 	}
 
@@ -58,7 +60,7 @@ public class Chunk {
 			this.fileID = fileID;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL File ID");
-			System.exit(Utils.Util.ERR_NULLFILEID_CHUCK);
+			System.exit(ErrorCode.ERR_NULLFILEID_CHUCK.ordinal());
 		}
 	}
 
@@ -67,7 +69,7 @@ public class Chunk {
 			this.chunkNo = chunkNo;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with overflowed or underflowed values");
-			System.exit(Utils.Util.ERR_OVER_CHUNK);
+			System.exit(ErrorCode.ERR_OVER_CHUNK.ordinal());
 		}
 	}
 
@@ -76,7 +78,7 @@ public class Chunk {
 			this.replicationDegree = replicationDegree;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Invalid replication degree");
-			System.exit(Utils.Util.ERR_REP_DEGREE);
+			System.exit(ErrorCode.ERR_REP_DEGREE.ordinal());
 		}
 	}
 
@@ -85,7 +87,7 @@ public class Chunk {
 			this.bodyData = bodyData;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value");
-			System.exit(Utils.Util.ERR_NULLBODY_CHUCK);
+			System.exit(ErrorCode.ERR_NULLBODY_CHUCK.ordinal());
 		}
 	}
 

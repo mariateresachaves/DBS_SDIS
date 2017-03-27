@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
 import Utils.Util;
+import Utils.Util.ErrorCode;
 
 public class MCCListener implements Runnable {
 
@@ -71,7 +68,7 @@ public class MCCListener implements Runnable {
 		} catch (Exception e) {
 			Util.getLogger().log(Level.SEVERE,
 					"Error creating Listener for multicast Restore Channel");
-			System.exit(Util.ERR_CREATELISTMCC);
+			System.exit(ErrorCode.ERR_CREATELISTMCC.ordinal());
 		}
 
 		recieveMessage();
@@ -88,7 +85,7 @@ public class MCCListener implements Runnable {
 			} catch (IOException e) {
 				Util.getLogger().log(Level.SEVERE,
 						"Error Recieving packet on control channel");
-				System.exit(Util.ERR_MCC_PACKET);
+				System.exit(ErrorCode.ERR_MCC_PACKET.ordinal());
 			}
 
 			String response = new String(packet_received.getData());
