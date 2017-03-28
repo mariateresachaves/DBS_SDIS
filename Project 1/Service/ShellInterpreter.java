@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 
-import Service.Listeners.DatedMessage;
 import Service.Listeners.MCCListener;
-import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
 import Service.Protocols.Restore;
@@ -192,8 +190,7 @@ public class ShellInterpreter {
 		/*
 		 * Upon receiving this message, a peer that has a copy of the specified
 		 * chunk shall send it in the body of a CHUNK message via the MDR
-		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo>
-		 * <CRLF><CRLF><Body>
+		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF><Body>
 		 */
 
 		/*
@@ -214,11 +211,11 @@ public class ShellInterpreter {
 		boolean done = false;
 
 		int k = 1;
-		System.out.println("NUM CHUNKS - " + chunks.size());
+		// System.out.println("NUM CHUNKS - " + chunks.size());
 		for (Chunk chunk : chunks) {
-			System.out.println("Chunk -- " + (k++) + " --");
+			// System.out.println("Chunk -- " + (k++) + " --");
 			while (!done && tries != 5) {
-				System.out.println("--- Try " + (tries + 1) + " ---");
+				// System.out.println("--- Try " + (tries + 1) + " ---");
 				int i = chunk.getReplicationDegree();
 
 				while (i > 0) {
@@ -232,9 +229,11 @@ public class ShellInterpreter {
 				mcc_thread = new Thread(mcc_listener);
 				mcc_thread.start();
 
-				//PacketCollector collectedMessages = mcc_listener.getCollectedMessages();
-				
-				//System.out.println("Mensagens recebidas_ " + collectedMessages.numPutchunks());
+				// PacketCollector collectedMessages =
+				// mcc_listener.getCollectedMessages();
+
+				// System.out.println("Mensagens recebidas_ " +
+				// collectedMessages.numPutchunks());
 
 				if (num_stores >= chunk.getReplicationDegree())
 					done = true;
