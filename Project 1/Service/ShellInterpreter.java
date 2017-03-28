@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 
 import Service.Listeners.MCCListener;
+import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
 import Service.Protocols.Restore;
@@ -221,19 +223,20 @@ public class ShellInterpreter {
 				while (i > 0) {
 					DatagramPacket packet = controller.make_packet(chunk);
 					controller.send_putchunk(packet);
+					
+					// delay random time 0-400ms
+					Random r = new Random();
+					Thread.sleep(r.nextInt(400));
+					
 					i--;
 				}
 
 				// Collects confirmation messages during an interval
-				mcc_listener = new MCCListener();
-				mcc_thread = new Thread(mcc_listener);
-				mcc_thread.start();
+				PacketCollector msgs = Peer.mccl.getCollectedMessages();
 
-				// PacketCollector collectedMessages =
-				// mcc_listener.getCollectedMessages();
-
-				// System.out.println("Mensagens recebidas_ " +
-				// collectedMessages.numPutchunks());
+				// Counts number of STOREs received
+				
+				
 
 				if (num_stores >= chunk.getReplicationDegree())
 					done = true;
