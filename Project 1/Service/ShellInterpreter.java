@@ -214,6 +214,7 @@ public class ShellInterpreter {
 		boolean done = false;
 
 		int k = 1;
+		System.out.println("NUM CHUNKS - " + chunks.size());
 		for (Chunk chunk : chunks) {
 			System.out.println("Chunk -- " + (k++) + " --");
 			while (!done && tries != 5) {
@@ -227,10 +228,9 @@ public class ShellInterpreter {
 				}
 
 				// Collects confirmation messages during an interval
-				mcc_listener = new MCCListener(time);
+				mcc_listener = new MCCListener();
 				mcc_thread = new Thread(mcc_listener);
 				mcc_thread.start();
-				//mcc_thread.join();
 
 				//PacketCollector collectedMessages = mcc_listener.getCollectedMessages();
 				
@@ -248,6 +248,7 @@ public class ShellInterpreter {
 					tries++;
 				}
 			}
+			tries = 0;
 		}
 
 		// TODO:

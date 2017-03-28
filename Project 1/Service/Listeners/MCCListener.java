@@ -50,15 +50,6 @@ public class MCCListener implements Runnable {
 
 	}
 
-	public MCCListener(int time) {
-		// Variables assingment
-		channelIP = Util.getProperties().getProperty("MC_IP", "224.13.3.1");
-		channelport = Util.getProperties().getProperty("MC_PORT", "9176");
-
-		start_time = System.currentTimeMillis();
-		ttl = time;
-	}
-
 	public void run() {
 		Util.getLogger().log(Level.INFO, "Starting Multicast Control Channel Listener");
 
