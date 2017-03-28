@@ -97,11 +97,18 @@ public class Chunk {
 	}
 
 	public boolean saveToDisk(String path) {
-		File f = new File(path + "/" + this.senderID + "-" + this.fileID + "-" + this.chunkNo);
+
+		File directory = new File(path+"/"+this.fileID);
+
+		if (!directory.exists()) {
+			directory.mkdir();
+		}
+
+		File f = new File(path+"/"+this.fileID+"/" + this.senderID + "-" + String.format("%09d",this.chunkNo));
 
 		try {
 			Formatter ft = new Formatter(f);
-			ft.format("%s %s %s\n%s", this.senderID, this.fileID, this.chunkNo, this.bodyData);
+			ft.format("%s", this.bodyData.trim());
 			ft.flush();
 			ft.close();
 			return true;

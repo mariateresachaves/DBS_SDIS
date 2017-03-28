@@ -39,4 +39,16 @@ public class PacketCollector extends ArrayList<DatedMessage> {
 		return ret;
 	}
 	
+	public int numStores(String fileID) {
+		int ret = 0;
+		
+		for (DatedMessage x : this) {
+			String msg=x.getMessage().toUpperCase();
+			if((msg.startsWith("STORED") && msg.split(" ")[2].trim().equalsIgnoreCase(fileID.trim())  ) )
+				ret++;
+		}
+		
+		return ret;
+	}
+	
 }
