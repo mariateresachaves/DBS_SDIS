@@ -89,17 +89,18 @@ public class MCCListener implements Runnable {
 			String response = new String(packet_received.getData());
 			String protocolMessage = processProtocol(response);
 
-			if (collectedMessages == null) {
+			/*if (collectedMessages == null) {
 				DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
 				ArrayList<DatedMessage> mgs = new ArrayList<DatedMessage>();
 				mgs.add(d_msg);
 				collectedMessages = new PacketCollector(mgs);
-			} else {
-				synchronized (collectedMessages) {
+			} else {*/
+				synchronized (collectedMessages) {					
+					//System.out.println("-----> Com mensagens!");
 					DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
 					collectedMessages.add(d_msg);
 				}
-			}
+			//}
 
 			selectProtocol(protocolMessage);
 		}

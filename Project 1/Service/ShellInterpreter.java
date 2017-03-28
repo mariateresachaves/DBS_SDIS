@@ -215,6 +215,7 @@ public class ShellInterpreter {
 
 		int k = 1;
 		for (Chunk chunk : chunks) {
+			System.out.println("Chunk -- " + (k++) + " --");
 			while (!done && tries != 5) {
 				System.out.println("--- Try " + (tries + 1) + " ---");
 				int i = chunk.getReplicationDegree();
@@ -229,11 +230,11 @@ public class ShellInterpreter {
 				mcc_listener = new MCCListener(time);
 				mcc_thread = new Thread(mcc_listener);
 				mcc_thread.start();
-				mcc_thread.join();
+				//mcc_thread.join();
 
-				PacketCollector collectedMessages = mcc_listener.getCollectedMessages();
+				//PacketCollector collectedMessages = mcc_listener.getCollectedMessages();
 				
-				System.out.println("Mensagens recebidas_ " + collectedMessages.numPutchunks());
+				//System.out.println("Mensagens recebidas_ " + collectedMessages.numPutchunks());
 
 				if (num_stores >= chunk.getReplicationDegree())
 					done = true;

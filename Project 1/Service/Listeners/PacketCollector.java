@@ -2,46 +2,36 @@ package Service.Listeners;
 
 import java.util.ArrayList;
 
-public class PacketCollector {
-	
-	private ArrayList<DatedMessage> packets;
-	
-	public PacketCollector() {
-		packets = new ArrayList<DatedMessage>();
-	}
-	
-	public PacketCollector(ArrayList<DatedMessage> mgs) {
-		packets = mgs;
-	}
+public class PacketCollector extends ArrayList<DatedMessage> {
 	
 	public void deleteOlderThan(long time) {
 		long currentTime = System.currentTimeMillis();
 		ArrayList<DatedMessage> toBeRemoved = new ArrayList<DatedMessage>();
 
-		for (DatedMessage x : packets) {
+		for (DatedMessage x : this) {
 			if ((x.getTime() + time) < currentTime) {
 				toBeRemoved.add(x);
 			}
 		}
 
-		packets.removeAll(toBeRemoved);
+		this.removeAll(toBeRemoved);
 	}
 
-	/*public ArrayList<String> getLastMessages() {
+	public ArrayList<String> getLastMessages() {
 		ArrayList<String> ret = new ArrayList<String>();
 
-		for (DatedMessage x : packets) {
+		for (DatedMessage x : this) {
 
 			ret.add(x.getMessage());
 
 		}
 		return ret;
-	}*/
+	}
 
 	public int numPutchunks() {
 		int ret = 0;
 		
-		for (DatedMessage x : packets) {
+		for (DatedMessage x : this) {
 			if((x.getMessage().toUpperCase()).equals("PUTCHUNK"))
 				ret++;
 		}
@@ -49,7 +39,4 @@ public class PacketCollector {
 		return ret;
 	}
 	
-	public void add(DatedMessage msg) {
-		packets.add(msg);
-	}
 }
