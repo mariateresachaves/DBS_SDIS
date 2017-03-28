@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 
+import Service.Listeners.DatedMessage;
 import Service.Listeners.MCCListener;
+import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
 import Service.Protocols.Restore;
@@ -229,7 +231,9 @@ public class ShellInterpreter {
 				mcc_thread.start();
 				mcc_thread.join();
 
-				// TODO: Verificar packets STORED e contar quantos são!
+				PacketCollector collectedMessages = mcc_listener.getCollectedMessages();
+				
+				System.out.println("Mensagens recebidas_ " + collectedMessages.numPutchunks());
 
 				if (num_stores >= chunk.getReplicationDegree())
 					done = true;

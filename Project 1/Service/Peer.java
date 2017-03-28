@@ -49,7 +49,7 @@ public class Peer {
 		Thread t1 = new Thread(mccl);
 		t1.start();
 
-		// Start Mulicast Data Backup Listener
+		// Start Mulicast Data Restore Listener
 		MDRListener mdrl = new MDRListener();
 		Thread t2 = new Thread(mdrl);
 		t2.start();

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -58,16 +60,13 @@ public class MCCListener implements Runnable {
 	}
 
 	public void run() {
-		Util.getLogger().log(Level.INFO,
-				"Starting Multicast Control Channel Listener");
+		Util.getLogger().log(Level.INFO, "Starting Multicast Control Channel Listener");
 
 		try {
-			mcast_socket = new MulticastSocket(
-					Integer.parseInt(this.channelport));
+			mcast_socket = new MulticastSocket(Integer.parseInt(this.channelport));
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE,
-					"Error creating Listener for multicast Restore Channel");
+			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Restore Channel");
 			System.exit(ErrorCode.ERR_CREATELISTMCC.ordinal());
 		}
 
@@ -83,17 +82,23 @@ public class MCCListener implements Runnable {
 			try {
 				mcast_socket.receive(packet_received);
 			} catch (IOException e) {
-				Util.getLogger().log(Level.SEVERE,
-						"Error Recieving packet on control channel");
+				Util.getLogger().log(Level.SEVERE, "Error Recieving packet on control channel");
 				System.exit(ErrorCode.ERR_MCC_PACKET.ordinal());
 			}
 
 			String response = new String(packet_received.getData());
 			String protocolMessage = processProtocol(response);
 
-			synchronized (collectedMessages) {
-				collectedMessages.add(new DatedMessage(response, System
-						.currentTimeMillis()));
+			if (collectedMessages == null) {
+				DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
+				ArrayList<DatedMessage> mgs = new ArrayList<DatedMessage>();
+				mgs.add(d_msg);
+				collectedMessages = new PacketCollector(mgs);
+			} else {
+				synchronized (collectedMessages) {
+					DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
+					collectedMessages.add(d_msg);
+				}
 			}
 
 			selectProtocol(protocolMessage);
@@ -147,6 +152,10 @@ public class MCCListener implements Runnable {
 		} else {
 			return processProtocol(processed);
 		}
+	}
+
+	public PacketCollector getCollectedMessages() {
+		return collectedMessages;
 	}
 
 }
