@@ -43,6 +43,7 @@ public class ChunkController {
 				}
 				// File size less than chunk size or file size not pair with chunk size
 				else {
+					chunkData=new byte[bytes2write];
 					System.arraycopy(fileBytes, i, chunkData, 0, bytes2write);
 					bytes2write -= bytes2write;
 					i += bytes2write;
@@ -60,7 +61,9 @@ public class ChunkController {
 		String crypto = Util.getProperties().getProperty("Hash_Crypto");
 
 		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo, replicationDegree,
-				Base64.getEncoder().encodeToString(data));
+				data);
+				//Base64.getEncoder().withoutPadding().encodeToString(data));
+				
 
 		return c;
 	}
