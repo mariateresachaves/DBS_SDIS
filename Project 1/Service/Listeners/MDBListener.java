@@ -51,8 +51,13 @@ public class MDBListener implements Runnable {
 		try {
 			while (true) {
 				sck.receive(packet_received);
-
-				String response = new String(packet_received.getData());
+				System.out.println(packet_received.getLength());
+				
+				//Tratar dos valores erroneos no final
+				byte[] copy=new byte[packet_received.getLength()];
+				System.arraycopy(packet_received.getData(), 0, copy, 0, copy.length);
+				
+				String response = new String(copy);
 				String protocolMessage = processProtocol(response);
 
 				selectProtocol(protocolMessage);
@@ -83,7 +88,7 @@ public class MDBListener implements Runnable {
 
 		if (!split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
 			Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]), Integer.parseInt(split[5].trim()),
-					split[6]);
+					split[6].getBytes());
 
 			System.out.println("[+] Saving Chunk No " + split[4]);
 

@@ -36,9 +36,16 @@ public class Backup {
 	public DatagramPacket make_packet(Chunk chunk) throws UnknownHostException, SocketException {
 		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
 
+		
+		//Loading Body
+		String bodymsg="";
+		for(byte x: chunk.getBodyData()){
+			bodymsg+=String.format("%02x", x);
+		}
+			
 		// Create message to send
 		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n%s", version, chunk.getSenderID(),
-				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), chunk.getBodyData());
+				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), bodymsg);
 
 		byte[] msg = tmp_msg.getBytes();
 

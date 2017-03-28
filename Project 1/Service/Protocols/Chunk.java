@@ -1,6 +1,7 @@
 package Service.Protocols;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Formatter;
 import java.util.logging.Level;
 
@@ -12,12 +13,12 @@ public class Chunk {
 	private String fileID; // This is where the hash of the file if going to be
 	private int chunkNo;
 	private int replicationDegree;
-	private String bodyData;
+	private byte[] bodyData;
 
 	public Chunk() {
 	}
 
-	public Chunk(String senderID, String fileID, int chunkNo, int replicationDegree, String bodyData) {
+	public Chunk(String senderID, String fileID, int chunkNo, int replicationDegree, byte[] bodyData) {
 		setSenderID(senderID);
 		setFileID(fileID);
 		setChunkNo(chunkNo);
@@ -41,7 +42,7 @@ public class Chunk {
 		return replicationDegree;
 	}
 
-	public String getBodyData() {
+	public byte[] getBodyData() {
 		return bodyData;
 	}
 
@@ -82,8 +83,8 @@ public class Chunk {
 		}
 	}
 
-	public void setBodyData(String bodyData) {
-		if (bodyData != null && !bodyData.equalsIgnoreCase("")) {
+	public void setBodyData(byte[] bodyData) {
+		if (bodyData != null ) {
 			this.bodyData = bodyData;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value");
@@ -107,10 +108,15 @@ public class Chunk {
 		File f = new File(path+"/"+this.fileID+"/" + this.senderID + "-" + String.format("%09d",this.chunkNo));
 
 		try {
-			Formatter ft = new Formatter(f);
-			ft.format("%s", this.bodyData.trim());
+			/*Formatter ft = new Formatter(f);
+			ft.format("%s", this.bodyData);
 			ft.flush();
 			ft.close();
+			*/
+			FileOutputStream fos = new FileOutputStream(f.getPath());
+			fos.write(this.bodyData);
+			fos.close();
+			
 			return true;
 		} catch (Exception e) {
 			Utils.Util.getLogger().log(Level.WARNING, "Couln't save chunk to folder");
