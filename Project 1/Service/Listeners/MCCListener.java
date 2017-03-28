@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -80,18 +78,10 @@ public class MCCListener implements Runnable {
 			String response = new String(packet_received.getData());
 			String protocolMessage = processProtocol(response);
 
-			/*if (collectedMessages == null) {
+			synchronized (collectedMessages) {
 				DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
-				ArrayList<DatedMessage> mgs = new ArrayList<DatedMessage>();
-				mgs.add(d_msg);
-				collectedMessages = new PacketCollector(mgs);
-			} else {*/
-				synchronized (collectedMessages) {					
-					//System.out.println("-----> Com mensagens!");
-					DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
-					collectedMessages.add(d_msg);
-				}
-			//}
+				collectedMessages.add(d_msg);
+			}
 
 			selectProtocol(protocolMessage);
 		}
