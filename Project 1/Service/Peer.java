@@ -22,8 +22,11 @@ public class Peer {
 	private static int mdr_port;
 
 	private static NodeCollector mc_collector;
-	private static NodeCollector mdb_collector;
-	private static NodeCollector mdr_collector;
+	
+	//Chanel Listeners definition
+	public static MCCListener mccl;
+	public static MDBListener mdbl;
+	public static MDRListener mdrl;
 
 	private static ShellInterpreter shell = new ShellInterpreter();
 
@@ -40,17 +43,17 @@ public class Peer {
 		Util.loadPropertiesFile(args[0]);
 
 		// Start Mulicast Data Backup Listener
-		MDBListener mdbl = new MDBListener();
+		mdbl = new MDBListener();
 		Thread t = new Thread(mdbl);
 		t.start();
 
 		// Start Mulicast Control Channel Listener
-		MCCListener mccl = new MCCListener();
+		mccl = new MCCListener();
 		Thread t1 = new Thread(mccl);
 		t1.start();
 
 		// Start Mulicast Data Restore Listener
-		MDRListener mdrl = new MDRListener();
+		mdrl = new MDRListener();
 		Thread t2 = new Thread(mdrl);
 		t2.start();
 
