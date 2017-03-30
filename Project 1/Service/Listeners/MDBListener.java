@@ -51,7 +51,7 @@ public class MDBListener implements Runnable {
 		try {
 			while (true) {
 				sck.receive(packet_received);
-				System.out.println(packet_received.getLength());
+				//System.out.println(packet_received.getLength());
 				
 				//Tratar dos valores erroneos no final
 				byte[] copy=new byte[packet_received.getLength()];

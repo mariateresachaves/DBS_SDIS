@@ -34,7 +34,7 @@ public class Restore {
 		// Socket to send the message
 		DatagramSocket socket = new DatagramSocket();
 
-		// MDB Channel
+		// MDB(MC?) Channel
 		hostname = Util.getProperties().getProperty("MC_IP");
 		port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
 		address = InetAddress.getByName(hostname);
