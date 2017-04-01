@@ -123,6 +123,7 @@ public class ShellInterpreter {
 			break;
 		case "QUIT": // To exit the shell interpreter
 			// Incorrect number of arguments
+			Peer.xmldb.saveDatabase();
 			if (args.length != 0) {
 				System.out.println("Usage: QUIT");
 				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the QUIT command");
@@ -159,7 +160,17 @@ public class ShellInterpreter {
 
 	private void protoState(String[] args) {
 		Util.getLogger().log(Level.INFO, "Running State Protocol");
-		State controller = new State();
+		ArrayList<String> files=Peer.xmldb.getFiles();
+		ArrayList<String> chunks=Peer.xmldb.getChunks();
+		
+		System.out.println("Files initiated from this endpoint");
+		for(String x: files){
+			System.out.println(x);
+		}
+		System.out.println("Chunks stored in this endpoint");
+		for(String x: chunks){
+			System.out.println(x);
+		}
 	}
 
 	private void protoReclaim(String[] args) {
@@ -212,6 +223,10 @@ public class ShellInterpreter {
 		int num_stores = 0, tries = 0, time = 1000;
 		boolean done = false;
 
+		
+		//Save on the database
+		Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks.get(0).getReplicationDegree()+"", "0");
+		
 		int k = 1;
 		// System.out.println("NUM CHUNKS - " + chunks.size());
 		for (Chunk chunk : chunks) {
@@ -223,6 +238,7 @@ public class ShellInterpreter {
 				while (i > 0) {
 					DatagramPacket packet = controller.make_packet(chunk);
 					controller.send_putchunk(packet);
+					
 					
 					// delay random time 0-400ms
 					Random r = new Random();
