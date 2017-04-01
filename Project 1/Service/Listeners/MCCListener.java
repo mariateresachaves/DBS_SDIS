@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 
+import Service.Peer;
 import Service.StoredChunk;
 import Service.Protocols.Restore;
 import Utils.Util;
@@ -124,7 +125,9 @@ public class MCCListener implements Runnable {
 		String fileId = split[3];
 		String chunkNo = split[4].trim();
 
-		// TODO Falta a base de dados
+		if(Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)){
+			Peer.xmldb.addToChunkRD(1, fileId, chunkNo);
+		}
 	}
 
 	private void removedProtocol(String message) {
@@ -135,7 +138,9 @@ public class MCCListener implements Runnable {
 		String fileId = split[3];
 		String chunkNo = split[4].trim();
 
-		// TODO Falta a base de dados
+		if(Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)){
+			Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
+		}
 	}
 
 	private void deleteProtocol(String message) {
