@@ -45,6 +45,12 @@ public class Peer {
 
 		// Load properties file
 		Util.loadPropertiesFile(args[0]);
+		
+		//Overload Properties Defined in File
+		if(args.length ==2){
+			//Set ServiceID
+			Util.getProperties().setProperty("SenderID", args[1]);
+		}
 
 		// XMLDatabase
 		xmldb = new XMLDatabase(Util.getProperties().getProperty("XMLDB",
