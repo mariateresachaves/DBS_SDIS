@@ -52,8 +52,10 @@ public class ShellInterpreter {
 		case "BACKUP":
 			// Incorrect number of arguments
 			if (args.length != 2) {
-				System.out.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the BACKUP command");
+				System.out
+						.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the BACKUP command");
 			}
 			// Correct number of arguments
 			else {
@@ -65,7 +67,8 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: RESTORE <FilePathName>");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RESTORE command");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the RESTORE command");
 			}
 			// Correct number of arguments
 			else {
@@ -77,7 +80,8 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: DELETE <FilePathName>");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the DELETE command");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the DELETE command");
 			}
 			// Correct number of arguments
 			else {
@@ -89,7 +93,8 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: RECLAIM");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RECLAIM command");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the RECLAIM command");
 			}
 			// Correct number of arguments
 			else {
@@ -101,7 +106,8 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: STATE");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the STATE command");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the STATE command");
 			}
 			// Correct number of arguments
 			else {
@@ -112,8 +118,10 @@ public class ShellInterpreter {
 		case "SETDISK": // To define the disk space that can be used
 			// Incorrect number of arguments
 			if (args.length != 1) {
-				System.out.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the SETDISK command");
+				System.out
+						.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the SETDISK command");
 			}
 			// Correct number of arguments
 			else {
@@ -126,7 +134,8 @@ public class ShellInterpreter {
 			Peer.xmldb.saveDatabase();
 			if (args.length != 0) {
 				System.out.println("Usage: QUIT");
-				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the QUIT command");
+				Util.getLogger().log(Level.SEVERE,
+						"Invalid arguments at the QUIT command");
 			}
 			// Correct number of arguments
 			else {
@@ -151,7 +160,8 @@ public class ShellInterpreter {
 		try {
 			value = Integer.parseInt(args[0].trim());
 		} catch (NumberFormatException e) {
-			Util.getLogger().log(Level.WARNING, "Incorrect Number Format, aborting");
+			Util.getLogger().log(Level.WARNING,
+					"Incorrect Number Format, aborting");
 			return;
 		}
 
@@ -160,15 +170,15 @@ public class ShellInterpreter {
 
 	private void protoState(String[] args) {
 		Util.getLogger().log(Level.INFO, "Running State Protocol");
-		ArrayList<String> files=Peer.xmldb.getFiles();
-		ArrayList<String> chunks=Peer.xmldb.getChunks();
-		
+		ArrayList<String> files = Peer.xmldb.getFiles();
+		ArrayList<String> chunks = Peer.xmldb.getChunks();
+
 		System.out.println("Files initiated from this endpoint");
-		for(String x: files){
+		for (String x : files) {
 			System.out.println(x);
 		}
 		System.out.println("Chunks stored in this endpoint");
-		for(String x: chunks){
+		for (String x : chunks) {
 			System.out.println(x);
 		}
 	}
@@ -203,7 +213,8 @@ public class ShellInterpreter {
 		/*
 		 * Upon receiving this message, a peer that has a copy of the specified
 		 * chunk shall send it in the body of a CHUNK message via the MDR
-		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF><Body>
+		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo>
+		 * <CRLF><CRLF><Body>
 		 */
 
 		/*
@@ -225,7 +236,9 @@ public class ShellInterpreter {
 
 		
 		//Save on the database
-		Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks.get(0).getReplicationDegree()+"", "0");
+		if(!Peer.xmldb.isFilePresent(args[0], chunks.get(0).getFileID())){
+			Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks.get(0).getReplicationDegree()+"", "0");
+		}
 		
 		int k = 1;
 		// System.out.println("NUM CHUNKS - " + chunks.size());
@@ -237,6 +250,11 @@ public class ShellInterpreter {
 
 				while (i > 0) {
 					DatagramPacket packet = controller.make_packet(chunk);
+					//Adicionar part à base de dados
+					if( ! Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo() )){
+					Peer.xmldb.addFilePart(args[0],chunks.get(0).getFileID(),chunk.getChunkNo());
+					}
+					
 					controller.send_putchunk(packet);
 					
 					
@@ -281,5 +299,4 @@ public class ShellInterpreter {
 		 * chunk.
 		 */
 	}
-
 }

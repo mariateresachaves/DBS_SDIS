@@ -121,6 +121,20 @@ public class XMLDatabase {
 								.getElementsByTagName("RD").item(0)
 								.getTextContent());
 
+				NodeList parts = eElement.getElementsByTagName("part");
+				for (int i = 0; i < parts.getLength(); i++) {
+					Node partNode = parts.item(i);
+
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+						Element part = (Element) partNode;
+						line = String.format("\n%s\tPart %s\t RD->%s\n", line,
+								part.getAttribute("pid"), part
+										.getElementsByTagName("partRD").item(0)
+										.getTextContent());
+					}
+				}
+
 				files.add(line);
 
 			}
@@ -300,6 +314,157 @@ public class XMLDatabase {
 
 		add.appendChild(file);
 
+	}
+
+	public void addFilePart(String filePath, String fileID, int chunkNo) {
+		NodeList nList = doc.getElementsByTagName("file");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String sID = eElement.getElementsByTagName("filepath")
+							.item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId")
+							.item(0).getTextContent();
+
+					if (sID.equalsIgnoreCase(filePath)
+							&& fID.equalsIgnoreCase(fileID)) {
+						// ADICIONAR PART!!!
+						Element file = doc.createElement("part");
+
+						file.setAttribute("pid", chunkNo + "");
+
+						Element prd = doc.createElement("partRD");
+						prd.appendChild(doc.createTextNode("0"));
+
+						file.appendChild(prd);
+
+						nNode.appendChild(file);
+
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+
+		}
+
+	}
+
+	public void updateFilePart(String filePath, String fileID, int chunkNo,
+			int valorAAdicionar) {
+		NodeList nList = doc.getElementsByTagName("file");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String sID = eElement.getElementsByTagName("filepath")
+							.item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId")
+							.item(0).getTextContent();
+
+					if (sID.equalsIgnoreCase(filePath)
+							&& fID.equalsIgnoreCase(fileID)) {
+
+						// Estou no ficheiro certo vou iterar agora as parts
+						NodeList parts = eElement.getElementsByTagName("part");
+						for (int i = 0; i < parts.getLength(); i++) {
+							Node partNode = parts.item(temp);
+							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+								try {
+									Element part = (Element) partNode;
+									if (part.getAttribute("pid")
+											.equalsIgnoreCase(chunkNo + "")) {
+										int valor = Integer.parseInt(eElement
+												.getElementsByTagName("partRD")
+												.item(0).getTextContent());
+
+										eElement.getElementsByTagName("partRD")
+												.item(0)
+												.setTextContent(
+														(valor + valorAAdicionar)
+																+ "");
+									}
+								} catch (Exception e) {
+									// NOPE
+								}
+							}
+						}
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+
+		}
+
+	}
+
+	public boolean isPartPresent(String filePath, String fileID, int chunkNo) {
+		NodeList nList = doc.getElementsByTagName("file");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String sID = eElement.getElementsByTagName("filepath")
+							.item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId")
+							.item(0).getTextContent();
+
+					if (sID.equalsIgnoreCase(filePath)
+							&& fID.equalsIgnoreCase(fileID)) {
+
+						// Estou no ficheiro certo vou iterar agora as parts
+						NodeList parts = eElement.getElementsByTagName("part");
+						for (int i = 0; i < parts.getLength(); i++) {
+							Node partNode = parts.item(i);
+							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+								try {
+									Element part = (Element) partNode;
+
+									if (part.getAttribute("pid").trim()
+											.equalsIgnoreCase(chunkNo + "")) {
+										return true;
+									}
+								} catch (Exception e) {
+									// NOPE
+								}
+							}
+						}
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+
+		}
+		return false;
 	}
 
 }
