@@ -451,6 +451,7 @@ public class XMLDatabase {
 
 					if (fID.equalsIgnoreCase(fileId)) {
 						eElement.getParentNode().removeChild(eElement);
+						doc.normalize();
 					}
 				} catch (NullPointerException e) {
 					// Hammer TIME! if something gives null it means that there
