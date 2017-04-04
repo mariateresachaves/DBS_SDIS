@@ -12,7 +12,7 @@ import Utils.Util;
 
 public class Deletion {
 
-	private static StoredChunk chunk_info;
+	private static String chunk_fileID;
 	private static String version;
 
 	private static String hostname;
@@ -20,7 +20,7 @@ public class Deletion {
 	private static InetAddress address;
 
 	public Deletion(String filePathName) {
-		chunk_info = Peer.getStoredChunk(filePathName).get(0);
+		chunk_fileID = Peer.xmldb.getFileID(filePathName);
 		version = "1.0";
 	}
 
@@ -33,8 +33,8 @@ public class Deletion {
 		address = InetAddress.getByName(hostname);
 
 		// Create message to send
-		String tmp_msg = String.format("DELETE %s %s %s \r\n\r\n", version, chunk_info.getSenderID(),
-				chunk_info.getFileID());
+		String tmp_msg = String.format("DELETE %s %s %s \r\n\r\n", version, Util.getProperties().getProperty("SenderID"),
+				chunk_fileID);
 
 		byte[] msg = tmp_msg.getBytes();
 

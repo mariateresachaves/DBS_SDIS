@@ -153,6 +153,9 @@ public class MCCListener implements Runnable {
 
 		}
 
+		// Deletes file from db
+		Peer.xmldb.deleteChunk(fileId);
+		Peer.xmldb.deleteFile(fileId);
 	}
 
 	private void getChunkProtocol(String message) {

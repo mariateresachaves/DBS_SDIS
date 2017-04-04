@@ -409,4 +409,83 @@ public class XMLDatabase {
 		return false;
 	}
 
+	public void deleteChunk(String fileId) {
+		NodeList nList = doc.getElementsByTagName("chunk");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+
+					if (fID.equalsIgnoreCase(fileId)) {
+						eElement.getParentNode().removeChild(eElement);
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+		}
+	}
+
+	public void deleteFile(String fileId) {
+		NodeList nList = doc.getElementsByTagName("file");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+
+					if (fID.equalsIgnoreCase(fileId)) {
+						eElement.getParentNode().removeChild(eElement);
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+		}
+	}
+
+	public String getFileID(String filePath) {
+		NodeList nList = doc.getElementsByTagName("file");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String fPath = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+
+					if (fPath.equalsIgnoreCase(filePath))
+						return eElement.getElementsByTagName("fileId").item(0).getTextContent();
+
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+		}
+		return "";
+	}
+
 }
