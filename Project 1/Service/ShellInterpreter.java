@@ -233,6 +233,7 @@ public class ShellInterpreter {
 
 				while (i > 0) {
 					DatagramPacket packet = controller.make_packet(chunk);
+
 					// Adicionar part à base de dados
 					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
 						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo());
@@ -253,9 +254,11 @@ public class ShellInterpreter {
 				// Counts number of STOREs received
 				num_stores = msgs.numStores(chunk.getFileID());
 				
+				System.out.println("NUMSTORES " + num_stores);
+
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
-					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo()+1) + " Stored Correctly\n");
+					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo() + 1) + " Stored Correctly\n");
 				}
 
 				// number of confirmation messages received lower than the

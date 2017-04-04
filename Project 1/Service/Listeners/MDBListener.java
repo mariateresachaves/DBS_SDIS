@@ -96,11 +96,9 @@ public class MDBListener implements Runnable {
 			if (!Peer.xmldb.isChunkPresent(c.getSenderID().trim(), c.getFileID().trim(), c.getChunkNo() + "")) {
 				Peer.xmldb.addChunk(c.getSenderID().trim(), c.getFileID().trim(), c.getChunkNo() + "",
 						c.getReplicationDegree() + "", "1");
-			}
-
-			if (c.saveToDisk(this.storage)) {
-
-				anounceStorageonMCC(c);
+				
+				if (c.saveToDisk(this.storage))
+					anounceStorageonMCC(c);
 			}
 		}
 	}

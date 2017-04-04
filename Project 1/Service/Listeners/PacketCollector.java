@@ -2,6 +2,8 @@ package Service.Listeners;
 
 import java.util.ArrayList;
 
+import Utils.Util;
+
 public class PacketCollector extends ArrayList<DatedMessage> {
 
 	public void deleteOlderThan(long time) {
@@ -41,21 +43,15 @@ public class PacketCollector extends ArrayList<DatedMessage> {
 
 	public int numStores(String fileID) {
 		int ret = 0;
-		//ArrayList<String> agents = new ArrayList<String>();
 
 		for (DatedMessage x : this) {
 			String msg = x.getMessage().toUpperCase();
 
 			if (msg.startsWith("STORED")) {
-				
-				if (msg.split(" ")[3].trim().equalsIgnoreCase(fileID.trim())) {
-					
-						// falta verificar o peer que está a guardar se é o mesmo ou não
-						//&& (!agents.contains(msg.split(" ")[2].trim()))) {
-					
+
+				if (msg.split(" ")[3].trim().equalsIgnoreCase(fileID.trim()))
 					ret++;
-					//agents.add(msg.split(" ")[2].trim());
-				}
+
 			}
 		}
 
