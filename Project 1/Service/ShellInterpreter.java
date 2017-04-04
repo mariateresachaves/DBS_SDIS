@@ -253,8 +253,6 @@ public class ShellInterpreter {
 
 				// Counts number of STOREs received
 				num_stores = msgs.numStores(chunk.getFileID());
-				
-				System.out.println("NUMSTORES " + num_stores);
 
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;

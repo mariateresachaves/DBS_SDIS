@@ -208,8 +208,8 @@ public class MCCListener implements Runnable {
 			// Delay
 			// delay random time 0-400ms
 			Random r = new Random();
-			int delay = Integer.parseInt(Utils.Util.getProperties().getProperty("Delay", "400"));
-			Thread.sleep(delay);
+			int delay = Integer.parseInt(Utils.Util.getProperties().getProperty("DELAY", "400"));
+			Thread.sleep(r.nextInt(delay));
 
 			socket.send(packet);
 			
