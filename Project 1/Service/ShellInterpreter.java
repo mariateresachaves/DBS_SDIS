@@ -231,11 +231,13 @@ public class ShellInterpreter {
 		}
 
 		int k = 1;
-		System.out.println("NUM CHUNKS - " + chunks.size());
 		for (Chunk chunk : chunks) {
-			System.out.println("Chunk -- " + (k++) + " --");
+			System.out.println("");
+			System.out.println("[ ++++++ Chunk " + (k++) + " ++++++ ]");
+			System.out.println("");
+			
 			while (!done && tries != 5) {
-				System.out.println("--- Try " + (tries + 1) + " ---");
+				System.out.println("[ ~~~~~~ Try " + (tries + 1) + " ~~~~~~ ]");
 				int i = chunk.getReplicationDegree();
 
 				while (i > 0) {
@@ -272,6 +274,7 @@ public class ShellInterpreter {
 					// messages
 					time = time * 2;
 					tries++;
+					System.out.println("");
 				}
 			}
 
