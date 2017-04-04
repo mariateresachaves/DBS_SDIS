@@ -41,9 +41,10 @@ public class ChunkController {
 					bytes2write -= sizeOfChunk;
 					i += sizeOfChunk;
 				}
-				// File size less than chunk size or file size not pair with chunk size
+				// File size less than chunk size or file size not pair with
+				// chunk size
 				else {
-					chunkData=new byte[bytes2write];
+					chunkData = new byte[bytes2write];
 					System.arraycopy(fileBytes, i, chunkData, 0, bytes2write);
 					bytes2write -= bytes2write;
 					i += bytes2write;
@@ -60,10 +61,8 @@ public class ChunkController {
 	private Chunk makeChunk(File f, int chunkNo, int replicationDegree, byte[] data) throws Exception {
 		String crypto = Util.getProperties().getProperty("Hash_Crypto");
 
-		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo, replicationDegree,
-				data);
-				//Base64.getEncoder().withoutPadding().encodeToString(data));
-				
+		Chunk c = new Chunk(getHID(), Utils.Crypto.getFileHash(f.getPath(), crypto), chunkNo, replicationDegree, data);
+		// Base64.getEncoder().withoutPadding().encodeToString(data));
 
 		return c;
 	}

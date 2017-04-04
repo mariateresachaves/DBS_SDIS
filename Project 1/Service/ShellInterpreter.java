@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 
+import Service.Listeners.DatedMessage;
 import Service.Listeners.MCCListener;
 import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
@@ -52,10 +53,8 @@ public class ShellInterpreter {
 		case "BACKUP":
 			// Incorrect number of arguments
 			if (args.length != 2) {
-				System.out
-						.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the BACKUP command");
+				System.out.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the BACKUP command");
 			}
 			// Correct number of arguments
 			else {
@@ -67,8 +66,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: RESTORE <FilePathName>");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the RESTORE command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RESTORE command");
 			}
 			// Correct number of arguments
 			else {
@@ -80,8 +78,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: DELETE <FilePathName>");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the DELETE command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the DELETE command");
 			}
 			// Correct number of arguments
 			else {
@@ -93,8 +90,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: RECLAIM");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the RECLAIM command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RECLAIM command");
 			}
 			// Correct number of arguments
 			else {
@@ -106,8 +102,7 @@ public class ShellInterpreter {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: STATE");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the STATE command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the STATE command");
 			}
 			// Correct number of arguments
 			else {
@@ -118,10 +113,8 @@ public class ShellInterpreter {
 		case "SETDISK": // To define the disk space that can be used
 			// Incorrect number of arguments
 			if (args.length != 1) {
-				System.out
-						.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the SETDISK command");
+				System.out.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the SETDISK command");
 			}
 			// Correct number of arguments
 			else {
@@ -134,8 +127,7 @@ public class ShellInterpreter {
 			Peer.xmldb.saveDatabase();
 			if (args.length != 0) {
 				System.out.println("Usage: QUIT");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the QUIT command");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the QUIT command");
 			}
 			// Correct number of arguments
 			else {
@@ -160,8 +152,7 @@ public class ShellInterpreter {
 		try {
 			value = Integer.parseInt(args[0].trim());
 		} catch (NumberFormatException e) {
-			Util.getLogger().log(Level.WARNING,
-					"Incorrect Number Format, aborting");
+			Util.getLogger().log(Level.WARNING, "Incorrect Number Format, aborting");
 			return;
 		}
 
@@ -234,34 +225,32 @@ public class ShellInterpreter {
 		int num_stores = 0, tries = 0, time = 1000;
 		boolean done = false;
 
-		
-		//Save on the database
-		if(!Peer.xmldb.isFilePresent(args[0], chunks.get(0).getFileID())){
-			Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks.get(0).getReplicationDegree()+"", "0");
+		// Save on the database
+		if (!Peer.xmldb.isFilePresent(args[0], chunks.get(0).getFileID())) {
+			Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks.get(0).getReplicationDegree() + "", "0");
 		}
-		
+
 		int k = 1;
-		// System.out.println("NUM CHUNKS - " + chunks.size());
+		System.out.println("NUM CHUNKS - " + chunks.size());
 		for (Chunk chunk : chunks) {
-			// System.out.println("Chunk -- " + (k++) + " --");
+			System.out.println("Chunk -- " + (k++) + " --");
 			while (!done && tries != 5) {
-				// System.out.println("--- Try " + (tries + 1) + " ---");
+				System.out.println("--- Try " + (tries + 1) + " ---");
 				int i = chunk.getReplicationDegree();
 
 				while (i > 0) {
 					DatagramPacket packet = controller.make_packet(chunk);
-					//Adicionar part à base de dados
-					if( ! Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo() )){
-					Peer.xmldb.addFilePart(args[0],chunks.get(0).getFileID(),chunk.getChunkNo());
+					// Adicionar part à base de dados
+					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
+						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo());
 					}
-					
+
 					controller.send_putchunk(packet);
-					
-					
+
 					// delay random time 0-400ms
 					Random r = new Random();
 					Thread.sleep(r.nextInt(400));
-					
+
 					i--;
 				}
 
@@ -269,11 +258,12 @@ public class ShellInterpreter {
 				PacketCollector msgs = Peer.mccl.getCollectedMessages();
 
 				// Counts number of STOREs received
-				
-				
+				num_stores = msgs.numStores(chunk.getFileID());
 
-				if (num_stores >= chunk.getReplicationDegree())
+				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
+					Util.getLogger().log(Level.INFO, "Chunk No " + chunk.getChunkNo() + " Stored Correctly");
+				}
 
 				// number of confirmation messages received lower than the
 				// desired replication degree
@@ -284,6 +274,7 @@ public class ShellInterpreter {
 					tries++;
 				}
 			}
+
 			tries = 0;
 		}
 

@@ -29,8 +29,7 @@ public class XMLDatabase {
 	private DocumentBuilder dBuilder;
 	private Document doc;
 
-	public XMLDatabase(String databaseFile)
-			throws ParserConfigurationException, SAXException, IOException {
+	public XMLDatabase(String databaseFile) throws ParserConfigurationException, SAXException, IOException {
 		this.fXmlFile = new File(databaseFile);
 
 		// Create DB if not exists
@@ -59,8 +58,7 @@ public class XMLDatabase {
 		this.fXmlFile = new File(PathofNewFile);
 	}
 
-	public void addFile(String ifilePath, String iFileId, String idesiredRD,
-			String ird) {
+	public void addFile(String ifilePath, String iFileId, String idesiredRD, String ird) {
 		NodeList nList = doc.getElementsByTagName("files");
 
 		// Adicionar novo nó, Item 0 é os ficheiros
@@ -90,8 +88,7 @@ public class XMLDatabase {
 	public void saveDatabase() throws TransformerException {
 		DOMSource source = new DOMSource(doc);
 
-		TransformerFactory transformerFactory = TransformerFactory
-				.newInstance();
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		StreamResult result = new StreamResult(fXmlFile.getPath());
 		transformer.transform(source, result);
@@ -109,17 +106,11 @@ public class XMLDatabase {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 				Element eElement = (Element) nNode;
-				line = String.format(
-						"%s\t%s\t%s\t%s\n",
-						eElement.getElementsByTagName("filepath").item(0)
-								.getTextContent(),
-						eElement.getElementsByTagName("fileId").item(0)
-								.getTextContent(),
-						eElement.getElementsByTagName(
-								"desiredreplicationdegree").item(0)
-								.getTextContent(), eElement
-								.getElementsByTagName("RD").item(0)
-								.getTextContent());
+				line = String.format("%s\t%s\t%s\t%s\n",
+						eElement.getElementsByTagName("filepath").item(0).getTextContent(),
+						eElement.getElementsByTagName("fileId").item(0).getTextContent(),
+						eElement.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent(),
+						eElement.getElementsByTagName("RD").item(0).getTextContent());
 
 				NodeList parts = eElement.getElementsByTagName("part");
 				for (int i = 0; i < parts.getLength(); i++) {
@@ -128,19 +119,15 @@ public class XMLDatabase {
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 						Element part = (Element) partNode;
-						line = String.format("\n%s\tPart %s\t RD->%s\n", line,
-								part.getAttribute("pid"), part
-										.getElementsByTagName("partRD").item(0)
-										.getTextContent());
+						line = String.format("\n%s\tPart %s\t RD->%s\n", line, part.getAttribute("pid"),
+								part.getElementsByTagName("partRD").item(0).getTextContent());
 					}
 				}
 
 				files.add(line);
-
 			}
 		}
 		return files;
-
 	}
 
 	public boolean isChunkPresent(String senderId, String fileId, String chunkNo) {
@@ -155,15 +142,11 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String sID = eElement.getElementsByTagName("senderId")
-							.item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId")
-							.item(0).getTextContent();
-					String cNo = eElement.getElementsByTagName("chunkNo")
-							.item(0).getTextContent();
+					String sID = eElement.getElementsByTagName("senderId").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+					String cNo = eElement.getElementsByTagName("chunkNo").item(0).getTextContent();
 
-					if (sID.equalsIgnoreCase(senderId)
-							&& fID.equalsIgnoreCase(fileId)
+					if (sID.equalsIgnoreCase(senderId) && fID.equalsIgnoreCase(fileId)
 							&& cNo.equalsIgnoreCase(chunkNo)) {
 						return true;
 					}
@@ -189,19 +172,13 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String fID = eElement.getElementsByTagName("fileId")
-							.item(0).getTextContent();
-					String cNo = eElement.getElementsByTagName("chunkNo")
-							.item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+					String cNo = eElement.getElementsByTagName("chunkNo").item(0).getTextContent();
 
-					if (fID.equalsIgnoreCase(fileid)
-							&& cNo.equalsIgnoreCase(chunkNo)) {
+					if (fID.equalsIgnoreCase(fileid) && cNo.equalsIgnoreCase(chunkNo)) {
 
-						int rd = Integer.parseInt(eElement
-								.getElementsByTagName("RD").item(0)
-								.getTextContent().trim());
-						eElement.getElementsByTagName("RD").item(0)
-								.setTextContent((rd + valueToAdd) + "");
+						int rd = Integer.parseInt(eElement.getElementsByTagName("RD").item(0).getTextContent().trim());
+						eElement.getElementsByTagName("RD").item(0).setTextContent((rd + valueToAdd) + "");
 
 					}
 				} catch (NullPointerException e) {
@@ -225,13 +202,10 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String sID = eElement.getElementsByTagName("filepath")
-							.item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId")
-							.item(0).getTextContent();
+					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
 
-					if (sID.equalsIgnoreCase(filePath)
-							&& fID.equalsIgnoreCase(fileId)) {
+					if (sID.equalsIgnoreCase(filePath) && fID.equalsIgnoreCase(fileId)) {
 						return true;
 					}
 				} catch (NullPointerException e) {
@@ -256,30 +230,20 @@ public class XMLDatabase {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 				Element eElement = (Element) nNode;
-				line = String.format(
-						"%s\t%s\t%s\t%s\t%s\n",
+				line = String.format("%s\t%s\t%s\t%s\t%s\n",
 
-						eElement.getElementsByTagName("senderId").item(0)
-								.getTextContent(),
-						eElement.getElementsByTagName("fileId").item(0)
-								.getTextContent(),
-						eElement.getElementsByTagName("chunkNo").item(0)
-								.getTextContent(),
-						eElement.getElementsByTagName(
-								"desiredreplicationdegree").item(0)
-								.getTextContent(), eElement
-								.getElementsByTagName("RD").item(0)
-								.getTextContent());
+						eElement.getElementsByTagName("senderId").item(0).getTextContent(),
+						eElement.getElementsByTagName("fileId").item(0).getTextContent(),
+						eElement.getElementsByTagName("chunkNo").item(0).getTextContent(),
+						eElement.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent(),
+						eElement.getElementsByTagName("RD").item(0).getTextContent());
 				files.add(line);
-
 			}
 		}
 		return files;
-
 	}
 
-	public void addChunk(String isenderId, String iFileId, String ichunkNo,
-			String idesiredRD, String ird) {
+	public void addChunk(String isenderId, String iFileId, String ichunkNo, String idesiredRD, String ird) {
 		NodeList nList = doc.getElementsByTagName("chunks");
 
 		// Adicionar novo nó, Item 0 é os ficheiros
@@ -313,7 +277,6 @@ public class XMLDatabase {
 		System.out.println(rd);
 
 		add.appendChild(file);
-
 	}
 
 	public void addFilePart(String filePath, String fileID, int chunkNo) {
@@ -328,13 +291,10 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String sID = eElement.getElementsByTagName("filepath")
-							.item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId")
-							.item(0).getTextContent();
+					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
 
-					if (sID.equalsIgnoreCase(filePath)
-							&& fID.equalsIgnoreCase(fileID)) {
+					if (sID.equalsIgnoreCase(filePath) && fID.equalsIgnoreCase(fileID)) {
 						// ADICIONAR PART!!!
 						Element file = doc.createElement("part");
 
@@ -354,13 +314,10 @@ public class XMLDatabase {
 					continue;
 				}
 			}
-
 		}
-
 	}
 
-	public void updateFilePart(String filePath, String fileID, int chunkNo,
-			int valorAAdicionar) {
+	public void updateFilePart(String filePath, String fileID, int chunkNo, int valorAAdicionar) {
 		NodeList nList = doc.getElementsByTagName("file");
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -372,13 +329,10 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String sID = eElement.getElementsByTagName("filepath")
-							.item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId")
-							.item(0).getTextContent();
+					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
 
-					if (sID.equalsIgnoreCase(filePath)
-							&& fID.equalsIgnoreCase(fileID)) {
+					if (sID.equalsIgnoreCase(filePath) && fID.equalsIgnoreCase(fileID)) {
 
 						// Estou no ficheiro certo vou iterar agora as parts
 						NodeList parts = eElement.getElementsByTagName("part");
@@ -388,17 +342,12 @@ public class XMLDatabase {
 
 								try {
 									Element part = (Element) partNode;
-									if (part.getAttribute("pid")
-											.equalsIgnoreCase(chunkNo + "")) {
-										int valor = Integer.parseInt(eElement
-												.getElementsByTagName("partRD")
-												.item(0).getTextContent());
+									if (part.getAttribute("pid").equalsIgnoreCase(chunkNo + "")) {
+										int valor = Integer.parseInt(
+												eElement.getElementsByTagName("partRD").item(0).getTextContent());
 
-										eElement.getElementsByTagName("partRD")
-												.item(0)
-												.setTextContent(
-														(valor + valorAAdicionar)
-																+ "");
+										eElement.getElementsByTagName("partRD").item(0)
+												.setTextContent((valor + valorAAdicionar) + "");
 									}
 								} catch (Exception e) {
 									// NOPE
@@ -412,9 +361,7 @@ public class XMLDatabase {
 					continue;
 				}
 			}
-
 		}
-
 	}
 
 	public boolean isPartPresent(String filePath, String fileID, int chunkNo) {
@@ -429,13 +376,10 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String sID = eElement.getElementsByTagName("filepath")
-							.item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId")
-							.item(0).getTextContent();
+					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
 
-					if (sID.equalsIgnoreCase(filePath)
-							&& fID.equalsIgnoreCase(fileID)) {
+					if (sID.equalsIgnoreCase(filePath) && fID.equalsIgnoreCase(fileID)) {
 
 						// Estou no ficheiro certo vou iterar agora as parts
 						NodeList parts = eElement.getElementsByTagName("part");
@@ -446,8 +390,7 @@ public class XMLDatabase {
 								try {
 									Element part = (Element) partNode;
 
-									if (part.getAttribute("pid").trim()
-											.equalsIgnoreCase(chunkNo + "")) {
+									if (part.getAttribute("pid").trim().equalsIgnoreCase(chunkNo + "")) {
 										return true;
 									}
 								} catch (Exception e) {

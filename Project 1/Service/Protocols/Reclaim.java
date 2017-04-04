@@ -17,7 +17,7 @@ import Utils.Util;
  */
 
 public class Reclaim {
-	
+
 	private static StoredChunk chunk_info;
 	private static String version;
 
@@ -35,23 +35,27 @@ public class Reclaim {
 		// TODO: Which chunk is going to be removed?
 
 		// Create message to send
-		/*String tmp_msg = String.format("REMOVED %s %s %s %d %d \r\n%s", version, chunk.getSenderID(), chunk.getFileID(),
-				chunk.getChunkNo(), chunk.getReplicationDegree(), chunk.getBodyData());
-
-		byte[] msg = tmp_msg.getBytes();
-
-		// Socket to send the message
-		DatagramSocket socket = new DatagramSocket();
-
-		// MDB Channel
-		hostname = Util.getProperties().getProperty("MDB_IP");
-		port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
-		address = InetAddress.getByName(hostname);
-
-		DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
-
-		socket.send(packet);
-
-		socket.close();*/
+		/*
+		 * String tmp_msg = String.format("REMOVED %s %s %s %d %d \r\n%s",
+		 * version, chunk.getSenderID(), chunk.getFileID(), chunk.getChunkNo(),
+		 * chunk.getReplicationDegree(), chunk.getBodyData());
+		 * 
+		 * byte[] msg = tmp_msg.getBytes();
+		 * 
+		 * // Socket to send the message DatagramSocket socket = new
+		 * DatagramSocket();
+		 * 
+		 * // MDB Channel hostname = Util.getProperties().getProperty("MDB_IP");
+		 * port =
+		 * Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
+		 * address = InetAddress.getByName(hostname);
+		 * 
+		 * DatagramPacket packet = new DatagramPacket(msg, msg.length, address,
+		 * port);
+		 * 
+		 * socket.send(packet);
+		 * 
+		 * socket.close();
+		 */
 	}
 }

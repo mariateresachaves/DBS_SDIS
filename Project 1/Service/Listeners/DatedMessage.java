@@ -1,6 +1,5 @@
 package Service.Listeners;
 
-
 public class DatedMessage {
 
 	private String message;

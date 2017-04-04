@@ -84,7 +84,7 @@ public class Chunk {
 	}
 
 	public void setBodyData(byte[] bodyData) {
-		if (bodyData != null ) {
+		if (bodyData != null) {
 			this.bodyData = bodyData;
 		} else {
 			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value");
@@ -99,24 +99,23 @@ public class Chunk {
 
 	public boolean saveToDisk(String path) {
 
-		File directory = new File(path+"/"+this.fileID);
+		File directory = new File(path + "/" + this.fileID);
 
 		if (!directory.exists()) {
 			directory.mkdir();
 		}
 
-		File f = new File(path+"/"+this.fileID+"/" + this.senderID + "-" + String.format("%09d",this.chunkNo));
+		File f = new File(path + "/" + this.fileID + "/" + this.senderID + "-" + String.format("%09d", this.chunkNo));
 
 		try {
-			/*Formatter ft = new Formatter(f);
-			ft.format("%s", this.bodyData);
-			ft.flush();
-			ft.close();
-			*/
+			/*
+			 * Formatter ft = new Formatter(f); ft.format("%s", this.bodyData);
+			 * ft.flush(); ft.close();
+			 */
 			FileOutputStream fos = new FileOutputStream(f.getPath());
 			fos.write(this.bodyData);
 			fos.close();
-			
+
 			return true;
 		} catch (Exception e) {
 			Utils.Util.getLogger().log(Level.WARNING, "Couln't save chunk to folder");

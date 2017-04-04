@@ -56,16 +56,13 @@ public class MCCListener implements Runnable {
 	}
 
 	public void run() {
-		Util.getLogger().log(Level.INFO,
-				"Starting Multicast Control Channel Listener");
+		Util.getLogger().log(Level.INFO, "Starting Multicast Control Channel Listener");
 
 		try {
-			mcast_socket = new MulticastSocket(
-					Integer.parseInt(this.channelport));
+			mcast_socket = new MulticastSocket(Integer.parseInt(this.channelport));
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE,
-					"Error creating Listener for multicast Restore Channel");
+			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Restore Channel");
 			System.exit(ErrorCode.ERR_CREATELISTMCC.ordinal());
 		}
 
@@ -81,8 +78,7 @@ public class MCCListener implements Runnable {
 			try {
 				mcast_socket.receive(packet_received);
 			} catch (IOException e) {
-				Util.getLogger().log(Level.SEVERE,
-						"Error Recieving packet on control channel");
+				Util.getLogger().log(Level.SEVERE, "Error Recieving packet on control channel");
 				System.exit(ErrorCode.ERR_MCC_PACKET.ordinal());
 			}
 
@@ -90,8 +86,7 @@ public class MCCListener implements Runnable {
 			String protocolMessage = processProtocol(response);
 
 			synchronized (collectedMessages) {
-				DatedMessage d_msg = new DatedMessage(response,
-						System.currentTimeMillis());
+				DatedMessage d_msg = new DatedMessage(response, System.currentTimeMillis());
 				collectedMessages.add(d_msg);
 			}
 
@@ -125,7 +120,7 @@ public class MCCListener implements Runnable {
 		String fileId = split[3];
 		String chunkNo = split[4].trim();
 
-		if(Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)){
+		if (Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)) {
 			Peer.xmldb.addToChunkRD(1, fileId, chunkNo);
 		}
 	}
@@ -138,7 +133,7 @@ public class MCCListener implements Runnable {
 		String fileId = split[3];
 		String chunkNo = split[4].trim();
 
-		if(Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)){
+		if (Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)) {
 			Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
 		}
 	}
@@ -148,8 +143,7 @@ public class MCCListener implements Runnable {
 		String fileId = split[3].trim();
 
 		// Check if file is present
-		String fileChunksPath = Util.getProperties().getProperty(
-				"ChunksLocation", "./chunks_storage");
+		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
 		String filePath = fileChunksPath + "/" + fileId + "/";
 
 		File f = new File(filePath);
@@ -173,10 +167,8 @@ public class MCCListener implements Runnable {
 		String chunkNo = split[4];
 
 		// Check if file is present
-		String fileChunksPath = Util.getProperties().getProperty(
-				"ChunksLocation", "./chunks_storage");
-		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-"
-				+ chunkNo;
+		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
+		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + chunkNo;
 		// TESTE
 		System.out.println(filePath);
 
@@ -187,8 +179,7 @@ public class MCCListener implements Runnable {
 
 	}
 
-	private void sendRestorePacket(File f, String version, String FileId,
-			String chunkNo) {
+	private void sendRestorePacket(File f, String version, String FileId, String chunkNo) {
 		String hostname;
 		int port;
 		InetAddress address;
@@ -201,8 +192,7 @@ public class MCCListener implements Runnable {
 
 			// MDB() Channel
 			hostname = Util.getProperties().getProperty("MDB_IP");
-			port = Integer.parseInt(Util.getProperties()
-					.getProperty("MDB_PORT"));
+			port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
 			address = InetAddress.getByName(hostname);
 			String senderId = Util.getProperties().getProperty("SenderID");
 
@@ -210,29 +200,25 @@ public class MCCListener implements Runnable {
 			String body;
 
 			body = new String(Files.readAllBytes(f.toPath()));
-			tmp_msg = String.format("CHUNK %s %s %s %d \r\n\r\n %s", version,
-					senderId, FileId, chunkNo, body);
+			tmp_msg = String.format("CHUNK %s %s %s %d \r\n\r\n %s", version, senderId, FileId, chunkNo, body);
 			// TESTE
 
 			System.out.println(body);
 			// TESTE
 			msg = tmp_msg.getBytes();
 
-			DatagramPacket packet = new DatagramPacket(msg, msg.length,
-					address, port);
+			DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
 
 			// Delay
 			// delay random time 0-400ms
 			Random r = new Random();
-			int delay = Integer.parseInt(Utils.Util.getProperties()
-					.getProperty("Delay", "400"));
+			int delay = Integer.parseInt(Utils.Util.getProperties().getProperty("Delay", "400"));
 			Thread.sleep(delay);
 
 			socket.send(packet);
 		} catch (IOException | InterruptedException e) {
-			Util.getLogger()
-					.log(Level.WARNING,
-							"Something went wrong sending the recovery packet, printing stack trace");
+			Util.getLogger().log(Level.WARNING,
+					"Something went wrong sending the recovery packet, printing stack trace");
 			e.printStackTrace();
 		}
 

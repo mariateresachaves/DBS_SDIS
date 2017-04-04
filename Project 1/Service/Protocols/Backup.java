@@ -36,13 +36,12 @@ public class Backup {
 	public DatagramPacket make_packet(Chunk chunk) throws UnknownHostException, SocketException {
 		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
 
-		
-		//Loading Body
-		String bodymsg="";
-		for(byte x: chunk.getBodyData()){
-			bodymsg+=String.format("%02x", x);
+		// Loading Body
+		String bodymsg = "";
+		for (byte x : chunk.getBodyData()) {
+			bodymsg += String.format("%02x", x);
 		}
-			
+
 		// Create message to send
 		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n%s", version, chunk.getSenderID(),
 				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), bodymsg);
@@ -55,13 +54,13 @@ public class Backup {
 		address = InetAddress.getByName(hostname);
 
 		DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
-		
+
 		return packet;
 	}
-	
+
 	public void send_putchunk(DatagramPacket packet) throws IOException {
 		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
-		
+
 		// Socket to send the message
 		DatagramSocket socket = new DatagramSocket();
 

@@ -38,23 +38,21 @@ public class Peer {
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			System.out.println("Usage: Peer <PropertiesFile>");
-			Util.getLogger().log(Level.SEVERE,
-					"Invalid arguments at the start of application");
+			Util.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
 			System.exit(ErrorCode.ERR_WRONG_ARGS.ordinal());
 		}
 
 		// Load properties file
 		Util.loadPropertiesFile(args[0]);
-		
-		//Overload Properties Defined in File
-		if(args.length ==2){
-			//Set ServiceID
+
+		// Overload Properties Defined in File
+		if (args.length == 2) {
+			// Set ServiceID
 			Util.getProperties().setProperty("SenderID", args[1]);
 		}
 
 		// XMLDatabase
-		xmldb = new XMLDatabase(Util.getProperties().getProperty("XMLDB",
-				"./xmldb.xml"));
+		xmldb = new XMLDatabase(Util.getProperties().getProperty("XMLDB", "./xmldb.xml"));
 
 		// Start Mulicast Data Backup Listener
 		mdbl = new MDBListener();
@@ -78,12 +76,10 @@ public class Peer {
 		mc_port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
 
 		mdb_ip = Util.getProperties().getProperty("MDB_IP");
-		mdb_port = Integer.parseInt(Util.getProperties()
-				.getProperty("MDB_PORT"));
+		mdb_port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
 
 		mdr_ip = Util.getProperties().getProperty("MDR_IP");
-		mdr_port = Integer.parseInt(Util.getProperties()
-				.getProperty("MDR_PORT"));
+		mdr_port = Integer.parseInt(Util.getProperties().getProperty("MDR_PORT"));
 
 		// Multicast Control Channel
 		mc_server = new Server(mc_ip, mc_port, mc_rate);
@@ -100,8 +96,7 @@ public class Peer {
 		return database;
 	}
 
-	public static void saveChunkToDB(String filePathName,
-			ArrayList<StoredChunk> storedChunks) {
+	public static void saveChunkToDB(String filePathName, ArrayList<StoredChunk> storedChunks) {
 		database.put(filePathName, storedChunks);
 	}
 

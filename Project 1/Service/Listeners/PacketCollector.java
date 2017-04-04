@@ -3,7 +3,7 @@ package Service.Listeners;
 import java.util.ArrayList;
 
 public class PacketCollector extends ArrayList<DatedMessage> {
-	
+
 	public void deleteOlderThan(long time) {
 		long currentTime = System.currentTimeMillis();
 		ArrayList<DatedMessage> toBeRemoved = new ArrayList<DatedMessage>();
@@ -30,25 +30,28 @@ public class PacketCollector extends ArrayList<DatedMessage> {
 
 	public int numPutchunks() {
 		int ret = 0;
-		
+
 		for (DatedMessage x : this) {
-			if((x.getMessage().toUpperCase()).equals("PUTCHUNK"))
+			if ((x.getMessage().toUpperCase()).equals("PUTCHUNK"))
 				ret++;
 		}
-		
+
 		return ret;
 	}
-	
+
 	public int numStores(String fileID) {
 		int ret = 0;
-		
+
 		for (DatedMessage x : this) {
-			String msg=x.getMessage().toUpperCase();
-			if((msg.startsWith("STORED") && msg.split(" ")[2].trim().equalsIgnoreCase(fileID.trim())  ) )
-				ret++;
+			String msg = x.getMessage().toUpperCase();
+
+			if (msg.startsWith("STORED")) {
+				if (msg.split(" ")[3].trim().equalsIgnoreCase(fileID.trim()))
+					ret++;
+			}
 		}
-		
+
 		return ret;
 	}
-	
+
 }
