@@ -255,7 +255,7 @@ public class ShellInterpreter {
 
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
-					Util.getLogger().log(Level.INFO, "Chunk No " + chunk.getChunkNo() + " Stored Correctly\n");
+					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo()+1) + " Stored Correctly\n");
 				}
 
 				// number of confirmation messages received lower than the
@@ -269,6 +269,7 @@ public class ShellInterpreter {
 			}
 
 			tries = 0;
+			done = false;
 		}
 	}
 }
