@@ -252,7 +252,7 @@ public class ShellInterpreter {
 
 				// Counts number of STOREs received
 				num_stores = msgs.numStores(chunk.getFileID());
-
+				
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
 					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo()+1) + " Stored Correctly\n");
