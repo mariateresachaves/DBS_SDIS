@@ -13,8 +13,6 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 
 import Service.Peer;
-import Service.StoredChunk;
-import Service.Protocols.Restore;
 import Utils.Util;
 import Utils.Util.ErrorCode;
 
@@ -56,13 +54,13 @@ public class MCCListener implements Runnable {
 	}
 
 	public void run() {
-		Util.getLogger().log(Level.INFO, "Starting Multicast Control Channel Listener");
+		Util.getLogger().log(Level.INFO, "Starting Multicast Control Channel Listener\n");
 
 		try {
 			mcast_socket = new MulticastSocket(Integer.parseInt(this.channelport));
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Restore Channel");
+			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Restore Channel\n");
 			System.exit(ErrorCode.ERR_CREATELISTMCC.ordinal());
 		}
 
@@ -78,7 +76,7 @@ public class MCCListener implements Runnable {
 			try {
 				mcast_socket.receive(packet_received);
 			} catch (IOException e) {
-				Util.getLogger().log(Level.SEVERE, "Error Recieving packet on control channel");
+				Util.getLogger().log(Level.SEVERE, "Error Recieving packet on control channel\n");
 				System.exit(ErrorCode.ERR_MCC_PACKET.ordinal());
 			}
 
@@ -115,7 +113,6 @@ public class MCCListener implements Runnable {
 
 	private void storedProtocol(String message) {
 		String[] split = message.split(" ");
-		String version = split[1];
 		String senderId = split[2];
 		String fileId = split[3];
 		String chunkNo = split[4].trim();
@@ -128,7 +125,6 @@ public class MCCListener implements Runnable {
 	private void removedProtocol(String message) {
 
 		String[] split = message.split(" ");
-		String version = split[1];
 		String senderId = split[2];
 		String fileId = split[3];
 		String chunkNo = split[4].trim();
@@ -216,6 +212,8 @@ public class MCCListener implements Runnable {
 			Thread.sleep(delay);
 
 			socket.send(packet);
+			
+			socket.close();
 		} catch (IOException | InterruptedException e) {
 			Util.getLogger().log(Level.WARNING,
 					"Something went wrong sending the recovery packet, printing stack trace");

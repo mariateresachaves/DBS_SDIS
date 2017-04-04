@@ -16,10 +16,6 @@ public class Peer {
 	private static int mc_rate;
 	private static String mc_ip;
 	private static int mc_port;
-	private static String mdb_ip;
-	private static int mdb_port;
-	private static String mdr_ip;
-	private static int mdr_port;
 
 	private static NodeCollector mc_collector;
 
@@ -38,7 +34,7 @@ public class Peer {
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			System.out.println("Usage: Peer <PropertiesFile>");
-			Util.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application");
+			Util.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application\n");
 			System.exit(ErrorCode.ERR_WRONG_ARGS.ordinal());
 		}
 
@@ -74,12 +70,6 @@ public class Peer {
 
 		mc_ip = Util.getProperties().getProperty("MC_IP");
 		mc_port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
-
-		mdb_ip = Util.getProperties().getProperty("MDB_IP");
-		mdb_port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
-
-		mdr_ip = Util.getProperties().getProperty("MDR_IP");
-		mdr_port = Integer.parseInt(Util.getProperties().getProperty("MDR_PORT"));
 
 		// Multicast Control Channel
 		mc_server = new Server(mc_ip, mc_port, mc_rate);

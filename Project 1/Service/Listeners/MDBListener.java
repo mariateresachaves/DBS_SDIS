@@ -31,6 +31,7 @@ public class MDBListener implements Runnable {
 	}
 
 	public void run() {
+		Util.getLogger().log(Level.INFO, "Starting Multicast Data Backup Channel Listener\n");
 		// Set of variables
 		MulticastSocket mcast_socket = null;
 
@@ -38,7 +39,7 @@ public class MDBListener implements Runnable {
 			mcast_socket = new MulticastSocket(Integer.parseInt(this.channelport));
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Backup Channel");
+			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Backup Channel\n");
 			System.exit(ErrorCode.ERR_CREATELISTMDB.ordinal());
 		}
 
@@ -76,7 +77,7 @@ public class MDBListener implements Runnable {
 			switch (protocolMessage.split(" ")[0]) {
 
 			case "PUTCHUNK":
-				Util.getLogger().log(Level.INFO, "Received PUTCHUNK on MDB Channel");
+				Util.getLogger().log(Level.INFO, "Received PUTCHUNK on MDB Channel\n");
 				saveChunk(protocolMessage);
 				break;
 
@@ -105,7 +106,7 @@ public class MDBListener implements Runnable {
 	}
 
 	private void anounceStorageonMCC(Chunk c) {
-		Util.getLogger().log(Level.INFO, "Sending STORED to MC Channel");
+		Util.getLogger().log(Level.INFO, "Sending STORED to MC Channel\n");
 
 		// STORED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
 		String msg = String.format("STORED %s %s %s %d \r\n", "1.0", c.getSenderID(), c.getFileID(), c.getChunkNo());
@@ -120,7 +121,8 @@ public class MDBListener implements Runnable {
 			serverSocket.send(msgPacket);
 			serverSocket.close();
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE, "Error Creating Socket to Send STORED. Error Message " + e.getMessage());
+			Util.getLogger().log(Level.SEVERE,
+					"[-] Error Creating Socket to Send STORED. Error Message " + e.getMessage() + "\n");
 		}
 	}
 
@@ -139,12 +141,12 @@ public class MDBListener implements Runnable {
 	private void checkStorage(String loc) {
 		File f = new File(loc);
 		if (f.isDirectory() && f.canRead() && f.canWrite()) {
-			Util.getLogger().log(Level.INFO, "Chunk Directory " + loc + " is created/readable/writable");
+			Util.getLogger().log(Level.INFO, "Chunk Directory " + loc + " is created/readable/writable\n");
 		} else {
 			try {
 				f.mkdir();
 			} catch (Exception e) {
-				Util.getLogger().log(Level.SEVERE, "Error Creating chunk store");
+				Util.getLogger().log(Level.SEVERE, "[-] Error Creating chunk store \n");
 				System.exit(ErrorCode.ERR_CHUNKSTORAGE.ordinal());
 			}
 		}

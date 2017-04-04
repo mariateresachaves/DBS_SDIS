@@ -25,7 +25,7 @@ public class Deletion {
 	}
 
 	public void send_delete() throws IOException {
-		Util.getLogger().log(Level.INFO, "Sending DELETE to MC Channel");
+		Util.getLogger().log(Level.INFO, "Sending DELETE to MC Channel\n");
 
 		// MDB Channel
 		hostname = Util.getProperties().getProperty("MC_IP");

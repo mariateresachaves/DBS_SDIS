@@ -65,7 +65,7 @@ public class Server {
 							mcast_port);
 					serverSocket.send(msgPacket);
 				} catch (IOException ex) {
-					System.err.println("[-] Error sending multicast Message");
+					System.err.println("[-] Error sending multicast Message\n");
 					System.exit(ErrorCode.ERR_SENDING_ADV.ordinal());
 
 				}

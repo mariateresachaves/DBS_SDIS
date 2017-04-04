@@ -2,7 +2,6 @@ package Service.Protocols;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Formatter;
 import java.util.logging.Level;
 
 import Utils.Util.ErrorCode;
@@ -50,7 +49,7 @@ public class Chunk {
 		if (senderID != null && !senderID.equalsIgnoreCase("")) {
 			this.senderID = senderID;
 		} else {
-			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL Sender ID");
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL Sender ID\n");
 			System.exit(ErrorCode.ERR_NULLSENDERID_CHUCK.ordinal());
 		}
 	}
@@ -60,7 +59,7 @@ public class Chunk {
 		if (fileID != null && !fileID.equalsIgnoreCase("")) {
 			this.fileID = fileID;
 		} else {
-			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL File ID");
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with NULL File ID\n");
 			System.exit(ErrorCode.ERR_NULLFILEID_CHUCK.ordinal());
 		}
 	}
@@ -69,7 +68,7 @@ public class Chunk {
 		if (chunkNo >= 0 && chunkNo <= 999999) {
 			this.chunkNo = chunkNo;
 		} else {
-			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with overflowed or underflowed values");
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with overflowed or underflowed values\n");
 			System.exit(ErrorCode.ERR_OVER_CHUNK.ordinal());
 		}
 	}
@@ -78,7 +77,7 @@ public class Chunk {
 		if (replicationDegree > 0) {
 			this.replicationDegree = replicationDegree;
 		} else {
-			Utils.Util.getLogger().log(Level.SEVERE, "Invalid replication degree");
+			Utils.Util.getLogger().log(Level.SEVERE, "Invalid replication degree\n");
 			System.exit(ErrorCode.ERR_REP_DEGREE.ordinal());
 		}
 	}
@@ -87,7 +86,7 @@ public class Chunk {
 		if (bodyData != null) {
 			this.bodyData = bodyData;
 		} else {
-			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value");
+			Utils.Util.getLogger().log(Level.SEVERE, "Creating a Chunk with null Value\n");
 			System.exit(ErrorCode.ERR_NULLBODY_CHUCK.ordinal());
 		}
 	}
@@ -118,7 +117,7 @@ public class Chunk {
 
 			return true;
 		} catch (Exception e) {
-			Utils.Util.getLogger().log(Level.WARNING, "Couln't save chunk to folder");
+			Utils.Util.getLogger().log(Level.WARNING, "Couln't save chunk to folder\n");
 			return false;
 		}
 	}

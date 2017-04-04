@@ -24,7 +24,7 @@ public class MDRListener implements Runnable {
 	}
 
 	public void run() {
-		Util.getLogger().log(Level.INFO, "Starting Multicast Data Recovery Channel Listener");
+		Util.getLogger().log(Level.INFO, "Starting Multicast Data Recovery Channel Listener\n");
 		// Set of variables
 		MulticastSocket mcast_socket = null;
 
@@ -32,7 +32,7 @@ public class MDRListener implements Runnable {
 			mcast_socket = new MulticastSocket(Integer.parseInt(this.channelport));
 			mcast_socket.joinGroup(InetAddress.getByName(this.channelIP));
 		} catch (Exception e) {
-			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Recovery Channel");
+			Util.getLogger().log(Level.SEVERE, "Error creating Listener for multicast Recovery Channel\n");
 			System.exit(ErrorCode.ERR_CREATELISTMDR.ordinal());
 		}
 
@@ -84,7 +84,7 @@ public class MDRListener implements Runnable {
 				f.flush();
 				f.close();
 			} catch (FileNotFoundException e) {
-				Util.getLogger().log(Level.WARNING, "Error saving recovery message");
+				Util.getLogger().log(Level.WARNING, "Error saving recovery message\n");
 			}
 		}
 	}

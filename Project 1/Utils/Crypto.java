@@ -14,7 +14,7 @@ public class Crypto {
 		if (hash != null) {
 			hash = hash.toUpperCase();
 		} else {
-			throw new Exception("[-] Invalid String passed to getFileHash function]");
+			throw new Exception("[-] Invalid String passed to getFileHash function\n");
 		}
 
 		MessageDigest md = MessageDigest.getInstance(hash);

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.net.SocketException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -22,7 +21,7 @@ public class ChunkController {
 		ArrayList<Chunk> ret = new ArrayList<>();
 
 		if (sizeOfChunk < 0) {
-			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk");
+			Util.getLogger().log(Level.SEVERE, "Incorrect size of Chunk\n");
 			System.exit(ErrorCode.ERR_SIZECHUNK_CHCONTROLLER.ordinal());
 		}
 
@@ -52,7 +51,7 @@ public class ChunkController {
 				ret.add(makeChunk(f, chunkNo, replicationDegree, chunkData));
 			}
 		} else {
-			Util.getLogger().log(Level.SEVERE, "Cannot read file.");
+			Util.getLogger().log(Level.SEVERE, "Cannot read file\n");
 			System.exit(ErrorCode.ERR_SIZECHUNK_CHCONTROLLER.ordinal());
 		}
 		return ret;

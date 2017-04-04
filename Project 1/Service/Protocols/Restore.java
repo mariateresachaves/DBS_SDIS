@@ -26,7 +26,7 @@ public class Restore {
 	}
 
 	public void send_getchunk() throws IOException {
-		Util.getLogger().log(Level.INFO, "Sending GETCHUNK to MC Channel");
+		Util.getLogger().log(Level.INFO, "Sending GETCHUNK to MC Channel\n");
 
 		String tmp_msg = null;
 		byte[] msg;

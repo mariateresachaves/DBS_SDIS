@@ -22,7 +22,7 @@ public class Backup {
 	private static InetAddress address;
 
 	public Backup(String filePathName, String replicationDegree) throws Exception {
-		Util.getLogger().log(Level.INFO, "Breaking File Into Chunks");
+		Util.getLogger().log(Level.INFO, "Breaking File Into Chunks\n");
 
 		version = "1.0";
 		File f = new File(filePathName);
@@ -34,7 +34,7 @@ public class Backup {
 	}
 
 	public DatagramPacket make_packet(Chunk chunk) throws UnknownHostException, SocketException {
-		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
+		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel\n");
 
 		// Loading Body
 		String bodymsg = "";
@@ -59,7 +59,7 @@ public class Backup {
 	}
 
 	public void send_putchunk(DatagramPacket packet) throws IOException {
-		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel");
+		Util.getLogger().log(Level.INFO, "Sending PUTCHUNK to MDB Channel\n");
 
 		// Socket to send the message
 		DatagramSocket socket = new DatagramSocket();

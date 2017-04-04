@@ -30,7 +30,7 @@ public class Reclaim {
 	}
 
 	public void send_removed() throws IOException {
-		Util.getLogger().log(Level.INFO, "Sending REMOVED to MC Channel");
+		Util.getLogger().log(Level.INFO, "Sending REMOVED to MC Channel\n");
 
 		// TODO: Which chunk is going to be removed?
 
