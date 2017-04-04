@@ -277,17 +277,5 @@ public class ShellInterpreter {
 
 			tries = 0;
 		}
-
-		// TODO:
-		/*
-		 * The initiator-peer collects the confirmation messages during a time
-		 * interval of one second. If the number of confirmation messages it
-		 * received up to the end of that interval is lower than the desired
-		 * replication degree, it retransmits the backup message on the MDB
-		 * channel, and doubles the time interval for receiving confirmation
-		 * messages. This procedure is repeated up to a maximum number of five
-		 * times, i.e. the initiator will send at most 5 PUTCHUNK messages per
-		 * chunk.
-		 */
 	}
 }
