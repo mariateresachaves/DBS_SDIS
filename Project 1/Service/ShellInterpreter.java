@@ -238,7 +238,7 @@ public class ShellInterpreter {
 
 					// Adicionar part à base de dados
 					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
-						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo());
+						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree());
 					}
 
 					controller.send_putchunk(packet);

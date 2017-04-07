@@ -273,7 +273,7 @@ public class XMLDatabase {
 		add.appendChild(file);
 	}
 
-	public void addFilePart(String filePath, String fileID, int chunkNo) {
+	public void addFilePart(String filePath, String fileID, int chunkNo, int repDegree) {
 		NodeList nList = doc.getElementsByTagName("file");
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -295,7 +295,7 @@ public class XMLDatabase {
 						file.setAttribute("pid", chunkNo + "");
 
 						Element prd = doc.createElement("partRD");
-						prd.appendChild(doc.createTextNode("0"));
+						prd.appendChild(doc.createTextNode(Integer.toString(repDegree)));
 
 						file.appendChild(prd);
 
