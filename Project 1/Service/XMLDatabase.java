@@ -75,7 +75,7 @@ public class XMLDatabase {
 
 		Element rd = doc.createElement("RD");
 		rd.appendChild(doc.createTextNode(ird));
-
+		
 		file.appendChild(filepath);
 		file.appendChild(fileId);
 		file.appendChild(drd);
@@ -229,7 +229,7 @@ public class XMLDatabase {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 				Element eElement = (Element) nNode;
-				line = String.format("%s\t%s\t%s\t%s\t%s\n",
+				line = String.format("SenderId -> %s\tFileId -> %s\tChunkNo -> %s\tDesiredRD -> %s\tRD -> %s\n",
 
 						eElement.getElementsByTagName("senderId").item(0).getTextContent(),
 						eElement.getElementsByTagName("fileId").item(0).getTextContent(),
