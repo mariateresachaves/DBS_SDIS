@@ -159,9 +159,11 @@ public class ShellInterpreter {
 		ArrayList<String> chunks = Peer.xmldb.getChunks();
 
 		System.out.println("Files initiated from this endpoint\n");
+		
 		for (String x : files) {
 			System.out.println(x);
 		}
+		
 		System.out.println("Chunks stored in this endpoint\n");
 		for (String x : chunks) {
 			System.out.println(x);

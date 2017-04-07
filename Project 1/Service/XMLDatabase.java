@@ -105,7 +105,7 @@ public class XMLDatabase {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 				Element eElement = (Element) nNode;
-				line = String.format("%s\t%s\t%s\t%s\n",
+				line = String.format("Path -> %s\t|\tID -> %s\t|\tDesiredRD -> %s\t|\tRD -> %s\n",
 						eElement.getElementsByTagName("filepath").item(0).getTextContent(),
 						eElement.getElementsByTagName("fileId").item(0).getTextContent(),
 						eElement.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent(),
@@ -118,7 +118,7 @@ public class XMLDatabase {
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 						Element part = (Element) partNode;
-						line = String.format("\n%s\tPart %s\t RD->%s\n", line, part.getAttribute("pid"),
+						line = String.format("%s\tPart-> %s\tRD -> %s\n", line, part.getAttribute("pid"),
 								part.getElementsByTagName("partRD").item(0).getTextContent());
 					}
 				}
