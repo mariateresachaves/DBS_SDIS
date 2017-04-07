@@ -270,11 +270,6 @@ public class XMLDatabase {
 		file.appendChild(drd);
 		file.appendChild(rd);
 
-		System.out.println(filepath);
-		System.out.println(fileId);
-		System.out.println(chunkNo);
-		System.out.println(rd);
-
 		add.appendChild(file);
 	}
 
