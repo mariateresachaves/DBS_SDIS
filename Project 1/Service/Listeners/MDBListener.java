@@ -92,7 +92,7 @@ public class MDBListener implements Runnable {
 			Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]), Integer.parseInt(split[5].trim()),
 					split[6].getBytes());
 
-			System.out.println("[+] Saving Chunk No " + split[4]);
+			System.out.println("[+] Saving Chunk No " + (Integer.parseInt(split[4])+1));
 			if (!Peer.xmldb.isChunkPresent(c.getSenderID().trim(), c.getFileID().trim(), c.getChunkNo() + "")) {
 				Peer.xmldb.addChunk(c.getSenderID().trim(), c.getFileID().trim(), c.getChunkNo() + "",
 						c.getReplicationDegree() + "", c.getReplicationDegree() + "");
