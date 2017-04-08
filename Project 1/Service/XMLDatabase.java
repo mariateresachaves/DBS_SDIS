@@ -405,6 +405,7 @@ public class XMLDatabase {
 
 	public void deleteChunk(String fileId) {
 		NodeList nList = doc.getElementsByTagName("chunk");
+		ArrayList<Element> elementsToBeRemoved=new ArrayList<>();
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -415,10 +416,11 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent().trim();
 
-					if (fID.equalsIgnoreCase(fileId)) {
-						eElement.getParentNode().removeChild(eElement);
+					if (fID.equalsIgnoreCase(fileId.trim())) {
+						elementsToBeRemoved.add(eElement);
+						//eElement.getParentNode().removeChild(eElement);
 					}
 				} catch (NullPointerException e) {
 					// Hammer TIME! if something gives null it means that there
@@ -426,6 +428,9 @@ public class XMLDatabase {
 					continue;
 				}
 			}
+		}
+		for(Element x: elementsToBeRemoved){
+			x.getParentNode().removeChild(x);
 		}
 	}
 
