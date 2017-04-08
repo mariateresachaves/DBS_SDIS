@@ -255,9 +255,13 @@ public class ShellInterpreter {
 				// Counts number of STOREs received
 				num_stores = msgs.numStores(chunk.getFileID(), chunk.getChunkNo()+"");
 				
+				System.out.println("NUM STORES -> " + num_stores);
+				
 				if (Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
+					
+					System.out.println("JA ESTOU NA DB SOU O NUMERO --- " + chunk.getChunkNo() + " ---");
+					
 					Peer.xmldb.updateFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), num_stores);
-					System.out.println("NUM STORES - > " + num_stores);
 				}
 
 				if (num_stores >= chunk.getReplicationDegree()) {

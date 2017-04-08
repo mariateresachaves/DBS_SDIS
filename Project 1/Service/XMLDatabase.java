@@ -322,24 +322,32 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+					String fPath = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();					
+					
 
-					if (sID.equalsIgnoreCase(filePath) && fID.equalsIgnoreCase(fileID)) {
+					if (fPath.equalsIgnoreCase(filePath) && fID.equalsIgnoreCase(fileID)) {
 
 						// Estou no ficheiro certo vou iterar agora as parts
-						NodeList parts = eElement.getElementsByTagName("part");
+						NodeList parts = eElement.getElementsByTagName("part");						
 						for (int i = 0; i < parts.getLength(); i++) {
-							Node partNode = parts.item(temp);
+							Node partNode = parts.item(i);
 							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
+								
 								try {
 									Element part = (Element) partNode;
+									
+									/*System.out.println("PID --->  " + part.getAttribute("pid"));
+									System.out.println("CHUNK NO --->  " + chunkNo);*/
+									
 									if (part.getAttribute("pid").equalsIgnoreCase(chunkNo + "")) {
 										int valor = Integer.parseInt(
-												eElement.getElementsByTagName("partRD").item(0).getTextContent());
+												part.getElementsByTagName("partRD").item(0).getTextContent());
 
-										eElement.getElementsByTagName("partRD").item(0)
+										System.out.println("VALOR --> " + valor);
+										System.out.println("RD NOVO = " + (valor + valorAAdicionar));
+										
+										part.getElementsByTagName("partRD").item(0)
 												.setTextContent((valor + valorAAdicionar) + "");
 									}
 								} catch (Exception e) {
@@ -405,7 +413,6 @@ public class XMLDatabase {
 
 	public void deleteChunk(String fileId) {
 		NodeList nList = doc.getElementsByTagName("chunk");
-		ArrayList<Element> elementsToBeRemoved=new ArrayList<>();
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -416,11 +423,10 @@ public class XMLDatabase {
 				try {
 					Element eElement = (Element) nNode;
 
-					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent().trim();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
 
-					if (fID.equalsIgnoreCase(fileId.trim())) {
-						elementsToBeRemoved.add(eElement);
-						//eElement.getParentNode().removeChild(eElement);
+					if (fID.equalsIgnoreCase(fileId)) {
+						eElement.getParentNode().removeChild(eElement);
 					}
 				} catch (NullPointerException e) {
 					// Hammer TIME! if something gives null it means that there
@@ -428,9 +434,6 @@ public class XMLDatabase {
 					continue;
 				}
 			}
-		}
-		for(Element x: elementsToBeRemoved){
-			x.getParentNode().removeChild(x);
 		}
 	}
 
