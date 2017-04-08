@@ -237,9 +237,8 @@ public class ShellInterpreter {
 					DatagramPacket packet = controller.make_packet(chunk);
 
 					// Adicionar part à base de dados
-					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
-						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree());
-					}
+					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo()))
+						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), 0);
 
 					controller.send_putchunk(packet);
 
@@ -254,13 +253,18 @@ public class ShellInterpreter {
 				PacketCollector msgs = Peer.mccl.getCollectedMessages();
 
 				// Counts number of STOREs received
-				num_stores = msgs.numStores(chunk.getFileID());
+				num_stores = msgs.numStores(chunk.getFileID(), chunk.getChunkNo()+"");
+				
+				if (Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
+					Peer.xmldb.updateFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), num_stores);
+					System.out.println("NUM STORES - > " + num_stores);
+				}
 
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
 					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo() + 1) + " Stored Correctly\n");
-				}
-
+				}				
+				
 				// number of confirmation messages received lower than the
 				// desired replication degree
 				else {

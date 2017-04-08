@@ -105,11 +105,10 @@ public class XMLDatabase {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 				Element eElement = (Element) nNode;
-				line = String.format("Path -> %s\t|\tID -> %s\t|\tDesiredRD -> %s\t|\tRD -> %s\n",
+				line = String.format("Path -> %s\t|\tID -> %s\t|\tDesiredRD -> %s\n",
 						eElement.getElementsByTagName("filepath").item(0).getTextContent(),
 						eElement.getElementsByTagName("fileId").item(0).getTextContent(),
-						eElement.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent(),
-						eElement.getElementsByTagName("RD").item(0).getTextContent());
+						eElement.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent());
 
 				NodeList parts = eElement.getElementsByTagName("part");
 				for (int i = 0; i < parts.getLength(); i++) {
