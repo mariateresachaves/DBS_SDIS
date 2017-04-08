@@ -12,13 +12,6 @@ import Utils.Util.ErrorCode;
 
 public class Peer {
 
-	private static Server mc_server;
-	private static int mc_rate;
-	private static String mc_ip;
-	private static int mc_port;
-
-	private static NodeCollector mc_collector;
-
 	// Chanel Listeners definition
 	public static MCCListener mccl;
 	public static MDBListener mdbl;
@@ -64,18 +57,6 @@ public class Peer {
 		mdrl = new MDRListener();
 		Thread t2 = new Thread(mdrl);
 		t2.start();
-
-		// Get multicast channels properties
-		mc_rate = Integer.parseInt(Util.getProperties().getProperty("MC_RATE"));
-
-		mc_ip = Util.getProperties().getProperty("MC_IP");
-		mc_port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
-
-		// Multicast Control Channel
-		mc_server = new Server(mc_ip, mc_port, mc_rate);
-		mc_server.createMenance();
-
-		mc_collector = new NodeCollector(mc_ip, mc_port);
 
 		// Shell Interpreter
 		shell.getShell();
