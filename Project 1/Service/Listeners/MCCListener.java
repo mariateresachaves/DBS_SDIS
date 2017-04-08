@@ -215,7 +215,7 @@ public class MCCListener implements Runnable {
 			Thread.sleep(r.nextInt(delay));
 
 			socket.send(packet);
-			
+
 			socket.close();
 		} catch (IOException | InterruptedException e) {
 			Util.getLogger().log(Level.WARNING,
