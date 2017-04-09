@@ -124,12 +124,17 @@ public class MCCListener implements Runnable {
 	}
 
 	private void removedProtocol(String message) {
+		Util.getLogger().log(Level.INFO, "Updating chunk replication degree\n");
 		String[] split = message.split(" ");
-		String senderId = split[2];
-		String fileId = split[3];
+		String senderId = split[2].trim();
+		String fileId = split[3].trim();
 		String chunkNo = split[4].trim();
+		System.out.println(senderId);
+		System.out.println(fileId);
+		System.out.println(chunkNo);
 
 		if (Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)) {
+			System.out.println("AQUI");
 			Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
 		}
 	}
@@ -167,7 +172,8 @@ public class MCCListener implements Runnable {
 
 		// Check if file is present
 		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
-		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + String.format("%09d", Integer.parseInt(chunkNo));
+		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-"
+				+ String.format("%09d", Integer.parseInt(chunkNo));
 		// TESTE
 		System.out.println(filePath);
 
@@ -198,14 +204,14 @@ public class MCCListener implements Runnable {
 			// Create message to send
 			String body;
 
-			//body = new String(Files.readAllBytes(f.toPath()));
-			File ftemp= new File(f.getAbsolutePath());
-			Scanner scf= new Scanner(ftemp);
-					
-			body=readFileContents(scf);
-			
-			
-			tmp_msg = String.format("CHUNK %s %s %s %09d \r\n\r\n %s", version, senderId, FileId, Integer.parseInt(chunkNo), body);
+			// body = new String(Files.readAllBytes(f.toPath()));
+			File ftemp = new File(f.getAbsolutePath());
+			Scanner scf = new Scanner(ftemp);
+
+			body = readFileContents(scf);
+
+			tmp_msg = String.format("CHUNK %s %s %s %09d \r\n\r\n %s", version, senderId, FileId,
+					Integer.parseInt(chunkNo), body);
 			// TESTE
 
 			System.out.println(body);
@@ -232,13 +238,12 @@ public class MCCListener implements Runnable {
 	}
 
 	private String readFileContents(Scanner scf) {
-		String file="";
-		
-		while(scf.hasNext()){
-			file+=scf.nextLine();
+		String file = "";
+
+		while (scf.hasNext()) {
+			file += scf.nextLine();
 		}
-		
-		
+
 		return file;
 	}
 

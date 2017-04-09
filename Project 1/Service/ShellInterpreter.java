@@ -172,7 +172,7 @@ public class ShellInterpreter {
 		}
 	}
 
-	private void protoReclaim(String[] args) {
+	private void protoReclaim(String[] args) throws IOException {
 		Util.getLogger().log(Level.INFO, "Running Reclaim Protocol\n");
 
 		// Chunk to be deleted
@@ -191,6 +191,7 @@ public class ShellInterpreter {
 				MDBListener.deleteChunk(fileId, senderId, chunkNo);
 
 				Reclaim controller = new Reclaim(fileId, Integer.parseInt(chunkNo));
+				controller.send_removed();
 				break;
 			}
 		}
