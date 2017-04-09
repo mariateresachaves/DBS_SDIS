@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 
+import Service.Listeners.DatedMessage;
 import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
@@ -159,11 +160,11 @@ public class ShellInterpreter {
 		ArrayList<String> chunks = Peer.xmldb.getChunks();
 
 		System.out.println("Files initiated from this endpoint\n");
-		
+
 		for (String x : files) {
 			System.out.println(x);
 		}
-		
+
 		System.out.println("Chunks stored in this endpoint\n");
 		for (String x : chunks) {
 			System.out.println(x);
@@ -217,7 +218,8 @@ public class ShellInterpreter {
 
 		Backup controller = new Backup(args[0], args[1]);
 		List<Chunk> chunks = controller.get_chunks();
-		int num_stores = 0, tries = 0, time = 1000;
+		int num_stores = 0, tries = 0;
+		long time;
 		boolean done = false;
 
 		// Save on the database
@@ -228,6 +230,8 @@ public class ShellInterpreter {
 		int k = 1;
 		for (Chunk chunk : chunks) {
 			System.out.println("[ ++++++ Chunk " + (k++) + " ++++++ ]\n");
+
+			time = 1000;
 
 			while (!done && tries != 5) {
 				System.out.println("[ ~~~~~~ Try " + (tries + 1) + " ~~~~~~ ]\n");
@@ -253,23 +257,22 @@ public class ShellInterpreter {
 				PacketCollector msgs = Peer.mccl.getCollectedMessages();
 
 				// Counts number of STOREs received
-				num_stores = msgs.numStores(chunk.getFileID(), chunk.getChunkNo()+"");
-				
-				
+				num_stores = msgs.numStores(chunk.getFileID(), chunk.getChunkNo() + "", time);
+
 				if (Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo()))
 					Peer.xmldb.updateFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), num_stores);
 
-				
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
 					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo() + 1) + " Stored Correctly\n");
-				}				
-				
+				}
+
 				// number of confirmation messages received lower than the
 				// desired replication degree
 				else {
 					// doubles the time interval for receiving confirmation
 					// messages
+					Util.getLogger().log(Level.INFO, "Going to try again with a period of " + time + "ms");
 					time = time * 2;
 					tries++;
 				}
