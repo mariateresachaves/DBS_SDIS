@@ -545,7 +545,7 @@ public class XMLDatabase {
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 						Element part = (Element) partNode;
-						line = String.format("%s %s %s %s",
+						line = String.format("%s %s %s %s %s\n",
 								eElement.getElementsByTagName("fileId").item(0).getTextContent(),
 								part.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent(),
 								part.getElementsByTagName("RD").item(0).getTextContent(),
@@ -558,6 +558,35 @@ public class XMLDatabase {
 					files.add(line);
 			}
 		}
+		return files;
+	}
+
+	// TODO: Fazer um get files mas para os chunks
+	public ArrayList<String> getChunksInfo() {
+		ArrayList<String> files = new ArrayList<>();
+
+		NodeList nList = doc.getElementsByTagName("chunk");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			String line = null;
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				line = String.format("%s %s %s %s %s\n",
+						eElement.getElementsByTagName("fileId").item(0).getTextContent(),
+						eElement.getElementsByTagName("desiredreplicationdegree").item(0).getTextContent(),
+						eElement.getElementsByTagName("RD").item(0).getTextContent(),
+						eElement.getElementsByTagName("chunkNo").item(0).getTextContent(),
+						eElement.getElementsByTagName("senderId").item(0).getTextContent());
+			}
+
+			if (line != null)
+				files.add(line);
+		}
+
 		return files;
 	}
 

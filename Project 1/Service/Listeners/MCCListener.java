@@ -123,7 +123,6 @@ public class MCCListener implements Runnable {
 	}
 
 	private void removedProtocol(String message) {
-
 		String[] split = message.split(" ");
 		String senderId = split[2];
 		String fileId = split[3];

@@ -147,7 +147,7 @@ public class MDBListener implements Runnable {
 		return (diskSpace > (usedSpace + chunkSize));
 	}
 
-	private void deleteChunk(String fileId, String senderId, String chunkNo) {
+	public static void deleteChunk(String fileId, String senderId, String chunkNo) {
 		// Check if file is present
 		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
 		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + chunkNo;

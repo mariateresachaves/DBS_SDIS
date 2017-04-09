@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 
 import Service.Listeners.DatedMessage;
+import Service.Listeners.MDBListener;
 import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
@@ -173,7 +174,33 @@ public class ShellInterpreter {
 
 	private void protoReclaim(String[] args) {
 		Util.getLogger().log(Level.INFO, "Running Reclaim Protocol\n");
-		Reclaim controller = new Reclaim();
+		
+		// Chunk to be deleted
+		ArrayList<String> filesInfo = Peer.xmldb.getChunksInfo();
+
+		for (String fileInfo : filesInfo) {
+			String[] split = fileInfo.split(" ");
+			String fileId = split[0];
+			String desiredRD = split[1];
+			String RD = split[2];
+			String chunkNo = split[3];
+			String senderId = split[4];
+			
+			if (Integer.parseInt(desiredRD) > Integer.parseInt(RD)) {
+				System.out.println("****** INFO ******");
+				System.out.println("FILE ID * " + fileId);
+				System.out.println("DESIRED RD * " + desiredRD);
+				System.out.println("RD * " + RD);
+				System.out.println("CHUNK NO * " + chunkNo);
+				System.out.println("SENDER ID * " + senderId);
+				System.out.println("******************");
+				
+				Util.getLogger().log(Level.INFO, "Deleting chunk No " + chunkNo + "\n");
+				MDBListener.deleteChunk(fileId, senderId, chunkNo);
+				
+				Reclaim controller = new Reclaim(fileId, Integer.parseInt(chunkNo));
+			}
+		}
 	}
 
 	private void protoDelete(String[] args) throws IOException {

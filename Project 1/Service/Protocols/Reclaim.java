@@ -1,61 +1,49 @@
 package Service.Protocols;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.logging.Level;
 
-import Service.StoredChunk;
 import Utils.Util;
 
-/*
- * The algorithm for managing the disk space reserved for the backup service
- * is not specified. Each implementation can use its own. However, when a
- * peer deletes a copy of a chunk it has backed up, it shall send to the MC
- * channel the following message:
- * 
- * REMOVED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
- */
-
 public class Reclaim {
-
-	private static StoredChunk chunk_info;
+	private String fileId;
+	private int chunkNo;
 	private static String version;
 
 	private static String hostname;
 	private static int port;
 	private static InetAddress address;
 
-	public Reclaim() {
+	public Reclaim(String fileId, int chunkNo) {
+		this.fileId = fileId;
+		this.chunkNo = chunkNo;
 		version = "1.0";
 	}
 
 	public void send_removed() throws IOException {
 		Util.getLogger().log(Level.INFO, "Sending REMOVED to MC Channel\n");
 
-		// TODO: Which chunk is going to be removed?
+		// MDB Channel
+		hostname = Util.getProperties().getProperty("MC_IP");
+		port = Integer.parseInt(Util.getProperties().getProperty("MC_PORT"));
+		address = InetAddress.getByName(hostname);
 
 		// Create message to send
-		/*
-		 * String tmp_msg = String.format("REMOVED %s %s %s %d %d \r\n%s",
-		 * version, chunk.getSenderID(), chunk.getFileID(), chunk.getChunkNo(),
-		 * chunk.getReplicationDegree(), chunk.getBodyData());
-		 * 
-		 * byte[] msg = tmp_msg.getBytes();
-		 * 
-		 * // Socket to send the message DatagramSocket socket = new
-		 * DatagramSocket();
-		 * 
-		 * // MDB Channel hostname = Util.getProperties().getProperty("MDB_IP");
-		 * port =
-		 * Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
-		 * address = InetAddress.getByName(hostname);
-		 * 
-		 * DatagramPacket packet = new DatagramPacket(msg, msg.length, address,
-		 * port);
-		 * 
-		 * socket.send(packet);
-		 * 
-		 * socket.close();
-		 */
+		// REMOVED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
+		String tmp_msg = String.format("REMOVED %s %s %s %s \r\n\r\n", version,
+				Util.getProperties().getProperty("SenderID"), fileId, chunkNo);
+
+		byte[] msg = tmp_msg.getBytes();
+
+		// Socket to send the message
+		DatagramSocket socket = new DatagramSocket();
+
+		DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
+		socket.send(packet);
+
+		socket.close();
 	}
 }
