@@ -216,6 +216,34 @@ public class XMLDatabase {
 		}
 		return false;
 	}
+	
+	public int getFilePartSize(String filePath) {
+		NodeList nList = doc.getElementsByTagName("file");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+
+					if (sID.equalsIgnoreCase(filePath)) {
+						return eElement.getElementsByTagName("part").getLength();
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+		}
+		return 0;
+	}
 
 	public ArrayList<String> getChunks() {
 		ArrayList<String> files = new ArrayList<>();
@@ -343,7 +371,7 @@ public class XMLDatabase {
 										eElement.getElementsByTagName("partRD").item(0)
 												.setTextContent((valor + valorAAdicionar) + "");
 									}
-								} catch (Exception e) {
+								} catch (NullPointerException e) {
 									// NOPE
 								}
 							}

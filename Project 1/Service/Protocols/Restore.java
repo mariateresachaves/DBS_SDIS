@@ -1,27 +1,39 @@
 package Service.Protocols;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import Service.Peer;
 import Service.StoredChunk;
+import Service.Listeners.MCCListener;
+import Service.Listeners.MDRListener;
+import Service.Listeners.PacketCollector;
 import Utils.Util;
 
 public class Restore {
 
-	private static ArrayList<StoredChunk> chunks_info;
-	private static String version;
+	// private static ArrayList<StoredChunk> chunks_info;
+	private int numOfChunks = 0;
+	private String fileIDToRestore;
+	private String path;
+	private String version;
 
 	private static String hostname;
 	private static int port;
 	private static InetAddress address;
 
 	public Restore(String filePathName) {
-		chunks_info = Peer.getStoredChunk(filePathName);
+		// chunks_info = Peer.getStoredChunk(filePathName);
+		numOfChunks = Peer.xmldb.getFilePartSize(filePathName);
+		fileIDToRestore = Peer.xmldb.getFileID(filePathName);
+		path = filePathName.substring(filePathName.lastIndexOf("/"));
 		version = "1.0";
 	}
 
@@ -40,9 +52,9 @@ public class Restore {
 		address = InetAddress.getByName(hostname);
 
 		// Create message to send
-		for (StoredChunk chunk_info : chunks_info) {
-			tmp_msg = String.format("GETCHUNK %s %s %s %d \r\n\r\n", version, chunk_info.getSenderID(),
-					chunk_info.getFileID(), chunk_info.getChunkNo());
+		for (int i = 0; i < numOfChunks; i++) {
+			tmp_msg = String.format("GETCHUNK %s %s %s %d \r\n\r\n", version,
+					Utils.Util.getProperties().getProperty("SenderID"), fileIDToRestore, i);
 
 			msg = tmp_msg.getBytes();
 
@@ -51,6 +63,76 @@ public class Restore {
 		}
 
 		socket.close();
+	}
+
+	public void assemblyFile() {
+		
+		ArrayList<String> rest = MDRListener.getRestores(fileIDToRestore);
+		String ass = "";
+
+		for (int i = 0; i < numOfChunks; i++) {
+			String ch = getChunkWithNo(rest, i);
+			if (ch.equalsIgnoreCase("")) {
+				//System.out.println("\t\t\tError");
+				continue;
+			} else {
+				ass +=ch;
+			}
+
+		}
+
+		//System.out.println("BUILDING-->"+ass);
+		
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(Utils.Util.getProperties().getProperty("Recovery") + "/" + path);
+			byte[] bfout = stringSplitByPair(ass);
+
+			fos.write(bfout);
+			
+			fos.flush();
+			fos.close();
+		} catch (IOException e) {
+			Utils.Util.getLogger().log(Level.WARNING, "Error Recovering file");
+			e.printStackTrace();
+		}
+
+		
+
+	}
+
+	private byte[] stringSplitByPair(String ass) {
+		String temp = "";
+		for (int i = 0; i <= (ass.length() - 2); i = i + 2) {
+			temp += (ass.charAt(i)+"") + (ass.charAt(i+1) + " ");
+		}
+
+		String[] sp = temp.trim().split(" ");
+
+		// http://stackoverflow.com/questions/18832812/string-of-bytes-to-byte-array
+
+		byte[] bytes = new byte[sp.length];
+		for (int i = 0; i < bytes.length; ++i) {
+			if(sp[i].equals("")){
+				continue;
+			}
+			bytes[i] = (byte)( Integer.parseInt(sp[i].trim(), 16) );
+			
+		}
+		return bytes;
+
+	}
+
+	public String getChunkWithNo(ArrayList<String> msgs, int i) {
+		for (String x : msgs) {
+			String[] split = x.split(" ");
+			int valorPercorrido = Integer.parseInt(split[4].trim());
+			if (valorPercorrido == i) {
+				//System.out.println("A RETORNAR!!-> "+split[6].trim());
+				return split[6].trim();
+			}
+		}
+		return "";
 	}
 
 }

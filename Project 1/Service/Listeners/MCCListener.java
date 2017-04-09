@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.file.Files;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -167,9 +168,10 @@ public class MCCListener implements Runnable {
 
 		// Check if file is present
 		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
-		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + chunkNo;
+		//System.out.println("CHUNKNOOOO->"+chunkNo);
+		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + String.format("%09d", Integer.parseInt(chunkNo));
 		// TESTE
-		System.out.println(filePath);
+		//System.out.println(filePath);
 
 		File f = new File(filePath);
 		if (f.exists() && f.canRead()) {
@@ -190,19 +192,23 @@ public class MCCListener implements Runnable {
 			DatagramSocket socket = new DatagramSocket();
 
 			// MDB() Channel
-			hostname = Util.getProperties().getProperty("MDB_IP");
-			port = Integer.parseInt(Util.getProperties().getProperty("MDB_PORT"));
+			hostname = Util.getProperties().getProperty("MDR_IP");
+			port = Integer.parseInt(Util.getProperties().getProperty("MDR_PORT"));
 			address = InetAddress.getByName(hostname);
 			String senderId = Util.getProperties().getProperty("SenderID");
 
 			// Create message to send
 			String body;
 
-			body = new String(Files.readAllBytes(f.toPath()));
-			tmp_msg = String.format("CHUNK %s %s %s %d \r\n\r\n %s", version, senderId, FileId, chunkNo, body);
+			//body = new String(Files.readAllBytes(f.toPath()));
+			File ftemp=new File(f.getAbsolutePath());
+			Scanner scf = new Scanner(ftemp);
+			body=readFileContentents(scf);
+			
+			tmp_msg = String.format("CHUNK %s %s %s %09d \r\n\r\n %s", version, senderId, FileId, Integer.parseInt(chunkNo), body);
 			// TESTE
 
-			System.out.println(body);
+			//System.out.println(body);
 			// TESTE
 			msg = tmp_msg.getBytes();
 
@@ -223,6 +229,15 @@ public class MCCListener implements Runnable {
 			e.printStackTrace();
 		}
 
+	}
+
+	private String readFileContentents(Scanner scf) {
+		String file="";
+		
+		while(scf.hasNext()){
+			file+=scf.nextLine();
+		}
+		return file;
 	}
 
 	private String processProtocol(String response) {

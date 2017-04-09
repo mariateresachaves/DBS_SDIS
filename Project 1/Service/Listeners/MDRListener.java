@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.logging.Level;
 
@@ -16,11 +17,12 @@ public class MDRListener implements Runnable {
 	private String recovertLocation;
 	private String channelIP;
 	private String channelport;
+	private static ArrayList <String> packetsForRecovery= new ArrayList<>();
 
 	public MDRListener() {
-		channelIP = Util.getProperties().getProperty("Recovery", "./recovery");
-		channelIP = Util.getProperties().getProperty("MC_IP", "224.13.3.3");
-		channelport = Util.getProperties().getProperty("MC_PORT", "9178");
+		recovertLocation = Util.getProperties().getProperty("Recovery", "./recovery");
+		channelIP = Util.getProperties().getProperty("MDR_IP", "224.13.3.3");
+		channelport = Util.getProperties().getProperty("MDR_PORT", "9178");
 	}
 
 	public void run() {
@@ -40,19 +42,22 @@ public class MDRListener implements Runnable {
 	}
 
 	private void recieveMessage(MulticastSocket sck) {
-		byte[] buf = new byte[4096];
-		DatagramPacket packet_received = new DatagramPacket(buf, buf.length);
+		
 
 		try {
 			while (true) {
-
+				byte[] buf = new byte[4096];
+				DatagramPacket packet_received = new DatagramPacket(buf, buf.length);
 				sck.receive(packet_received);
 
 				String response = new String(packet_received.getData());
 				String protocolMessage = processProtocol(response);
 
+				packetsForRecovery.add(protocolMessage);
+				
 				selectProtocol(protocolMessage);
-
+				//System.out.println("RECIEVED PACKET!");
+				//System.out.println(protocolMessage);
 			}
 		} catch (Exception e) {
 			Util.getLogger().log(Level.WARNING, "Error Recieving packet, Error Message: ");
@@ -71,16 +76,20 @@ public class MDRListener implements Runnable {
 
 	private void recoverChunk(String protocolMessage) {
 
+		
+		
 		File folder = new File(recovertLocation + "/" + protocolMessage.split(" ")[3]);
 		if (!folder.exists()) {
 			folder.mkdir();
 		}
+		//System.out.println("FOLDER-> "+ recovertLocation + "/" + protocolMessage.split(" ")[3]);
+		folder = new File(recovertLocation + "/" + protocolMessage.split(" ")[3]);
 		if (folder.isDirectory() && folder.canWrite()) {
 			try {
-				Formatter f = new Formatter(new File(folder.getPath() + "/" + protocolMessage.split(" ")[3]));
+				Formatter f = new Formatter(new File(folder.getPath() + "/" + protocolMessage.split(" ")[4]));
 				String[] processedMessage = protocolMessage.split(" ");
 				f.format("%s %s %s \r\n\r\n%s", processedMessage[2], processedMessage[3], processedMessage[4],
-						processedMessage[5]);
+						processedMessage[6]);
 				f.flush();
 				f.close();
 			} catch (FileNotFoundException e) {
@@ -100,5 +109,19 @@ public class MDRListener implements Runnable {
 			return processProtocol(processed);
 		}
 	}
+	public static ArrayList<String> getRestores(String fileID) {
+		ArrayList<String> ret=new ArrayList<>();
+		ArrayList<String> temp=new ArrayList(packetsForRecovery);
+		
+		for (String msg : temp) {
+			
+			if (msg.startsWith("CHUNK")) {
 
+				if (msg.split(" ")[3].trim().equalsIgnoreCase(fileID.trim()))
+					ret.add(msg);
+
+			}
+		}
+		return ret;
+	}
 }

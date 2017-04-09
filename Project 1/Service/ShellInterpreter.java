@@ -195,6 +195,13 @@ public class ShellInterpreter {
 		Restore controller = new Restore(args[0]);
 
 		controller.send_getchunk();
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		controller.assemblyFile();
 
 		// TODO:
 		/*
