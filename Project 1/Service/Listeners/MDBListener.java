@@ -107,7 +107,7 @@ public class MDBListener implements Runnable {
 					String chunkNo = split[3];
 					String senderId = split[4];
 
-					if (Integer.parseInt(desiredRD) > Integer.parseInt(RD))
+					if (Integer.parseInt(desiredRD) < Integer.parseInt(RD))
 						deleteChunk(fileId, senderId, chunkNo);
 				}
 				// Enough free space
@@ -150,7 +150,8 @@ public class MDBListener implements Runnable {
 	public static void deleteChunk(String fileId, String senderId, String chunkNo) {
 		// Check if file is present
 		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
-		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + chunkNo;
+		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-"
+				+ String.format("%09d", Integer.parseInt(chunkNo));
 
 		File f = new File(filePath);
 

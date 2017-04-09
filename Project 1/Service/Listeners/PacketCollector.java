@@ -71,6 +71,4 @@ public class PacketCollector extends ArrayList<DatedMessage> {
 		return ret;
 	}
 
-	
-
 }

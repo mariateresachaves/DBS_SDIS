@@ -215,34 +215,6 @@ public class XMLDatabase {
 		}
 		return false;
 	}
-	
-	public int getFilePartSize(String filePath) {
-		NodeList nList = doc.getElementsByTagName("file");
-
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-
-			Node nNode = nList.item(temp);
-
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-				try {
-					Element eElement = (Element) nNode;
-
-					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
-
-					if (sID.equalsIgnoreCase(filePath)) {
-						return eElement.getElementsByTagName("part").getLength();
-					}
-				} catch (NullPointerException e) {
-					// Hammer TIME! if something gives null it means that there
-					// is no record
-					continue;
-				}
-			}
-		}
-		return 0;
-	}
 
 	public ArrayList<String> getChunks() {
 		ArrayList<String> files = new ArrayList<>();
@@ -371,7 +343,7 @@ public class XMLDatabase {
 										part.getElementsByTagName("partRD").item(0)
 												.setTextContent((valor + valorAAdicionar) + "");
 									}
-								} catch (NullPointerException e) {
+								} catch (Exception e) {
 									// NOPE
 								}
 							}
@@ -471,25 +443,11 @@ public class XMLDatabase {
 					Element eElement = (Element) nNode;
 
 					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+					String cNo = eElement.getElementsByTagName("chunkNo").item(0).getTextContent();
 
-					if (fID.equalsIgnoreCase(fileId)) {
+					if (fID.equalsIgnoreCase(fileId) && cNo.equalsIgnoreCase(chunkNo))
+						eElement.getParentNode().removeChild(eElement);
 
-						NodeList parts = eElement.getElementsByTagName("chunk");
-						for (int i = 0; i < parts.getLength(); i++) {
-							Node partNode = parts.item(i);
-
-							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-								Element chunk = (Element) partNode;
-
-								String cNo = chunk.getElementsByTagName("chunkNo").item(0).getTextContent();
-
-								if (cNo.equalsIgnoreCase(chunkNo)) {
-									chunk.getParentNode().removeChild(chunk);
-								}
-							}
-						}
-					}
 				} catch (NullPointerException e) {
 					// Hammer TIME! if something gives null it means that there
 					// is no record
@@ -497,6 +455,7 @@ public class XMLDatabase {
 				}
 			}
 		}
+
 	}
 
 	public void deleteFile(String fileId) {
