@@ -167,10 +167,9 @@ public class MCCListener implements Runnable {
 
 		// Check if file is present
 		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
-		//System.out.println("CHUNKNOOOO->"+chunkNo);
 		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + String.format("%09d", Integer.parseInt(chunkNo));
 		// TESTE
-		//System.out.println(filePath);
+		System.out.println(filePath);
 
 		File f = new File(filePath);
 		if (f.exists() && f.canRead()) {
@@ -200,14 +199,16 @@ public class MCCListener implements Runnable {
 			String body;
 
 			//body = new String(Files.readAllBytes(f.toPath()));
-			File ftemp=new File(f.getAbsolutePath());
-			Scanner scf = new Scanner(ftemp);
-			body=readFileContentents(scf);
+			File ftemp= new File(f.getAbsolutePath());
+			Scanner scf= new Scanner(ftemp);
+					
+			body=readFileContents(scf);
+			
 			
 			tmp_msg = String.format("CHUNK %s %s %s %09d \r\n\r\n %s", version, senderId, FileId, Integer.parseInt(chunkNo), body);
 			// TESTE
 
-			//System.out.println(body);
+			System.out.println(body);
 			// TESTE
 			msg = tmp_msg.getBytes();
 
@@ -230,12 +231,14 @@ public class MCCListener implements Runnable {
 
 	}
 
-	private String readFileContentents(Scanner scf) {
+	private String readFileContents(Scanner scf) {
 		String file="";
 		
 		while(scf.hasNext()){
 			file+=scf.nextLine();
 		}
+		
+		
 		return file;
 	}
 
