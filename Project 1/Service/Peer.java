@@ -58,10 +58,6 @@ public class Peer {
 		Thread t2 = new Thread(mdrl);
 		t2.start();
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f6f9554a81c30699a04c63c248e02263dd5d49c3
 		// Shell Interpreter
 		shell.getShell();
 
