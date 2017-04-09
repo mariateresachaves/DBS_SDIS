@@ -1,5 +1,6 @@
 package Service.Protocols;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,8 +66,29 @@ public class Restore {
 		socket.close();
 	}
 
-	public void assemblyFile() {
+	public boolean assemblyFile() {
+		int sleep=Integer.parseInt(Utils.Util.getProperties().getProperty("SleepOnInsuccessRestore", "20000"));
+		int retries=Integer.parseInt(Utils.Util.getProperties().getProperty("RetriesOnRestore", "5"));
+		for(int i=0;i<retries;i++){
+			
+			try {
+				Thread.sleep(sleep);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(restoreFile()){
+				return true;
+			}
+		}
+		return false;
 		
+
+	}
+
+	private boolean restoreFile() {
+
 		ArrayList<String> rest = MDRListener.getRestores(fileIDToRestore);
 		String ass = "";
 
@@ -74,7 +96,9 @@ public class Restore {
 			String ch = getChunkWithNo(rest, i);
 			if (ch.equalsIgnoreCase("")) {
 				//System.out.println("\t\t\tError");
-				continue;
+				int sleep=Integer.parseInt(Utils.Util.getProperties().getProperty("SleepOnInsuccessRestore", "20000"));
+				System.out.println("Looks Like I am not ready to compile the file Sleeping for "+sleep+" ms");
+				return false;
 			} else {
 				ass +=ch;
 			}
@@ -85,6 +109,13 @@ public class Restore {
 		
 		FileOutputStream fos;
 		try {
+			//Verificacao da pasta de recovery
+			File fd= new File(Utils.Util.getProperties().getProperty("Recovery"));
+			if(!fd.exists()){
+				fd.mkdir();
+			}
+			
+			
 			fos = new FileOutputStream(Utils.Util.getProperties().getProperty("Recovery") + "/" + path);
 			byte[] bfout = stringSplitByPair(ass);
 
@@ -97,8 +128,8 @@ public class Restore {
 			e.printStackTrace();
 		}
 
+		return true;
 		
-
 	}
 
 	private byte[] stringSplitByPair(String ass) {
