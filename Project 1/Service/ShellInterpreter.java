@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 
+import Service.Listeners.DatedMessage;
+import Service.Listeners.MDBListener;
 import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
 import Service.Protocols.Chunk;
@@ -159,11 +161,11 @@ public class ShellInterpreter {
 		ArrayList<String> chunks = Peer.xmldb.getChunks();
 
 		System.out.println("Files initiated from this endpoint\n");
-		
+
 		for (String x : files) {
 			System.out.println(x);
 		}
-		
+
 		System.out.println("Chunks stored in this endpoint\n");
 		for (String x : chunks) {
 			System.out.println(x);
@@ -172,7 +174,33 @@ public class ShellInterpreter {
 
 	private void protoReclaim(String[] args) {
 		Util.getLogger().log(Level.INFO, "Running Reclaim Protocol\n");
-		Reclaim controller = new Reclaim();
+		
+		// Chunk to be deleted
+		ArrayList<String> filesInfo = Peer.xmldb.getChunksInfo();
+
+		for (String fileInfo : filesInfo) {
+			String[] split = fileInfo.split(" ");
+			String fileId = split[0];
+			String desiredRD = split[1];
+			String RD = split[2];
+			String chunkNo = split[3];
+			String senderId = split[4];
+			
+			if (Integer.parseInt(desiredRD) > Integer.parseInt(RD)) {
+				System.out.println("****** INFO ******");
+				System.out.println("FILE ID * " + fileId);
+				System.out.println("DESIRED RD * " + desiredRD);
+				System.out.println("RD * " + RD);
+				System.out.println("CHUNK NO * " + chunkNo);
+				System.out.println("SENDER ID * " + senderId);
+				System.out.println("******************");
+				
+				Util.getLogger().log(Level.INFO, "Deleting chunk No " + chunkNo + "\n");
+				MDBListener.deleteChunk(fileId, senderId, chunkNo);
+				
+				Reclaim controller = new Reclaim(fileId, Integer.parseInt(chunkNo));
+			}
+		}
 	}
 
 	private void protoDelete(String[] args) throws IOException {
@@ -224,7 +252,8 @@ public class ShellInterpreter {
 
 		Backup controller = new Backup(args[0], args[1]);
 		List<Chunk> chunks = controller.get_chunks();
-		int num_stores = 0, tries = 0, time = 1000;
+		int num_stores = 0, tries = 0;
+		long time;
 		boolean done = false;
 
 		// Save on the database
@@ -236,6 +265,8 @@ public class ShellInterpreter {
 		for (Chunk chunk : chunks) {
 			System.out.println("[ ++++++ Chunk " + (k++) + " ++++++ ]\n");
 
+			time = 1000;
+
 			while (!done && tries != 5) {
 				System.out.println("[ ~~~~~~ Try " + (tries + 1) + " ~~~~~~ ]\n");
 				int i = chunk.getReplicationDegree();
@@ -244,9 +275,8 @@ public class ShellInterpreter {
 					DatagramPacket packet = controller.make_packet(chunk);
 
 					// Adicionar part à base de dados
-					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo())) {
-						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree());
-					}
+					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo()))
+						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), 0);
 
 					controller.send_putchunk(packet);
 
@@ -261,7 +291,10 @@ public class ShellInterpreter {
 				PacketCollector msgs = Peer.mccl.getCollectedMessages();
 
 				// Counts number of STOREs received
-				num_stores = msgs.numStores(chunk.getFileID());
+				num_stores = msgs.numStores(chunk.getFileID(), chunk.getChunkNo() + "", time);
+
+				if (Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo()))
+					Peer.xmldb.updateFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), num_stores);
 
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
@@ -273,6 +306,7 @@ public class ShellInterpreter {
 				else {
 					// doubles the time interval for receiving confirmation
 					// messages
+					Util.getLogger().log(Level.INFO, "Going to try again with a period of " + time + "ms");
 					time = time * 2;
 					tries++;
 				}

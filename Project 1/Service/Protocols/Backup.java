@@ -43,7 +43,7 @@ public class Backup {
 		}
 
 		// Create message to send
-		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n%s", version, chunk.getSenderID(),
+		String tmp_msg = String.format("PUTCHUNK %s %s %s %d %d \r\n\r\n%s", version, chunk.getSenderID(),
 				chunk.getFileID(), chunk.getChunkNo(), chunk.getReplicationDegree(), bodymsg);
 
 		byte[] msg = tmp_msg.getBytes();

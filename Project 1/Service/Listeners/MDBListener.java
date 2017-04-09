@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import Service.Peer;
@@ -78,28 +79,86 @@ public class MDBListener implements Runnable {
 
 			case "PUTCHUNK":
 				Util.getLogger().log(Level.INFO, "Received PUTCHUNK on MDB Channel\n");
-				saveChunk(protocolMessage);
+				tryToSaveChunk(protocolMessage);
 				break;
 
 			}
 		}
 	}
 
+	private void tryToSaveChunk(String protocolMessage) {
+		if (hasFreeSpace()) {
+			saveChunk(protocolMessage);
+		}
+		// Disk Full
+		else {
+			Util.getLogger().log(Level.WARNING, "Disk is full - going to free some space");
+
+			ArrayList<String> filesInfo = Peer.xmldb.getFilesInfo();
+
+			// Free some space
+			for (String fileInfo : filesInfo) {
+
+				if (!hasFreeSpace()) {
+					String[] split = fileInfo.split(" ");
+					String fileId = split[0];
+					String desiredRD = split[1];
+					String RD = split[2];
+					String chunkNo = split[3];
+					String senderId = split[4];
+
+					if (Integer.parseInt(desiredRD) > Integer.parseInt(RD))
+						deleteChunk(fileId, senderId, chunkNo);
+				}
+				// Enough free space
+				else {
+					Util.getLogger().log(Level.INFO, "Enough free space now");
+					saveChunk(protocolMessage);
+					break;
+				}
+			}
+		}
+	}
+
 	private void saveChunk(String protocolMessage) {
 		String[] split = protocolMessage.split(" ");
+		Util.getLogger().log(Level.INFO, "Saving Chunk No " + (Integer.parseInt(split[4]) + 1));
 
 		if (!split[2].trim().equals(Util.getProperties().getProperty("SenderID"))) {
 			Chunk c = new Chunk(split[2], split[3], Integer.parseInt(split[4]), Integer.parseInt(split[5].trim()),
 					split[6].getBytes());
 
-			System.out.println("[+] Saving Chunk No " + (Integer.parseInt(split[4])+1));
+			System.out.println();
 			if (!Peer.xmldb.isChunkPresent(c.getSenderID().trim(), c.getFileID().trim(), c.getChunkNo() + "")) {
 				Peer.xmldb.addChunk(c.getSenderID().trim(), c.getFileID().trim(), c.getChunkNo() + "",
 						c.getReplicationDegree() + "", "0");
-				
+
 				if (c.saveToDisk(this.storage))
 					anounceStorageonMCC(c);
 			}
+		}
+	}
+
+	private boolean hasFreeSpace() {
+		int diskSpace = Integer.parseInt(Util.getProperties().getProperty("MaxDiskSpace"));
+		long usedSpace = Util.folderSize(new File(Util.getProperties().getProperty("ChunksLocation")));
+		int chunkSize = Integer.parseInt(Util.getProperties().getProperty("CHUNK_SIZE"));
+
+		return (diskSpace > (usedSpace + chunkSize));
+	}
+
+	public static void deleteChunk(String fileId, String senderId, String chunkNo) {
+		// Check if file is present
+		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
+		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-" + chunkNo;
+
+		File f = new File(filePath);
+
+		if (f.exists()) {
+			f.delete();
+
+			// Delete chunk from db
+			Peer.xmldb.deleteChunkByChunkNo(fileId, chunkNo);
 		}
 	}
 

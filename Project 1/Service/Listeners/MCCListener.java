@@ -124,7 +124,6 @@ public class MCCListener implements Runnable {
 	}
 
 	private void removedProtocol(String message) {
-
 		String[] split = message.split(" ");
 		String senderId = split[2];
 		String fileId = split[3];
@@ -221,7 +220,7 @@ public class MCCListener implements Runnable {
 			Thread.sleep(r.nextInt(delay));
 
 			socket.send(packet);
-			
+
 			socket.close();
 		} catch (IOException | InterruptedException e) {
 			Util.getLogger().log(Level.WARNING,
