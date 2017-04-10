@@ -129,12 +129,8 @@ public class MCCListener implements Runnable {
 		String senderId = split[2].trim();
 		String fileId = split[3].trim();
 		String chunkNo = split[4].trim();
-		System.out.println(senderId);
-		System.out.println(fileId);
-		System.out.println(chunkNo);
 
 		if (Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)) {
-			System.out.println("AQUI");
 			Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
 		}
 	}
