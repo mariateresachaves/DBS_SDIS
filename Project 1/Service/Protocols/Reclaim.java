@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import Utils.Util;
 
 public class Reclaim {
+	private String senderId;
 	private String fileId;
 	private int chunkNo;
 	private static String version;
@@ -17,7 +18,8 @@ public class Reclaim {
 	private static int port;
 	private static InetAddress address;
 
-	public Reclaim(String fileId, int chunkNo) {
+	public Reclaim(String senderId, String fileId, int chunkNo) {
+		this.senderId = senderId;
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 		version = "1.0";
@@ -34,7 +36,7 @@ public class Reclaim {
 		// Create message to send
 		// REMOVED <Version> <SenderId> <FileId> <ChunkNo> <CRLF><CRLF>
 		String tmp_msg = String.format("REMOVED %s %s %s %s \r\n\r\n", version,
-				Util.getProperties().getProperty("SenderID"), fileId, chunkNo);
+				senderId, fileId, chunkNo);
 
 		byte[] msg = tmp_msg.getBytes();
 
