@@ -25,7 +25,7 @@ public class Peer {
 	private static final HashMap<String, ArrayList<StoredChunk>> database = new HashMap<>();
 
 	public static void main(String[] args) throws Exception {
-		if (args.length != 1) {
+		if (args.length != 1 && args.length!=2) {
 			System.out.println("Usage: Peer <PropertiesFile>");
 			Util.getLogger().log(Level.SEVERE, "Invalid arguments at the start of application\n");
 			System.exit(ErrorCode.ERR_WRONG_ARGS.ordinal());
@@ -59,7 +59,12 @@ public class Peer {
 		t2.start();
 
 		// Shell Interpreter
+		if( Integer.parseInt(Utils.Util.getProperties().getProperty("useRMI", "1")) == 1){
+			shell.startRMI();
+		}
 		shell.getShell();
+
+
 
 	}
 
