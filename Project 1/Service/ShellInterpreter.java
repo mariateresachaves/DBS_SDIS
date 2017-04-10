@@ -12,7 +12,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 
-import Service.Listeners.DatedMessage;
 import Service.Listeners.MDBListener;
 import Service.Listeners.PacketCollector;
 import Service.Protocols.Backup;
@@ -54,10 +53,8 @@ public class ShellInterpreter implements ConnectBackInterface {
 		case "BACKUP":
 			// Incorrect number of arguments
 			if (args.length != 2) {
-				System.out
-						.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the BACKUP command\n");
+				System.out.println("Usage: BACKUP <FilePathName> <ReplicationDegree>");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the BACKUP command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -69,8 +66,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: RESTORE <FilePathName>");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the RESTORE command\n");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RESTORE command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -82,8 +78,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 			// Incorrect number of arguments
 			if (args.length != 1) {
 				System.out.println("Usage: DELETE <FilePathName>");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the DELETE command\n");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the DELETE command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -95,8 +90,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: RECLAIM");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the RECLAIM command\n");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the RECLAIM command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -108,8 +102,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 			// Incorrect number of arguments
 			if (args.length != 0) {
 				System.out.println("Usage: STATE");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the STATE command\n");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the STATE command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -120,10 +113,8 @@ public class ShellInterpreter implements ConnectBackInterface {
 		case "SETDISK": // To define the disk space that can be used
 			// Incorrect number of arguments
 			if (args.length != 1) {
-				System.out
-						.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the SETDISK command\n");
+				System.out.println("Usage: SETDISK <MaximumDiskSpace> [KBytes]");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the SETDISK command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -136,8 +127,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 			Peer.xmldb.saveDatabase();
 			if (args.length != 0) {
 				System.out.println("Usage: QUIT");
-				Util.getLogger().log(Level.SEVERE,
-						"Invalid arguments at the QUIT command\n");
+				Util.getLogger().log(Level.SEVERE, "Invalid arguments at the QUIT command\n");
 			}
 			// Correct number of arguments
 			else {
@@ -162,8 +152,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 		try {
 			value = Integer.parseInt(args[0].trim());
 		} catch (NumberFormatException e) {
-			Util.getLogger().log(Level.WARNING,
-					"Incorrect Number Format, aborting\n");
+			Util.getLogger().log(Level.WARNING, "Incorrect Number Format, aborting\n");
 			return;
 		}
 
@@ -202,12 +191,10 @@ public class ShellInterpreter implements ConnectBackInterface {
 			String senderId = split[4].trim();
 
 			if (Integer.parseInt(desiredRD) < Integer.parseInt(RD)) {
-				Util.getLogger().log(Level.INFO,
-						"Deleting chunk No " + chunkNo + "\n");
+				Util.getLogger().log(Level.INFO, "Deleting chunk No " + chunkNo + "\n");
 				MDBListener.deleteChunk(fileId, senderId, chunkNo);
 
-				Reclaim controller = new Reclaim(senderId, fileId,
-						Integer.parseInt(chunkNo));
+				Reclaim controller = new Reclaim(senderId, fileId, Integer.parseInt(chunkNo));
 				controller.send_removed();
 				break;
 			}
@@ -227,24 +214,8 @@ public class ShellInterpreter implements ConnectBackInterface {
 
 		controller.send_getchunk();
 
-		System.out
-				.println("Request Packets Sent, Waiting for replies, this could take a while, go grab a coffe");
+		System.out.println("Request Packets Sent, Waiting for replies, this could take a while, go grab a coffe");
 		controller.assemblyFile();
-
-		// TODO:
-		/*
-		 * Upon receiving this message, a peer that has a copy of the specified
-		 * chunk shall send it in the body of a CHUNK message via the MDR
-		 * channel: CHUNK <Version> <SenderId> <FileId> <ChunkNo>
-		 * <CRLF><CRLF><Body>
-		 */
-
-		/*
-		 * To avoid flooding the host with CHUNK messages, each peer shall wait
-		 * for a random time uniformly distributed between 0 and 400 ms, before
-		 * sending the CHUNK message. If it receives a CHUNK message before that
-		 * time expires, it will not send the CHUNK message.
-		 */
 	}
 
 	private void protoBackup(String[] args) throws Exception {
@@ -257,30 +228,25 @@ public class ShellInterpreter implements ConnectBackInterface {
 		boolean done = false;
 
 		// Save on the database
-		if (!Peer.xmldb.isFilePresent(args[0], chunks.get(0).getFileID())) {
-			Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks
-					.get(0).getReplicationDegree() + "", "0");
-		}
+		if (!Peer.xmldb.isFilePresent(args[0], chunks.get(0).getFileID()))
+			Peer.xmldb.addFile(args[0], chunks.get(0).getFileID(), chunks.get(0).getReplicationDegree() + "", "0");
 
 		int k = 1;
 		for (Chunk chunk : chunks) {
-			System.out.println("[ ++++++ Chunk " + (k++) + " ++++++ ]\n");
+			System.out.println("[ ~~~~~~ Chunk " + (k++) + " ~~~~~~ ]\n");
 
 			time = 1000;
 
 			while (!done && tries != 5) {
-				System.out.println("[ ~~~~~~ Try " + (tries + 1)
-						+ " ~~~~~~ ]\n");
+				System.out.println("[ ~~~~~~ Try " + (tries + 1) + " ~~~~~~ ]\n");
 				int i = chunk.getReplicationDegree();
 
 				while (i > 0) {
 					DatagramPacket packet = controller.make_packet(chunk);
 
 					// Adicionar part à base de dados
-					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0)
-							.getFileID(), chunk.getChunkNo()))
-						Peer.xmldb.addFilePart(args[0], chunks.get(0)
-								.getFileID(), chunk.getChunkNo(), 0);
+					if (!Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo()))
+						Peer.xmldb.addFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), 0);
 
 					controller.send_putchunk(packet);
 
@@ -295,20 +261,14 @@ public class ShellInterpreter implements ConnectBackInterface {
 				PacketCollector msgs = Peer.mccl.getCollectedMessages();
 
 				// Counts number of STOREs received
-				num_stores = msgs.numStores(chunk.getFileID(),
-						chunk.getChunkNo() + "", time);
+				num_stores = msgs.numStores(chunk.getFileID(), chunk.getChunkNo() + "", time);
 
-				if (Peer.xmldb.isPartPresent(args[0],
-						chunks.get(0).getFileID(), chunk.getChunkNo()))
-					Peer.xmldb.updateFilePart(args[0], chunks.get(0)
-							.getFileID(), chunk.getChunkNo(), num_stores);
+				if (Peer.xmldb.isPartPresent(args[0], chunks.get(0).getFileID(), chunk.getChunkNo()))
+					Peer.xmldb.updateFilePart(args[0], chunks.get(0).getFileID(), chunk.getChunkNo(), num_stores);
 
 				if (num_stores >= chunk.getReplicationDegree()) {
 					done = true;
-					Util.getLogger().log(
-							Level.INFO,
-							"Chunk No " + (chunk.getChunkNo() + 1)
-									+ " Stored Correctly\n");
+					Util.getLogger().log(Level.INFO, "Chunk No " + (chunk.getChunkNo() + 1) + " Stored Correctly\n");
 				}
 
 				// number of confirmation messages received lower than the
@@ -316,10 +276,7 @@ public class ShellInterpreter implements ConnectBackInterface {
 				else {
 					// doubles the time interval for receiving confirmation
 					// messages
-					Util.getLogger().log(
-							Level.INFO,
-							"Going to try again with a period of " + time
-									+ "ms");
+					Util.getLogger().log(Level.INFO, "Going to try again with a period of " + time + "ms");
 					time = time * 2;
 					tries++;
 				}
@@ -331,36 +288,28 @@ public class ShellInterpreter implements ConnectBackInterface {
 	}
 
 	@Override
-	public String sendCommand(String proto, String[] args)
-			throws RemoteException {
+	public String sendCommand(String proto, String[] args) throws RemoteException {
 		try {
 			int value = this.inputCommand(proto, args);
 			return "Command Sent Successfully" + value;
 		} catch (Exception e) {
 			return "Something went wrong processing the request";
 		}
-
 	}
 
 	public void startRMI() {
-
 		try {
 
-			ConnectBackInterface stub = (ConnectBackInterface) UnicastRemoteObject
-					.exportObject(this, 0);
+			ConnectBackInterface stub = (ConnectBackInterface) UnicastRemoteObject.exportObject(this, 0);
 			// Bind the remote object's stub in the registry
 			Registry registry = LocateRegistry.getRegistry();
 
-			registry.rebind(
-					Utils.Util.getProperties().getProperty("SenderID",
-							"Agent999"), stub);
+			registry.rebind(Utils.Util.getProperties().getProperty("SenderID", "Agent999"), stub);
 
 			Utils.Util.getLogger().log(Level.INFO, "RMI Server Started");
 		} catch (Exception e) {
-			Utils.Util.getLogger().log(Level.WARNING,
-					"RMI Server Failed to Start Started");
+			Utils.Util.getLogger().log(Level.WARNING, "RMI Server Failed to Start Started");
 			e.printStackTrace();
 		}
-
 	}
 }

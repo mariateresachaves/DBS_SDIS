@@ -6,7 +6,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.nio.file.Files;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Timer;
@@ -26,7 +25,6 @@ public class MCCListener implements Runnable {
 	private MulticastSocket mcast_socket;
 
 	private long ttl;
-	private long start_time;
 
 	public MCCListener() {
 		// Variables assingment
@@ -35,7 +33,6 @@ public class MCCListener implements Runnable {
 
 		collectedMessages = new PacketCollector();
 
-		start_time = System.currentTimeMillis();
 		ttl = Integer.parseInt(Util.getProperties().getProperty("TTL", "1000"));
 
 		/**
@@ -126,13 +123,14 @@ public class MCCListener implements Runnable {
 	private void removedProtocol(String message) {
 		Util.getLogger().log(Level.INFO, "Updating chunk replication degree\n");
 		String[] split = message.split(" ");
-		String senderId = split[2].trim();
 		String fileId = split[3].trim();
 		String chunkNo = split[4].trim();
-		
+
 		// Update db
 		Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
 		Peer.xmldb.updateFilePart(fileId, Integer.parseInt(chunkNo), -1);
+
+		// TODO: verify rd -> backup if needed
 	}
 
 	private void deleteProtocol(String message) {
@@ -151,7 +149,6 @@ public class MCCListener implements Runnable {
 				c.delete();
 			}
 			f.delete();
-
 		}
 
 		// Deletes file from db
@@ -170,8 +167,6 @@ public class MCCListener implements Runnable {
 		String fileChunksPath = Util.getProperties().getProperty("ChunksLocation", "./chunks_storage");
 		String filePath = fileChunksPath + "/" + fileId + "/" + senderId + "-"
 				+ String.format("%09d", Integer.parseInt(chunkNo));
-		// TESTE
-		System.out.println(filePath);
 
 		File f = new File(filePath);
 		if (f.exists() && f.canRead()) {
@@ -208,10 +203,7 @@ public class MCCListener implements Runnable {
 
 			tmp_msg = String.format("CHUNK %s %s %s %09d \r\n\r\n %s", version, senderId, FileId,
 					Integer.parseInt(chunkNo), body);
-			// TESTE
-
-			System.out.println(body);
-			// TESTE
+			
 			msg = tmp_msg.getBytes();
 
 			DatagramPacket packet = new DatagramPacket(msg, msg.length, address, port);
@@ -248,11 +240,11 @@ public class MCCListener implements Runnable {
 
 		String processed;
 		processed = old.replaceAll("  ", " ");
-		if (old.equalsIgnoreCase(processed)) {
+
+		if (old.equalsIgnoreCase(processed))
 			return processed;
-		} else {
+		else
 			return processProtocol(processed);
-		}
 	}
 
 	public PacketCollector getCollectedMessages() {

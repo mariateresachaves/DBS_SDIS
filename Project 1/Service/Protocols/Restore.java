@@ -1,21 +1,16 @@
 package Service.Protocols;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 
 import Service.Peer;
-import Service.StoredChunk;
-import Service.Listeners.MCCListener;
 import Service.Listeners.MDRListener;
-import Service.Listeners.PacketCollector;
 import Utils.Util;
 
 public class Restore {
@@ -67,23 +62,22 @@ public class Restore {
 	}
 
 	public boolean assemblyFile() {
-		int sleep=Integer.parseInt(Utils.Util.getProperties().getProperty("SleepOnInsuccessRestore", "20000"));
-		int retries=Integer.parseInt(Utils.Util.getProperties().getProperty("RetriesOnRestore", "5"));
-		for(int i=0;i<retries;i++){
-			
+		int sleep = Integer.parseInt(Utils.Util.getProperties().getProperty("SleepOnInsuccessRestore", "20000"));
+		int retries = Integer.parseInt(Utils.Util.getProperties().getProperty("RetriesOnRestore", "5"));
+		for (int i = 0; i < retries; i++) {
+
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			if(restoreFile()){
+
+			if (restoreFile()) {
 				return true;
 			}
 		}
 		return false;
-		
 
 	}
 
@@ -95,32 +89,32 @@ public class Restore {
 		for (int i = 0; i < numOfChunks; i++) {
 			String ch = getChunkWithNo(rest, i);
 			if (ch.equalsIgnoreCase("")) {
-				//System.out.println("\t\t\tError");
-				int sleep=Integer.parseInt(Utils.Util.getProperties().getProperty("SleepOnInsuccessRestore", "20000"));
-				System.out.println("Looks Like I am not ready to compile the file Sleeping for "+sleep+" ms");
+				// System.out.println("\t\t\tError");
+				int sleep = Integer
+						.parseInt(Utils.Util.getProperties().getProperty("SleepOnInsuccessRestore", "20000"));
+				System.out.println("Looks Like I am not ready to compile the file Sleeping for " + sleep + " ms");
 				return false;
 			} else {
-				ass +=ch;
+				ass += ch;
 			}
 
 		}
 
-		//System.out.println("BUILDING-->"+ass);
-		
+		// System.out.println("BUILDING-->"+ass);
+
 		FileOutputStream fos;
 		try {
-			//Verificacao da pasta de recovery
-			File fd= new File(Utils.Util.getProperties().getProperty("Recovery"));
-			if(!fd.exists()){
+			// Verificacao da pasta de recovery
+			File fd = new File(Utils.Util.getProperties().getProperty("Recovery"));
+			if (!fd.exists()) {
 				fd.mkdir();
 			}
-			
-			
+
 			fos = new FileOutputStream(Utils.Util.getProperties().getProperty("Recovery") + "/" + path);
 			byte[] bfout = stringSplitByPair(ass);
 
 			fos.write(bfout);
-			
+
 			fos.flush();
 			fos.close();
 		} catch (IOException e) {
@@ -129,13 +123,13 @@ public class Restore {
 		}
 
 		return true;
-		
+
 	}
 
 	private byte[] stringSplitByPair(String ass) {
 		String temp = "";
 		for (int i = 0; i <= (ass.length() - 2); i = i + 2) {
-			temp += (ass.charAt(i)+"") + (ass.charAt(i+1) + " ");
+			temp += (ass.charAt(i) + "") + (ass.charAt(i + 1) + " ");
 		}
 
 		String[] sp = temp.trim().split(" ");
@@ -144,11 +138,11 @@ public class Restore {
 
 		byte[] bytes = new byte[sp.length];
 		for (int i = 0; i < bytes.length; ++i) {
-			if(sp[i].equals("")){
+			if (sp[i].equals("")) {
 				continue;
 			}
-			bytes[i] = (byte)( Integer.parseInt(sp[i].trim(), 16) );
-			
+			bytes[i] = (byte) (Integer.parseInt(sp[i].trim(), 16));
+
 		}
 		return bytes;
 
@@ -159,7 +153,7 @@ public class Restore {
 			String[] split = x.split(" ");
 			int valorPercorrido = Integer.parseInt(split[4].trim());
 			if (valorPercorrido == i) {
-				//System.out.println("A RETORNAR!!-> "+split[6].trim());
+				// System.out.println("A RETORNAR!!-> "+split[6].trim());
 				return split[6].trim();
 			}
 		}

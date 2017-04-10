@@ -595,7 +595,6 @@ public class XMLDatabase {
 		return files;
 	}
 
-	// TODO: Fazer um get files mas para os chunks
 	public ArrayList<String> getChunksInfo() {
 		ArrayList<String> files = new ArrayList<>();
 
@@ -637,7 +636,6 @@ public class XMLDatabase {
 					Element eElement = (Element) nNode;
 
 					String sID = eElement.getElementsByTagName("filepath").item(0).getTextContent();
-					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
 
 					if (sID.equalsIgnoreCase(filePath)) {
 						return eElement.getElementsByTagName("part").getLength();
@@ -651,5 +649,21 @@ public class XMLDatabase {
 		}
 		return 0;
 	}
+	
+	public String getFilePath(String fileId) {
+		NodeList nList = doc.getElementsByTagName("file");
 
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+						if(eElement.getElementsByTagName("fileId").item(0).getTextContent().equals(fileId))
+							return eElement.getElementsByTagName("filepath").item(0).getTextContent();
+			}
+		}
+		return null;
+	}
 }

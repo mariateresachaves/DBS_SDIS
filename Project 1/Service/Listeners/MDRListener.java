@@ -17,7 +17,7 @@ public class MDRListener implements Runnable {
 	private String recovertLocation;
 	private String channelIP;
 	private String channelport;
-	private static ArrayList <String> packetsForRecovery= new ArrayList<>();
+	private static ArrayList<String> packetsForRecovery = new ArrayList<>();
 
 	public MDRListener() {
 		recovertLocation = Util.getProperties().getProperty("Recovery", "./recovery");
@@ -42,7 +42,6 @@ public class MDRListener implements Runnable {
 	}
 
 	private void recieveMessage(MulticastSocket sck) {
-		
 
 		try {
 			while (true) {
@@ -54,10 +53,10 @@ public class MDRListener implements Runnable {
 				String protocolMessage = processProtocol(response);
 
 				packetsForRecovery.add(protocolMessage);
-				
+
 				selectProtocol(protocolMessage);
-				//System.out.println("RECIEVED PACKET!");
-				//System.out.println(protocolMessage);
+				// System.out.println("RECIEVED PACKET!");
+				// System.out.println(protocolMessage);
 			}
 		} catch (Exception e) {
 			Util.getLogger().log(Level.WARNING, "Error Recieving packet, Error Message: ");
@@ -76,13 +75,12 @@ public class MDRListener implements Runnable {
 
 	private void recoverChunk(String protocolMessage) {
 
-		
-		
 		File folder = new File(recovertLocation + "/" + protocolMessage.split(" ")[3]);
 		if (!folder.exists()) {
 			folder.mkdir();
 		}
-		//System.out.println("FOLDER-> "+ recovertLocation + "/" + protocolMessage.split(" ")[3]);
+		// System.out.println("FOLDER-> "+ recovertLocation + "/" +
+		// protocolMessage.split(" ")[3]);
 		folder = new File(recovertLocation + "/" + protocolMessage.split(" ")[3]);
 		if (folder.isDirectory() && folder.canWrite()) {
 			try {
@@ -109,12 +107,13 @@ public class MDRListener implements Runnable {
 			return processProtocol(processed);
 		}
 	}
+
 	public static ArrayList<String> getRestores(String fileID) {
-		ArrayList<String> ret=new ArrayList<>();
-		ArrayList<String> temp=new ArrayList(packetsForRecovery);
-		
+		ArrayList<String> ret = new ArrayList<>();
+		ArrayList<String> temp = new ArrayList<String>(packetsForRecovery);
+
 		for (String msg : temp) {
-			
+
 			if (msg.startsWith("CHUNK")) {
 
 				if (msg.split(" ")[3].trim().equalsIgnoreCase(fileID.trim()))

@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.util.logging.Level;
 
 import Service.Peer;
-import Service.StoredChunk;
 import Utils.Util;
 
 public class Deletion {
@@ -33,8 +32,8 @@ public class Deletion {
 		address = InetAddress.getByName(hostname);
 
 		// Create message to send
-		String tmp_msg = String.format("DELETE %s %s %s \r\n\r\n", version, Util.getProperties().getProperty("SenderID"),
-				chunk_fileID);
+		String tmp_msg = String.format("DELETE %s %s %s \r\n\r\n", version,
+				Util.getProperties().getProperty("SenderID"), chunk_fileID);
 
 		byte[] msg = tmp_msg.getBytes();
 
