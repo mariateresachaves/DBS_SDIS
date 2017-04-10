@@ -29,28 +29,6 @@ public class ShellInterpreter implements ConnectBackInterface {
 
 	public ShellInterpreter() {
 
-		int useRMI = Integer.parseInt(Utils.Util.getProperties().getProperty(
-				"useRMI", "1"));
-		if (useRMI == 1) {
-
-			try {
-
-				ConnectBackInterface stub = (ConnectBackInterface) UnicastRemoteObject
-						.exportObject(this, 1098);
-				// Bind the remote object's stub in the registry
-				Registry registry = LocateRegistry.getRegistry();
-
-				registry.rebind(
-						Utils.Util.getProperties().getProperty("SenderID",
-								"Agent999"), stub);
-
-				Utils.Util.getLogger().log(Level.INFO, "RMI Server Started");
-			} catch (Exception e) {
-				Utils.Util.getLogger().log(Level.WARNING,
-						"RMI Server Failed to Start Started");
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public void getShell() throws Exception {
@@ -356,10 +334,32 @@ public class ShellInterpreter implements ConnectBackInterface {
 	public String sendCommand(String proto, String[] args)
 			throws RemoteException {
 		try {
-			this.inputCommand(proto, args);
-			return "Command Sent Successfully";
+			int value = this.inputCommand(proto, args);
+			return "Command Sent Successfully" + value;
 		} catch (Exception e) {
 			return "Something went wrong processing the request";
+		}
+
+	}
+
+	public void startRMI() {
+
+		try {
+
+			ConnectBackInterface stub = (ConnectBackInterface) UnicastRemoteObject
+					.exportObject(this, 0);
+			// Bind the remote object's stub in the registry
+			Registry registry = LocateRegistry.getRegistry();
+
+			registry.rebind(
+					Utils.Util.getProperties().getProperty("SenderID",
+							"Agent999"), stub);
+
+			Utils.Util.getLogger().log(Level.INFO, "RMI Server Started");
+		} catch (Exception e) {
+			Utils.Util.getLogger().log(Level.WARNING,
+					"RMI Server Failed to Start Started");
+			e.printStackTrace();
 		}
 
 	}
