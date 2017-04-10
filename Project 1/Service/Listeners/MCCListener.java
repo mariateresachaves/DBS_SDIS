@@ -129,10 +129,10 @@ public class MCCListener implements Runnable {
 		String senderId = split[2].trim();
 		String fileId = split[3].trim();
 		String chunkNo = split[4].trim();
-
-		if (Peer.xmldb.isChunkPresent(senderId, fileId, chunkNo)) {
-			Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
-		}
+		
+		// Update db
+		Peer.xmldb.addToChunkRD(-1, fileId, chunkNo);
+		Peer.xmldb.updateFilePart(fileId, Integer.parseInt(chunkNo), -1);
 	}
 
 	private void deleteProtocol(String message) {

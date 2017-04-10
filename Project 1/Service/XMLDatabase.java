@@ -357,6 +357,53 @@ public class XMLDatabase {
 			}
 		}
 	}
+	
+	public void updateFilePart(String fileID, int chunkNo, int valorAAdicionar) {
+		NodeList nList = doc.getElementsByTagName("file");
+		
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				try {
+					Element eElement = (Element) nNode;
+
+					String fID = eElement.getElementsByTagName("fileId").item(0).getTextContent();
+					
+					if (fID.equalsIgnoreCase(fileID)) {
+
+						// Estou no ficheiro certo vou iterar agora as parts
+						NodeList parts = eElement.getElementsByTagName("part");
+						for (int i = 0; i < parts.getLength(); i++) {
+							Node partNode = parts.item(i);
+							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+								try {
+									Element part = (Element) partNode;
+
+									if (part.getAttribute("pid").equalsIgnoreCase(chunkNo + "")) {
+										int valor = Integer
+												.parseInt(part.getElementsByTagName("partRD").item(0).getTextContent());
+
+										part.getElementsByTagName("partRD").item(0)
+												.setTextContent((valor + valorAAdicionar) + "");
+									}
+								} catch (Exception e) {
+									// NOPE
+								}
+							}
+						}
+					}
+				} catch (NullPointerException e) {
+					// Hammer TIME! if something gives null it means that there
+					// is no record
+					continue;
+				}
+			}
+		}
+	}
 
 	public boolean isPartPresent(String filePath, String fileID, int chunkNo) {
 		NodeList nList = doc.getElementsByTagName("file");
