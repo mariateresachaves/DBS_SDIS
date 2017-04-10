@@ -31,7 +31,7 @@ public class TestingApp {
 		String[] remoteArgs=new String[args.length-2];
 		System.arraycopy(args, 2, remoteArgs, 0, remoteArgs.length);
 
-		System.out.println("Going to send the following command->" + args[0]);
+		System.out.println("Going to send the following command->" + args[1]);
 		try {
 			Registry registry = LocateRegistry.getRegistry(host);
 
