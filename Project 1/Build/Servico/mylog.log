@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2017-04-10T10:19:03</date>
+  <millis>1491844743059</millis>
+  <sequence>0</sequence>
+  <logger>Utils.Util</logger>
+  <level>SEVERE</level>
+  <class>Service.Peer</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Invalid arguments at the start of application
+</message>
+</record>
+</log>
