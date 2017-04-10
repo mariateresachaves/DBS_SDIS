@@ -190,7 +190,7 @@ public class ShellInterpreter {
 				Util.getLogger().log(Level.INFO, "Deleting chunk No " + chunkNo + "\n");
 				MDBListener.deleteChunk(fileId, senderId, chunkNo);
 
-				Reclaim controller = new Reclaim(fileId, Integer.parseInt(chunkNo));
+				Reclaim controller = new Reclaim(senderId, fileId, Integer.parseInt(chunkNo));
 				controller.send_removed();
 				break;
 			}
